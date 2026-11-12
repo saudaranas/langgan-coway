@@ -575,7 +575,7 @@ Selamat maju jaya! Ada apa-apa, terus WhatsApp saya 💪`;
   }
 
   /* statistik artikel */
-  const ART_TITLES = {"tangki-air-rumah": "Bila kali terakhir tangki air rumah anda dicuci?", "habuk-dalam-rumah": "Habuk yang anda lap pagi tadi, dari mana datangnya?", "bila-perlu-tukar-tilam": "Tilam anda dah berapa tahun?", "lenguh-badan-tiada-masa-urut": "Bila kali terakhir anda betul-betul rehat?", "lantai-tandas-basah": "Kenapa lantai tandas rumah anda selalu basah?", "baju-putih-jadi-kuning": "Kenapa baju putih anda makin kekuningan?", "bil-elektrik-naik-aircond-lama": "Kenapa bil elektrik naik walaupun guna aircond yang sama?", "baju-berbau-lepas-basuh": "Baju dah basuh, tapi kenapa masih berbau?", "makanan-cepat-rosak-peti-ais": "Berapa banyak makanan yang anda buang setiap bulan?"};
+  const ART_TITLES = {"tangki-air-rumah": "Bila kali terakhir tangki air rumah anda dicuci?", "habuk-dalam-rumah": "Habuk yang anda lap pagi tadi, dari mana datangnya?", "bila-perlu-tukar-tilam": "Tilam anda dah berapa tahun?", "lenguh-badan-tiada-masa-urut": "Bila kali terakhir anda betul-betul rehat?", "lantai-tandas-basah": "Kenapa lantai tandas rumah anda selalu basah?", "baju-putih-jadi-kuning": "Kenapa baju putih anda makin kekuningan?", "bil-elektrik-naik-aircond-lama": "Kenapa bil elektrik naik walaupun guna aircond yang sama?", "baju-berbau-lepas-basuh": "Baju dah basuh, tapi kenapa masih berbau?", "makanan-cepat-rosak-peti-ais": "Berapa banyak makanan yang anda buang setiap bulan?", "kerjaya-consultant-coway": "Kerjaya: kerja sebagai consultant Coway"};
   function renderArts(ag, days){
     const set = new Set(days), by = {};
     Object.keys(ART_TITLES).forEach(k => by[k] = { view:0, reader:0, done:0, prod:0, wa:0 });
