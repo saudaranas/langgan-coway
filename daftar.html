@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daftar Ejen Coway</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#163a5c;--ink:#14212b;--muted:#55636e;--line:#dbe2e7;--panel:#f3f6f8;--red:#c0392b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:16px;color:var(--ink);background:var(--panel);line-height:1.55}
+  button,input{font:inherit}
+  .card{max-width:460px;margin:28px auto;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .top{background:var(--navy);color:#fff;padding:22px}
+  .top h1{font-size:22px;line-height:1.25}
+  .top p{color:#c3d3e2;margin-top:6px;font-size:15px}
+  form,.done{padding:20px 22px 24px}
+  label{display:block;font-weight:600;font-size:14.5px;margin:14px 0 5px}
+  input[type=text],input[type=tel]{width:100%;border:1px solid var(--line);border-radius:8px;padding:11px 12px}
+  .hint{font-size:13.5px;color:var(--muted);margin-top:4px}
+  .photo{display:flex;align-items:center;gap:14px}
+  .photo img,.photo .ph{width:64px;height:64px;border-radius:50%;object-fit:cover;background:var(--panel);flex:none}
+  .agree{display:flex;gap:10px;align-items:flex-start;margin-top:16px;font-size:14px;color:var(--muted)}
+  .agree input{margin-top:4px}
+  .btn{width:100%;margin-top:18px;border:0;border-radius:8px;padding:14px;font-weight:600;background:var(--navy);color:#fff;cursor:pointer}
+  .btn:disabled{opacity:.5}
+  .err{color:var(--red);font-size:14px;margin-top:10px;min-height:20px}
+  .done{display:none}
+  .done h2{font-size:20px;margin-bottom:8px}
+  .done ol{margin:12px 0 0 20px;display:grid;gap:8px}
+  .tg{display:inline-block;margin-top:14px;background:#229ed9;color:#fff;text-decoration:none;font-weight:600;border-radius:8px;padding:11px 16px}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="top">
+    <h1>Daftar sebagai ejen Coway</h1>
+    <p>Dapatkan link website sendiri. Prospek yang isi chat di link anda akan dihantar terus ke WhatsApp dan Telegram anda.</p>
+  </div>
+
+  <form id="f" novalidate>
+    <label for="nama">Nama penuh</label>
+    <input type="text" id="nama" autocomplete="name" required>
+
+    <label for="wa">Nombor WhatsApp</label>
+    <input type="tel" id="wa" placeholder="012-345 6789" autocomplete="tel" required>
+    <p class="hint">Prospek akan menghubungi anda di nombor ini.</p>
+
+    <label for="tg">Username Telegram</label>
+    <input type="text" id="tg" placeholder="@username">
+    <p class="hint">Untuk terima notifikasi lead. Lihat di Telegram: Settings → Username.</p>
+
+    <label for="foto">Gambar profil</label>
+    <div class="photo">
+      <div class="ph" id="ph"></div>
+      <input type="file" id="foto" accept="image/*">
+    </div>
+    <p class="hint">Gambar ini dipaparkan pada popup promosi di link anda.</p>
+
+    <label class="agree"><input type="checkbox" id="ok"> <span>Saya bersetuju maklumat ini disimpan oleh admin untuk tujuan pengurusan ejen dan pengagihan lead.</span></label>
+
+    <button class="btn" id="go" type="submit">Hantar pendaftaran</button>
+    <p class="err" id="err"></p>
+  </form>
+
+  <div class="done" id="done">
+    <h2>Pendaftaran diterima</h2>
+    <p>Admin akan semak dan luluskan akaun anda. Sementara itu:</p>
+    <ol>
+      <li>Buka bot Telegram di bawah.</li>
+      <li>Tekan <b>START</b> dan hantar "hi".</li>
+      <li>Selepas diluluskan, anda akan terima link website anda di Telegram.</li>
+    </ol>
+    <a class="tg" id="tgLink" href="#" target="_blank" rel="noopener">Buka bot Telegram</a>
+  </div>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const API = "https://script.google.com/macros/s/AKfycbzxiDAR0APLLQvlI-peaoL89dsabpLZd-PHxqAuEgeaGVqtiX3NngTdNbbnhCLyxX3kVw/exec";
+  const call = (fn, ...args) => fetch(API, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: fn, args: args }) })
+    .then(r => r.json(), () => { throw "Tiada sambungan internet. Cuba lagi."; })
+    .then(r => { if(!r.ok) throw r.error || "Ralat pelayan."; return r.data; });
+  let foto = "";
+  $("foto").onchange = () => {
+    const f = $("foto").files[0]; if(!f) return;
+    const img = new Image(), url = URL.createObjectURL(f);
+    img.onload = () => {
+      const s = Math.min(1, 400 / Math.max(img.width, img.height));
+      const c = document.createElement("canvas"); c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      foto = c.toDataURL("image/jpeg", .85); URL.revokeObjectURL(url);
+      const p = $("ph"); p.outerHTML = `<img id="ph" src="${foto}" alt="">`;
+    };
+    img.src = url;
+  };
+  $("f").onsubmit = e => {
+    e.preventDefault();
+    $("err").textContent = "";
+    if($("nama").value.trim().length < 3){ $("err").textContent = "Sila isi nama penuh."; return; }
+    if($("wa").value.replace(/\D/g, "").length < 9){ $("err").textContent = "Sila isi nombor WhatsApp yang betul."; return; }
+    if(!$("ok").checked){ $("err").textContent = "Sila tandakan persetujuan."; return; }
+    $("go").disabled = true; $("go").textContent = "Menghantar…";
+    const fail = m => { $("err").textContent = m || "Pendaftaran gagal. Cuba lagi."; $("go").disabled = false; $("go").textContent = "Hantar pendaftaran"; };
+    call("daftarEjen", { nama: $("nama").value, wa: $("wa").value, telegram: $("tg").value, foto: foto })
+      .then(r => {
+        if(!r || !r.ok) return fail(r && r.error);
+        $("f").style.display = "none"; $("done").style.display = "block";
+        if(r.bot) $("tgLink").href = "https://t.me/" + r.bot; else $("tgLink").style.display = "none";
+      })
+      .catch(fail);
+  };
+</script>
+</body>
+</html>
