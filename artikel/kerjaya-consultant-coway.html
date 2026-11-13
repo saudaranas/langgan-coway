@@ -234,7 +234,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:8px 18px}
 </main>
 <aside class="side" aria-label="Maklumat consultant dan produk">
   <div class="box me">
-    <img class="mePic" src="/img/me.jpg" alt="Gambar consultant Coway" width="72" height="72" onerror="this.style.visibility='hidden'">
+    <img class="mePic" alt="Gambar consultant" width="72" height="72">
     <div><b>Consultant Coway</b><small class="meName2" hidden></small><a class="wa" href="#" target="_blank" rel="noopener">&gt;&gt;&gt;Hubungi saya</a></div>
     <p>Saya consultant Coway. Kalau anda berminat dengan kerja ini, tanya saya tentang latihan, pejabat dan skim komisen.</p>
   </div>
@@ -280,17 +280,28 @@ footer nav{display:flex;flex-wrap:wrap;gap:8px 18px}
   document.querySelectorAll("a[data-keep]").forEach(a => { const u = a.getAttribute("href"); a.href = u + (Q ? (u.includes("?") ? "&" : "?") + Q : ""); });
   const setWa = n => document.querySelectorAll("a.wa").forEach(b => b.href = "https://wa.me/" + n + "?text=" + encodeURIComponent(WA_TEXT));
   setWa(DEFAULT_WA);
+  /* gambar profil: ejen guna gambar sendiri (atau huruf awal nama), utama guna img/me.jpg */
+  const initials = n => { const w = String(n || "C C").trim().split(/\s+/); const t = ((w[0] || "C")[0] + (w[1] ? w[1][0] : "")).toUpperCase();
+    return "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><rect width="72" height="72" fill="#0079c2"/><text x="36" y="45" font-family="Arial" font-size="26" font-weight="700" fill="#fff" text-anchor="middle">' + t + '</text></svg>'); };
+  const setPic = src => document.querySelectorAll(".mePic").forEach(i => { i.onerror = () => { i.onerror = null; i.src = initials("Consultant Coway"); }; i.src = src; });
   function applyMe(u){
     if(!u) return;
     if(u.wa) setWa(u.wa);
-    if(u.foto) document.querySelectorAll(".mePic").forEach(i => i.src = u.foto);
+    setPic(u.foto || (u.id === "utama" ? "/img/me.jpg" : initials(u.nama)));
     const custom = u.nama && u.nama !== "Consultant Coway";
     document.querySelectorAll(".meName").forEach(e => e.textContent = custom ? u.nama : "Consultant Coway");
     document.querySelectorAll(".meName2").forEach(e => { e.textContent = custom ? u.nama : ""; e.hidden = !custom; });
   }
+  /* simpanan sementara: page seterusnya terus tunjuk profil yang betul tanpa tunggu */
+  const CFG_KEY = "cfg_" + (UID || "utama");
+  let cached = null;
+  try { cached = JSON.parse(localStorage.getItem(CFG_KEY)); } catch (e) {}
+  if (cached && cached.ok) applyMe(cached.user);
+  else if (!UID) setPic("/img/me.jpg");
+  else setPic(initials(""));
   function getCfg(extra){
     return Promise.race([
-      fetch(GAS_URL + "?action=config&id=" + encodeURIComponent(UID) + (extra || "")).then(r => r.json()),
+      fetch(GAS_URL + "?action=config&id=" + encodeURIComponent(UID) + (extra || "")).then(r => r.json()).then(r => { try { if (r && r.ok) localStorage.setItem(CFG_KEY, JSON.stringify({ ok: true, user: r.user })); } catch (e) {} return r; }),
       new Promise((_, rej) => setTimeout(() => rej("timeout"), 6000))
     ]);
   }
