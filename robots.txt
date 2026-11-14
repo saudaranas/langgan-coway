@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /daftar
+
+Sitemap: https://langgancoway.store/sitemap.xml
