@@ -270,6 +270,7 @@
   .typing i{width:6px;height:6px;border-radius:50%;background:#9aa6ad;animation:b 1s infinite}
   .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
   @keyframes b{0%,60%,100%{opacity:.3}30%{opacity:1}}
+  .bub img{display:block;width:100%;max-width:280px;border-radius:8px;border:1px solid #d5dbe0;margin-bottom:6px;cursor:zoom-in}
   .choices{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;margin-top:4px}
   .choices button{background:#fff;border:1px solid #c9d4d1;color:var(--wa-dark);border-radius:999px;padding:7px 12px;font-size:14.5px;font-weight:600;cursor:pointer}
   .choices button:hover{background:#f0f7f5}
@@ -893,6 +894,13 @@
     ty.remove(); document.getElementById("status").textContent = "dalam talian";
     bubble(text,"bot");
   }
+  async function sayImg(src, cap){
+    await say(cap);
+    const b = msgs.lastElementChild, a = document.createElement("a");
+    a.href = src; a.target = "_blank"; a.rel = "noopener";
+    a.innerHTML = `<img src="${src}" alt="${esc(cap)}" loading="lazy">`;
+    b.insertBefore(a, b.firstChild); msgs.scrollTop = msgs.scrollHeight;
+  }
   function choose(opts){
     return new Promise(res=>{
       const w = document.createElement("div"); w.className="choices";
@@ -993,6 +1001,8 @@
     if(daftar){
       await bot("Langkah seterusnya 👇\n\n1. Tekan butang di bawah untuk hantar ringkasan ini ke WhatsApp saya.\n2. Saya sahkan pakej, promosi dan tarikh pemasangan dengan anda.\n3. Penghantaran dan pemasangan percuma 🚚\n4. Pendaftaran dibuat melalui sistem rasmi Coway. Salinan IC hanya diminta di WhatsApp, digunakan untuk pendaftaran Coway sahaja, dan dipadam selepas itu.\n\nUntuk keselamatan anda, jangan hantar IC atau nombor kad bank di chat ini.");
       await bot("📝 Dokumen untuk pendaftaran (sediakan dulu, hantar di WhatsApp sahaja):\n\n1️⃣ Gambar IC bahagian DEPAN sahaja. Tulis atau palang \"FOR COWAY ONLY\" di sebelah kanan IC. Pastikan nombor IC dan nama masih jelas.\n\n2️⃣ Kad debit/kredit untuk potongan bulanan: 6 digit pertama dan 4 digit terakhir SAHAJA. Jangan hantar nombor penuh, CVV atau OTP.\n\n3️⃣ Gambar tandatangan anda di atas kertas putih, dengan tulisan \"Coway use only\" di bawahnya.");
+      if(run===my) await sayImg("/img/dokumen-pendaftaran.webp", "Contoh dokumen 👆 Tekan gambar untuk besarkan.");
+      if(run===my) await sayImg("/img/contoh-kertas-tandatangan.webp", "Contoh kertas untuk tandatangan ✍️ Tandatangan di ruang kosong, tulis \"Coway use only\" di bawah.");
       await bot("Tip 💡 Untuk palang IC, ambil gambar IC, tekan Edit di galeri telefon, pilih Teks atau Lukis, dan tulis FOR COWAY ONLY. Senang je 😊");
     } else {
       await bot("Tekan butang di bawah untuk hantar ringkasan ini ke WhatsApp saya. Saya akan balas dengan sebut harga dan promosi terkini 😊\n\nUntuk keselamatan anda, jangan hantar IC atau nombor kad bank di chat ini. Pendaftaran dibuat melalui sistem rasmi Coway selepas anda bersetuju.");
