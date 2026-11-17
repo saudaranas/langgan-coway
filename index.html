@@ -565,6 +565,7 @@
       <p class="src" id="m-src"></p>
       <div class="acts">
         <button class="btn btn-wa" id="m-chat"><svg><use href="#wa"/></svg>Tanya produk ini</button>
+        <button class="btn btn-line" id="m-share" type="button">🔗 Kongsi produk</button>
       </div>
     </div>
   </div>
@@ -821,8 +822,14 @@
 
   /* modal */
   const ov = document.getElementById("ov"); let lastFocus=null, current=null;
+  const slug = n => n.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+  const prodLink = p => location.origin + "/?p=" + slug(p.n) + (UID ? "&id=" + UID : "");
+  function setP(v){
+    try{ const u = new URL(location.href); if(v) u.searchParams.set("p", v); else u.searchParams.delete("p"); history.replaceState(null, "", u); }catch(e){}
+  }
   function openModal(i, from){
     const p = products[i]; current = p; lastFocus = from;
+    setP(slug(p.n)); document.getElementById("m-share").textContent = "🔗 Kongsi produk";
     document.getElementById("m-pic").innerHTML = pic(p,"m");
     document.getElementById("m-code").textContent = p.code ? "Model " + p.code : "Coway";
     document.getElementById("m-name").textContent = p.n;
@@ -853,11 +860,20 @@
     document.getElementById("mx").focus();
   }
   function closeModal(){
+    setP(null);
     ov.classList.remove("open"); ov.setAttribute("aria-hidden","true"); document.body.classList.remove("locked");
     if(lastFocus) lastFocus.focus();
   }
   document.getElementById("mx").onclick = closeModal;
   ov.addEventListener("click", e=>{ if(e.target===ov) closeModal(); });
+  document.getElementById("m-share").onclick = async ()=>{
+    const b = document.getElementById("m-share"), url = prodLink(current);
+    const text = `${current.n} dari Coway, sewa ${current.pk||current.promo?"dari ":""}${rm(current.m)} sebulan. Penghantaran dan pemasangan percuma.`;
+    track("share");
+    if(navigator.share){ try{ await navigator.share({title:current.n, text:text, url:url}); return; }catch(e){ if(e.name==="AbortError") return; } }
+    try{ await navigator.clipboard.writeText(url); b.textContent = "✓ Link disalin"; }
+    catch(e){ prompt("Salin link ini:", url); }
+  };
   document.getElementById("m-chat").onclick = ()=>{ const n=current.n; closeModal(); openChat(n); };
 
   /* calculator */
@@ -1111,7 +1127,13 @@
   document.getElementById("pop-skip").onclick = ()=>{ closePop(); document.getElementById("produk").scrollIntoView(); };
   document.getElementById("pop-wa").addEventListener("click", ()=>{ track("claim"); closePop(); });
   pop.addEventListener("click", e=>{ if(e.target===pop) closePop(); });
-  setTimeout(()=>consReady.then(openPop), 1200);
+  const DEEP = (new URLSearchParams(location.search).get("p")||"").toLowerCase();
+  const deepI = DEEP ? products.findIndex(x=>slug(x.n)===DEEP) : -1;
+  if(deepI >= 0){
+    setFilter(products[deepI].c);
+    document.getElementById("produk").scrollIntoView();
+    openModal(deepI, null);
+  } else setTimeout(()=>consReady.then(openPop), 1200);
 
   /* kira klik ke WhatsApp dari mana-mana butang */
   document.addEventListener("click", e=>{
