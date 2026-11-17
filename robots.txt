@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /daftar
+Disallow: /nota-pd
 
 Sitemap: https://langgancoway.store/sitemap.xml
