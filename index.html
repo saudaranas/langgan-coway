@@ -234,6 +234,16 @@
   .feat li{padding-left:18px;position:relative;font-size:15.5px}
   .feat li::before{content:"";position:absolute;left:0;top:.62em;width:7px;height:7px;border-radius:50%;background:var(--navy)}
   .src{font-size:13px;color:var(--muted);margin-bottom:18px}
+  .pkg{margin-bottom:14px}
+  .pkg[hidden]{display:none}
+  .pkg h5{font-size:14px;margin:10px 0 4px;color:var(--navy)}
+  .pkg table{width:100%;border-collapse:collapse;font-size:15px}
+  .pkg th{text-align:left;font-size:13px;font-weight:600;color:var(--muted);padding:6px 8px;border-bottom:1px solid var(--line)}
+  .pkg td{padding:7px 8px;border-bottom:1px solid var(--line)}
+  .pkg td:last-child,.pkg th:last-child{text-align:right;white-space:nowrap}
+  .pkg tr.k1 td{border-top:2px solid var(--line)}
+  .pkg tr.best td{background:var(--panel);font-weight:600}
+  .pkg .pn{font-size:13px;color:var(--muted);margin-top:6px}
   .modal .acts{display:flex;gap:10px;flex-wrap:wrap}
   .x{position:absolute;top:10px;right:10px;width:38px;height:38px;border-radius:50%;border:0;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.15);font-size:22px;line-height:1;cursor:pointer;color:var(--ink);z-index:2}
 
@@ -548,6 +558,7 @@
         <div><span>Pemasangan</span><b>Percuma</b></div>
       </div>
       <p class="mcol" id="m-col" hidden></p>
+      <div class="pkg" id="m-pkg" hidden></div>
       <h4>Ciri-ciri utama</h4>
       <ul class="feat" id="m-feat"></ul>
       <p class="src" id="m-src"></p>
@@ -664,6 +675,8 @@
     {n:"Studio", code:"AP-1924A", c:"udara", t:"Penapis udara", m:94.34, o:2500, col:["White","Beige"], f:[]},
     {n:"Suite", code:"AP-2524B", c:"udara", t:"Penapis udara", m:111.30, o:3300, col:["White","Beige"], f:[]},
     {n:"Atrium", code:"AP-3525I", c:"udara", t:"Penapis udara untuk ruang besar", m:147.34, o:4800, col:["White","Gray","Beige"], f:[]},
+    {n:"Noble 2", c:"udara", t:"Penapis udara 360°", m:137.80,
+     f:["Penapisan 360° dengan penapis 4D","Aliran udara terarah dan liputan 360°","Mod pintar dan sensor kualiti udara","Mudah dialihkan, panel mudah guna"]},
     /* BIDET */
     {n:"Flowlet", code:"BA48-A", c:"bidet", t:"Bidet elektronik", m:50.00, o:1600, f:[]},
     {n:"Flowlet Plus (Panel)", code:"BAS45", c:"bidet", t:"Bidet elektronik, kawalan panel sisi", m:60.00, o:2100, col:["Round","Elongated"], f:[]},
@@ -700,6 +713,64 @@
     {n:"Multi-Door Refrigerator", code:"CR551-MDR01", c:"peti", t:"Peti ais pelbagai pintu", m:147.34, o:6799, f:[]}
   ];
   const IMGS = {"F-Series Aircond 1.0 HP": {"img": "https://emall.coway.com.my/ProductImages/3697babe-f90b-4231-bd8e-7a1c9d021b93/1/240x240/aircond-10-ren.jpg", "ci": {}}, "F-Series Aircond 1.5 HP": {"img": "https://emall.coway.com.my/ProductImages/2868c210-90bb-4100-be45-599c3f6b02dd/1/240x240/aircond-15-ren.jpg", "ci": {}}, "P-Series Aircond 1.5 HP": {"img": "https://emall.coway.com.my/ProductImages/18a6d2c9-8408-47db-a4fa-95ce351b793a/1/240x240/p-series-aircond-15-hp-white.png", "ci": {"White": "https://emall.coway.com.my/ProductImages/18a6d2c9-8408-47db-a4fa-95ce351b793a/1/240x240/p-series-aircond-15-hp-white.png", "Black": "https://emall.coway.com.my/ProductImages/0c6a19c4-dded-49e7-a21c-c808faa11368/1/240x240/p-series-aircond-15-hp-black.png"}}, "P-Series Aircond 2.0 HP": {"img": "https://emall.coway.com.my/ProductImages/e80ef42b-89de-4d34-8918-2d0126a108b1/1/240x240/p-series-aircond-20-hp-white.png", "ci": {"White": "https://emall.coway.com.my/ProductImages/e80ef42b-89de-4d34-8918-2d0126a108b1/1/240x240/p-series-aircond-20-hp-white.png", "Black": "https://emall.coway.com.my/ProductImages/6b4d0c35-37fb-4f4e-8968-329474a094ad/1/240x240/p-series-aircond-20-hp-black.png"}}, "Icon Ice": {"img": "https://emall.coway.com.my/ProductImages/740cf3e5-6378-4644-a4ba-2abfc882bc18/1/240x240/icon-ice-white.png", "ci": {"White": "https://emall.coway.com.my/ProductImages/740cf3e5-6378-4644-a4ba-2abfc882bc18/1/240x240/icon-ice-white.png", "Gray": "https://emall.coway.com.my/ProductImages/870075e6-35c9-4ae6-9c3a-abaab0cbb648/1/240x240/icon-ice-gray.png", "Pink": "https://emall.coway.com.my/ProductImages/9ebd9814-be54-4d25-bf8e-e55316cd54a1/1/240x240/icon-ice-pink.png", "Blue": "https://emall.coway.com.my/ProductImages/34eeeb39-36a8-4a95-b276-81067421769b/1/240x240/icon-ice-blue.png"}}, "Villaem 3": {"img": "https://emall.coway.com.my/ProductImages/859ec6e7-6111-41bb-aad4-75a7145a8a50/1/240x240/villaem-3-white.png", "ci": {"White": "https://emall.coway.com.my/ProductImages/859ec6e7-6111-41bb-aad4-75a7145a8a50/1/240x240/villaem-3-white.png", "Gray": "https://emall.coway.com.my/ProductImages/cfa73eea-3f49-4543-8563-8f626a1e9ea5/1/240x240/villaem-3-gray.png"}}, "AIS": {"img": "https://emall.coway.com.my/ProductImages/cd349c96-7052-4f9a-a75d-7eb696eedaa3/1/240x240/ais-white.png", "ci": {"White": "https://emall.coway.com.my/ProductImages/cd349c96-7052-4f9a-a75d-7eb696eedaa3/1/240x240/ais-white.png", "Gray": "https://emall.coway.com.my/ProductImages/19f9ad9e-d9a0-4aeb-b633-f34bd0672416/1/240x240/ais-gray.png"}}, "NeoN": {"img": "https://emall.coway.com.my/ProductImages/db8c15f4-b7a0-485a-ac62-6c2f7c1ec26e/1/240x240/neon-white.png", "ci": {"White": "https://emall.coway.com.my/ProductImages/db8c15f4-b7a0-485a-ac62-6c2f7c1ec26e/1/240x240/neon-white.png", "Gray": "https://emall.coway.com.my/ProductImages/c4c984ec-a10b-4882-9d03-b1b989c7480b/1/240x240/neon-gray.png", "Blue": "https://emall.coway.com.my/ProductImages/10d2a982-c861-44be-a493-e6d642196d30/1/240x240/neon-blue.png", "Pink": "https://emall.coway.com.my/ProductImages/b415f28c-7f4f-40f3-84e1-617a6a2eeaa4/1/240x240/neon-pink.png", "Green": "https://emall.coway.com.my/ProductImages/2308356a-5b9c-4259-bd58-58ed2a516b36/1/240x240/neon-green.png"}}, "Dazzie": {"img": "https://emall.coway.com.my/ProductImages/2cdb7053-6a95-4e6d-8ebc-4263cb6a23e7/1/240x240/dazzie-white.png", "ci": {"White": "https://emall.coway.com.my/ProductImages/2cdb7053-6a95-4e6d-8ebc-4263cb6a23e7/1/240x240/dazzie-white.png", "Gray": "https://emall.coway.com.my/ProductImages/57977099-8ba5-4172-89ef-57c34ffe121c/1/240x240/dazzie-gray.png", "Pink": "https://emall.coway.com.my/ProductImages/1618281c-5660-47bd-b4f3-c4370fd3048c/1/240x240/dazzie-pink.png", "Blue": "https://emall.coway.com.my/ProductImages/be7b101b-1f39-4bd1-8205-16a7dcb1196b/1/240x240/dazzie-blue.png", "Green": "https://emall.coway.com.my/ProductImages/d8b2ec17-f24a-479c-982d-cd5f166e2ad9/1/240x240/dazzie-green.png"}}, "Neo Plus": {"img": "https://emall.coway.com.my/ProductImages/4fc588de-8d1f-423d-9551-b88a032b2c6f/1/240x240/neo-plus.png", "ci": {}}, "Ombak": {"img": "https://emall.coway.com.my/ProductImages/e460e15d-9be7-4e1d-b37d-48a283c529f8/1/240x240/ombak.png", "ci": {}}, "Cinnamon": {"img": "https://emall.coway.com.my/ProductImages/b79c1af2-60c6-46e3-a902-babade97ea48/1/240x240/cinnamon.png", "ci": {}}, "Glaze": {"img": "https://emall.coway.com.my/ProductImages/e8f08c00-752f-4a72-844d-a54e37daf462/1/240x240/glaze.png", "ci": {}}, "Core Slim": {"img": "https://emall.coway.com.my/ProductImages/cc9302e6-fdfe-4881-bcc5-b37babee082e/1/240x240/core-slim-white.png", "ci": {"White": "https://emall.coway.com.my/ProductImages/cc9302e6-fdfe-4881-bcc5-b37babee082e/1/240x240/core-slim-white.png", "Gray": "https://emall.coway.com.my/ProductImages/8561e6f3-94ce-457a-a473-77865dd80bee/1/240x240/core-slim-gray.png"}}, "Core Plus": {"img": "https://emall.coway.com.my/ProductImages/ec48948e-5e2f-4edd-8531-58dd0edad5e3/1/240x240/core-plus.png", "ci": {}}, "Lucy Plus": {"img": "https://emall.coway.com.my/ProductImages/6dc84321-02e3-43e8-abc9-4d9bb6b3851e/1/240x240/lucy-plus.png", "ci": {}}, "Lombok 3": {"img": "https://emall.coway.com.my/ProductImages/67a5be7b-e151-44c3-9079-994677a451b6/1/240x240/lombok-3.jpg", "ci": {}}, "Storm 2": {"img": "https://emall.coway.com.my/ProductImages/f18d8c4d-f7d0-4eb5-a5da-389fbc5a66ad/1/240x240/storm-2.jpg", "ci": {}}, "Studio": {"img": "https://emall.coway.com.my/ProductImages/9b502336-eff4-4e13-99c6-ac4689181c2b/1/240x240/studio-white.png", "ci": {"White": "https://emall.coway.com.my/ProductImages/9b502336-eff4-4e13-99c6-ac4689181c2b/1/240x240/studio-white.png", "Beige": "https://emall.coway.com.my/ProductImages/58e15860-eac2-48d6-b551-19d8012c2f98/1/240x240/studio-beige.png"}}, "Suite": {"img": "https://emall.coway.com.my/ProductImages/6f51c08c-77e3-49cf-85cd-0ba40602cfea/1/240x240/suite-white.png", "ci": {"White": "https://emall.coway.com.my/ProductImages/6f51c08c-77e3-49cf-85cd-0ba40602cfea/1/240x240/suite-white.png", "Beige": "https://emall.coway.com.my/ProductImages/37594b88-f027-44f9-b721-dcc47def94ec/1/240x240/suite-beige.png"}}, "Atrium": {"img": "https://emall.coway.com.my/ProductImages/ac34611e-d910-44c0-b9b9-28e5c639f9b0/1/240x240/atrium-white.png", "ci": {"White": "https://emall.coway.com.my/ProductImages/ac34611e-d910-44c0-b9b9-28e5c639f9b0/1/240x240/atrium-white.png", "Gray": "https://emall.coway.com.my/ProductImages/99a8a5aa-d3df-4e61-a7f5-ba5955d27b33/1/240x240/atrium-gray.png", "Beige": "https://emall.coway.com.my/ProductImages/82f5db57-d480-4bc2-b822-802dc5dfc269/1/240x240/atrium-beige.png"}}, "Flowlet": {"img": "https://emall.coway.com.my/ProductImages/7dbc5bd0-b1b5-4b82-805e-182cade4f4d0/1/240x240/flowlet.png", "ci": {}}, "Flowlet Plus (Panel)": {"img": "https://emall.coway.com.my/ProductImages/7de1fc04-4760-4cf8-b8b3-3d0381a4d3b4/1/240x240/flowlet-plus-panel-round.png", "ci": {"Round": "https://emall.coway.com.my/ProductImages/7de1fc04-4760-4cf8-b8b3-3d0381a4d3b4/1/240x240/flowlet-plus-panel-round.png", "Elongated": "https://emall.coway.com.my/ProductImages/57c60e16-30c0-4478-b322-97c45d5e99c2/1/240x240/flowlet-plus-panel-elongated.png"}}, "Flowlet Plus (Remote)": {"img": "https://emall.coway.com.my/ProductImages/e5c74672-32d7-4477-ae7a-d920f965a361/1/240x240/flowlet-plus-remote-round.png", "ci": {"Round": "https://emall.coway.com.my/ProductImages/e5c74672-32d7-4477-ae7a-d920f965a361/1/240x240/flowlet-plus-remote-round.png", "Elongated": "https://emall.coway.com.my/ProductImages/ef2804f1-ba3a-4a43-a32c-7657fc9dc007/1/240x240/flowlet-plus-remote-elongated.png"}}, "Outdoor Filter": {"img": "https://emall.coway.com.my/ProductImages/d7e7f377-535e-4944-910c-b63881d1ede3/1/240x240/coway-outdoor-filter.png", "ci": {}}, "Berex Senno Plus": {"img": "https://emall.coway.com.my/ProductImages/036165bd-c4eb-4ce1-8d69-d4dc4042f09d/1/240x240/coway-berex-senno-plus.png", "ci": {}}, "Berex Senno": {"img": "https://emall.coway.com.my/ProductImages/e4f560ea-3df9-4b59-88ae-d6a3c5e94047/1/240x240/coway-berex-senno.png", "ci": {}}, "Pebble": {"img": "https://emall.coway.com.my/ProductImages/ebfc1727-f750-48dd-95d3-160fa3b33b57/1/240x240/pebble-hazy-blue.png", "ci": {"Hazy Blue": "https://emall.coway.com.my/ProductImages/ebfc1727-f750-48dd-95d3-160fa3b33b57/1/240x240/pebble-hazy-blue.png", "Terracotta Pink": "https://emall.coway.com.my/ProductImages/b4bd6469-edf6-436c-a2b2-fd7afe113ff3/1/240x240/pebble-terracotta-pink.png", "Sand Beige": "https://emall.coway.com.my/ProductImages/0c88e5fd-a79c-47be-8e77-eaa4916fbf25/1/240x240/pebble-sand-beige.png", "Mystic Grey": "https://emall.coway.com.my/ProductImages/8b8abf5f-2bc3-4ed3-9a95-5bbb5f7b41dc/1/240x240/pebble-mystic-grey.png"}}, "Coway Massage Chair": {"img": "https://emall.coway.com.my/ProductImages/94d89ea4-cbfb-4da8-9cc0-8e765e3f9788/1/240x240/coway-massage-chair.png", "ci": {}}, "Mine": {"img": "https://emall.coway.com.my/ProductImages/ed1db9d7-6a0b-4c66-9f27-7d0d9c1c036f/1/240x240/mine-ink-black.png", "ci": {"Ink Black": "https://emall.coway.com.my/ProductImages/ed1db9d7-6a0b-4c66-9f27-7d0d9c1c036f/1/240x240/mine-ink-black.png", "Champagne Beige": "https://emall.coway.com.my/ProductImages/3ecf4894-ce52-4c21-8fd4-c02fa4e58bde/1/240x240/mine-champagne-beige.png", "Rose Brown": "https://emall.coway.com.my/ProductImages/b0e24212-4a7b-4993-94ef-75bf2de52116/1/240x240/mine-rose-brown.png"}}, "Massage Bed (Standard)": {"img": "https://emall.coway.com.my/ProductImages/209b5910-5e06-4502-ade6-4e765d55553c/1/240x240/massage-bed-standard-ink-black.png", "ci": {}}, "Massage Bed (Premium)": {"img": "https://emall.coway.com.my/ProductImages/b38c539e-a00c-4a22-a0de-873f940b5e52/1/240x240/massage-bed-premium-ink-black.png", "ci": {"Ink Black": "https://emall.coway.com.my/ProductImages/b38c539e-a00c-4a22-a0de-873f940b5e52/1/240x240/massage-bed-premium-ink-black.png", "Champagne Beige": "https://emall.coway.com.my/ProductImages/cfa028ff-a59e-438d-a3db-eb9c05ae895e/1/240x240/massage-bed-premium-champagne-beige.png"}}, "Elite Mattress Queen": {"img": "https://emall.coway.com.my/ProductImages/8cf6d37e-81ee-4237-88ef-1a70aca543bd/1/240x240/elite-mattress-queen-soft-mattress-only.png", "ci": {"Soft": "https://emall.coway.com.my/ProductImages/8cf6d37e-81ee-4237-88ef-1a70aca543bd/1/240x240/elite-mattress-queen-soft-mattress-only.png", "Firm": "https://emall.coway.com.my/ProductImages/572d643d-dc60-4d29-a56e-001310f84e55/1/240x240/elite-mattress-queen-firm-mattress-only.png"}}, "Elite Mattress King": {"img": "https://emall.coway.com.my/ProductImages/3a867721-d41d-41cd-9d56-1824b2290005/1/240x240/elite-mattress-king-soft-mattress-only.png", "ci": {"Soft": "https://emall.coway.com.my/ProductImages/3a867721-d41d-41cd-9d56-1824b2290005/1/240x240/elite-mattress-king-soft-mattress-only.png", "Firm": "https://emall.coway.com.my/ProductImages/a75ed5ac-e5f4-4f2b-a461-672c718a6779/1/240x240/elite-mattress-king-firm-mattress-only.png"}}, "Prime II Mattress Queen": {"img": "https://emall.coway.com.my/ProductImages/c29d6b85-2c1b-4b62-b85b-d7e332376618/1/240x240/prime-ii-mattress-queen-soft-mattress-only.png", "ci": {"Soft": "https://emall.coway.com.my/ProductImages/c29d6b85-2c1b-4b62-b85b-d7e332376618/1/240x240/prime-ii-mattress-queen-soft-mattress-only.png", "Firm": "https://emall.coway.com.my/ProductImages/e521265b-17b9-4fd0-b4e5-386c3d9efa79/1/240x240/prime-ii-mattress-queen-firm-mattress-only.png"}}, "Prime II Mattress King": {"img": "https://emall.coway.com.my/ProductImages/59669466-60a2-4dd4-808b-0fe199471155/1/240x240/prime-ii-mattress-king-soft-mattress-only.png", "ci": {"Soft": "https://emall.coway.com.my/ProductImages/59669466-60a2-4dd4-808b-0fe199471155/1/240x240/prime-ii-mattress-king-soft-mattress-only.png", "Firm": "https://emall.coway.com.my/ProductImages/5a5e4e83-5a93-4fef-b7c8-61e9e1396297/1/240x240/prime-ii-mattress-king-firm-mattress-only.png"}}, "Prime Lite Mattress Queen": {"img": "https://emall.coway.com.my/ProductImages/aff3d31b-768a-419d-aed1-095ed19607b8/1/240x240/prime-lite-mattress-queen.png", "ci": {}}, "Prime Lite Mattress King": {"img": "https://emall.coway.com.my/ProductImages/167c7e3f-888d-4515-8632-8dedb21fd8fe/1/240x240/prime-lite-mattress-king.png", "ci": {}}, "Front Load Washer 12kg": {"img": "https://emall.coway.com.my/ProductImages/4ae30075-9940-404d-86f0-68f92692a639/1/240x240/front-load-washer-12kg.png", "ci": {}}, "Washer Dryer": {"img": "https://emall.coway.com.my/ProductImages/31083972-7f61-4970-8bc9-bc33f87fa3fa/1/240x240/washer-dryer.png", "ci": {}}, "Washer Dryer 12/9kg": {"img": "https://emall.coway.com.my/ProductImages/7a0d54ee-9932-461e-bbef-739f050f409c/1/240x240/washer-dryer-129kg.png", "ci": {}}, "Side-by-Side Refrigerator": {"img": "https://emall.coway.com.my/ProductImages/2f04bce7-6df0-44b3-ab44-cb17e95e33ba/1/240x240/side-by-side-refrigerator.png", "ci": {}}, "Multi-Door Refrigerator": {"img": "https://emall.coway.com.my/ProductImages/82906ac9-c364-44bb-a219-8b2665ff779e/1/240x240/multi-door-refrigerator.png", "ci": {}}};
+
+  /* PAKEJ: harga ikut kontrak dan servis (senarai harga consultant, Nov 2026) */
+  const pk = (sv, r) => { const o=[]; for(const k in r) r[k].forEach((v,i)=>{ if(v!=null) o.push([k, sv[i], v]); }); return o; };
+  const B2="2 bulan", B4="4 bulan", B6="6 bulan", B12="12 bulan", SS="Servis sendiri", TS="Tanpa servis";
+  const SS12="Servis sendiri (penapis dihantar selepas 12 bulan)", SS8="Servis sendiri (penapis dihantar selepas 8 bulan)", SS24="Servis sendiri (alat ganti dihantar selepas 2 tahun)";
+  const air24 = (a,b,c) => pk([B2,B4], {"3+2":a,"5+0":b,"7+0":c});
+  const tilam = (t,k) => ({v:{"Tilam sahaja":pk([B4,TS],t), "Tilam + katil":pk([B4,TS],k)}});
+  const PAKEJ = {
+    "Villaem 3": air24([131.44,120.84],[104,94],[84,74]),
+    "AIS": air24([169.60],[140],[120]),
+    "NeoN": pk([SS8,B4], {"3+2":[99.64,104.94],"5+0":[74,79],"7+0":[54,59]}),
+    "Dazzie": pk([SS8,B4], {"3+2":[120.84,126.14],"5+0":[94,99],"7+0":[74,79]}),
+    "Neo Plus": air24([115.54,104.94],[89,79],[69,59]),
+    "Ombak": air24([148.40,137.80],[120,110],[100,90]),
+    "Cinnamon": air24([86.92,76.32],[62,52],[42,32]),
+    "Glaze": air24([132.50,121.90],[105,95],[85,75]),
+    "Core Slim": air24([136.74],[109],[89]),
+    "Core Plus": air24([151.58,140.98],[123,113],[103,93]),
+    "Lucy Plus": air24([201.40],[170],[150]),
+    "Lombok 3": pk([B2,B4,SS12], {"3+2":[127.20,116.60,111.30],"5+0":[100,90,85],"7+0":[80,70,65]}),
+    "Storm 2": pk([B2,B4,SS12], {"3+2":[116.60,106.00,100.70],"5+0":[90,80,75],"7+0":[70,60,55]}),
+    "Studio": pk([SS12,B4], {"3+2":[94.34,99.64],"5+0":[69,74],"7+0":[49,54]}),
+    "Suite": pk([SS12,B4], {"3+2":[106.00,111.30],"5+0":[80,85],"7+0":[60,65]}),
+    "Atrium": air24([147.34,136.74],[119,109],[99,89]),
+    "Noble 2": pk([SS12,B4], {"3+2":[137.80,143.10],"5+0":[110,115],"7+0":[90,95]}),
+    "Outdoor Filter": pk([B6], {"3+2":[106],"5+0":[80],"7+0":[60]}),
+    "Mine": pk([B12,TS], {"5+0":[120,105]}),
+    "Coway Massage Chair": pk([B12,TS], {"5+0":[145,125]}),
+    "Prime II Mattress Queen": tilam({"5+0":[120,90],"7+0":[100,70],"9+0":[85]}, {"5+0":[169,139],"7+0":[139,109],"9+0":[124]}),
+    "Prime II Mattress King": tilam({"5+0":[135,105],"7+0":[115,85],"9+0":[100]}, {"5+0":[189,159],"7+0":[159,129],"9+0":[144]}),
+    "Prime Lite Mattress Queen": tilam({"5+0":[99,69],"7+0":[79,49],"9+0":[64]}, {"5+0":[139,109],"7+0":[109,79],"9+0":[95]}),
+    "Prime Lite Mattress King": tilam({"5+0":[115,85],"7+0":[95,65],"9+0":[80]}, {"5+0":[159,129],"7+0":[129,99],"9+0":[115]}),
+    "F-Series Aircond 1.0 HP": pk([B6], {"5+0":[100],"7+0":[80]}),
+    "F-Series Aircond 1.5 HP": pk([B6], {"5+0":[110],"7+0":[90]}),
+    "P-Series Aircond 1.5 HP": pk([B6], {"5+0":[110],"7+0":[90]}),
+    "P-Series Aircond 2.0 HP": pk([B6], {"5+0":[129],"7+0":[109]}),
+    "Washer Dryer": pk([B6,SS24], {"3+2":[126.14,120.84],"5+0":[99,94],"7+0":[79,74]}),
+    "Multi-Door Refrigerator": pk([B6,SS12], {"3+2":[147.34,142.04],"5+0":[119,114],"7+0":[99,94]}),
+    "Side-by-Side Refrigerator": pk([B6,SS12], {"3+2":[131.44,126.14],"5+0":[104,99],"7+0":[84,79]})
+  };
+  products.forEach(p=>{
+    const x = PAKEJ[p.n]; if(!x) return;
+    p.pk = Array.isArray(x) ? {"":x} : x.v;
+    if(!p.promo) p.m = Math.min(...Object.values(p.pk).flat().map(r=>r[2]));
+  });
+  function pkgHTML(p){
+    const best = p.promo ? -1 : p.m;
+    const parts = Object.entries(p.pk).map(([v,rows])=>{
+      let prev = null;
+      const tr = rows.map(r=>{ const k1 = r[0]!==prev; prev = r[0];
+        return `<tr class="${k1?"k1":""}${r[2]===best?" best":""}"><td>${k1?esc(r[0]):""}</td><td>${esc(r[1])}</td><td>${rm(r[2])}</td></tr>`; }).join("");
+      return (v?`<h5>${esc(v)}</h5>`:"") + `<table><thead><tr><th>Kontrak</th><th>Servis</th><th>Sebulan</th></tr></thead><tbody>${tr}</tbody></table>`;
+    }).join("");
+    const n = [];
+    if(Object.values(p.pk).flat().some(r=>r[0]==="3+2")) n.push("Harga pakej 3+2 tertakluk kepada 8% SST.");
+    if(p.promo) n.push("Ini harga biasa. Harga promosi semasa tertera di atas.");
+    return `<h4>Pilihan pakej</h4>${parts}<p class="pn">${esc(n.join(" "))}</p>`;
+  }
   products.forEach(p=>{ const x=IMGS[p.n]; if(x){ if(!(p.img||"").startsWith("data:")) p.img=x.img; p.ci=x.ci; } });
   const srcText = "Harga dari e-mall Coway (November 2026). Ciri-ciri diringkaskan daripada laman produk Coway Malaysia. Sahkan harga dan spesifikasi terkini sebelum membuat keputusan.";
   const esc = t => String(t).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -724,7 +795,7 @@
           <h3>${esc(p.n)}</h3>
           <div class="kind">${esc(p.t)}</div>
           ${p.col && p.col.length>1 ? `<div class="cols">${p.col.length} pilihan: ${esc(p.col.join(", "))}</div>` : ""}
-          <div class="price">${p.promo?"Dari ":""}${rm(p.m)} <small>sebulan${p.promo?" (promosi)":""}</small></div>
+          <div class="price">${(p.promo||p.pk)?"Dari ":""}${rm(p.m)} <small>sebulan${p.promo?" (promosi)":""}</small></div>
           <span class="more">Lihat butiran</span>
         </div>
       </button>`).join("");
@@ -769,8 +840,10 @@
         if(src) document.getElementById("m-pic").innerHTML = pic(p,"m",src);
       });
     }
+    const pg = document.getElementById("m-pkg");
+    pg.hidden = !p.pk; pg.innerHTML = p.pk ? pkgHTML(p) : "";
     const notes = [];
-    if(p.set) notes.push("Set tilam bersama katil, dan pakej kontrak 7+0 atau 9+0, juga ada. Tanya untuk harga set.");
+    if(p.set && !p.pk) notes.push("Set tilam bersama katil, dan pakej kontrak 7+0 atau 9+0, juga ada. Tanya untuk harga set.");
     if(p.promo) notes.push("Harga ini harga promosi semasa. Tanya untuk tempoh promosi dan bayaran selepasnya.");
     const ft = p.f.length ? p.f : ["Tanya consultant untuk spesifikasi penuh model ini."];
     document.getElementById("m-feat").innerHTML = ft.concat(notes).map(x=>`<li>${esc(x)}</li>`).join("");
