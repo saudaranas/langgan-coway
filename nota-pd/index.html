@@ -24,7 +24,7 @@ main{padding:18px 16px 40px}
 .count{font-size:14px;color:var(--muted);margin:0 0 10px}
 .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px}
 .card .cat{font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--blue)}
-.card h2{font-size:19px;line-height:1.3;margin:4px 0 4px;color:var(--navy)}
+.card h2{font-size:18px;line-height:1.3;margin:2px 0 4px;color:var(--navy)}
 .card .meta{font-size:13.5px;color:var(--muted);margin-bottom:8px}
 .card .desc{margin:0 0 10px;font-size:15px}
 .topics{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
@@ -34,6 +34,10 @@ main{padding:18px 16px 40px}
 .btn.read{background:var(--navy);color:#fff}
 .btn.pdf{background:#fff7ec;color:#9a5a0c;border:1px solid #f3d3a8}
 .new{display:inline-block;background:var(--orange);color:#fff;font-size:11px;font-weight:700;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+.head{display:flex;gap:12px;align-items:flex-start;margin-bottom:8px}
+.ico{flex:none;width:44px;height:54px;border-radius:6px;background:#c0392b;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;position:relative}
+.ico::after{content:"";position:absolute;top:0;right:0;border-style:solid;border-width:0 12px 12px 0;border-color:transparent var(--panel) #e57367 transparent}
+.web{display:block;margin-top:10px;font-size:14px;color:var(--blue);text-decoration:none;text-align:center}
 .empty{text-align:center;color:var(--muted);padding:30px 10px}
 footer{text-align:center;color:var(--muted);font-size:13px;padding:10px 20px 30px}
 </style>
@@ -42,7 +46,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:10px 20px 30p
 <header class="hero"><div class="wrap">
   <div class="tag">Team PD · Coway</div>
   <h1>Portal Belajar Team PD</h1>
-  <p>Nota training, skrip dan panduan jualan untuk team. Baca terus atau muat turun PDF.</p>
+  <p>Nota training, skrip dan panduan jualan untuk team dalam bentuk PDF.</p>
 </div></header>
 
 <main class="wrap">
@@ -60,7 +64,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:10px 20px 30p
    SENARAI NOTA
    Nak tambah nota baru:
    1. Buat folder baru dalam /nota-pd/ (contoh: /nota-pd/skrip-closing/)
-      dan letak index.html + fail PDF di dalamnya.
+      dan letak fail PDF di dalamnya (index.html versi web adalah pilihan).
    2. Tambah satu objek di BAHAGIAN ATAS senarai ini (nota terbaru di atas).
    ============================================================ */
 const NOTA = [
@@ -71,8 +75,9 @@ const NOTA = [
     sumber: "EC Team Academy · Wangsa Maju, KL",
     ringkasan: "Sales Process, Value Proposition Canvas, Sales Funnel R-E-A → BO → CTA, 5 tahap awareness, closing, handle rejection dan skrip call lead eTrust.",
     topik: ["Sales Process", "VPC", "Sales Funnel", "Awareness", "Closing", "Rejection", "Skrip eTrust"],
-    link: "ultimate-sales-framework/",
-    pdf: "ultimate-sales-framework/nota-ultimate-sales-framework.pdf"
+    mukaSurat: 9,
+    pdf: "ultimate-sales-framework/nota-ultimate-sales-framework.pdf",
+    web: "ultimate-sales-framework/"   // pilihan: versi web untuk baca di telefon
   }
 ];
 
@@ -102,15 +107,21 @@ function render(){
   document.getElementById("count").textContent = rows.length + " nota";
   document.getElementById("list").innerHTML = rows.length ? rows.map(n => `
     <article class="card">
-      <div class="cat">${esc(n.kategori)}</div>
-      <h2>${esc(n.tajuk)}${isNew(n.tarikh) ? '<span class="new">BARU</span>' : ''}</h2>
-      <div class="meta">${fmt(n.tarikh)} · ${esc(n.sumber)}</div>
+      <div class="head">
+        <div class="ico">PDF</div>
+        <div>
+          <div class="cat">${esc(n.kategori)}</div>
+          <h2>${esc(n.tajuk)}${isNew(n.tarikh) ? '<span class="new">BARU</span>' : ''}</h2>
+          <div class="meta">${fmt(n.tarikh)}${n.mukaSurat ? ' · ' + n.mukaSurat + ' muka surat' : ''}<br>${esc(n.sumber)}</div>
+        </div>
+      </div>
       <p class="desc">${esc(n.ringkasan)}</p>
       <div class="topics">${n.topik.map(t => `<span>${esc(t)}</span>`).join("")}</div>
       <div class="actions">
-        <a class="btn read" href="${esc(n.link)}">Baca nota</a>
-        ${n.pdf ? `<a class="btn pdf" href="${esc(n.pdf)}" download>⬇ PDF</a>` : ""}
+        <a class="btn read" href="${esc(n.pdf)}" target="_blank" rel="noopener">Buka PDF</a>
+        <a class="btn pdf" href="${esc(n.pdf)}" download>⬇ Muat turun</a>
       </div>
+      ${n.web ? `<a class="web" href="${esc(n.web)}">Atau baca versi web →</a>` : ""}
     </article>`).join("") : '<div class="empty">Tiada nota dijumpai.</div>';
 }
 render();
