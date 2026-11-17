@@ -992,10 +992,12 @@
     await bot(`Terima kasih ${A.nama}! 🙏 Ini ringkasan anda:\n\nWhatsApp: +${A.wa}\nProduk: ${A.produk}\nIsi rumah: ${A.rumah}\nLokasi: ${A.lokasi}\nBayaran: ${A.bayar}\nMasa dihubungi: ${A.masa}`);
     if(daftar){
       await bot("Langkah seterusnya 👇\n\n1. Tekan butang di bawah untuk hantar ringkasan ini ke WhatsApp saya.\n2. Saya sahkan pakej, promosi dan tarikh pemasangan dengan anda.\n3. Penghantaran dan pemasangan percuma 🚚\n4. Pendaftaran dibuat melalui sistem rasmi Coway. Salinan IC hanya diminta di WhatsApp, digunakan untuk pendaftaran Coway sahaja, dan dipadam selepas itu.\n\nUntuk keselamatan anda, jangan hantar IC atau nombor kad bank di chat ini.");
+      await bot("📝 Dokumen untuk pendaftaran (sediakan dulu, hantar di WhatsApp sahaja):\n\n1️⃣ Gambar IC bahagian DEPAN sahaja. Tulis atau palang \"FOR COWAY ONLY\" di sebelah kanan IC. Pastikan nombor IC dan nama masih jelas.\n\n2️⃣ Kad debit/kredit untuk potongan bulanan: 6 digit pertama dan 4 digit terakhir SAHAJA. Jangan hantar nombor penuh, CVV atau OTP.\n\n3️⃣ Gambar tandatangan anda di atas kertas putih, dengan tulisan \"Coway use only\" di bawahnya.");
+      await bot("Tip 💡 Untuk palang IC, ambil gambar IC, tekan Edit di galeri telefon, pilih Teks atau Lukis, dan tulis FOR COWAY ONLY. Senang je 😊");
     } else {
       await bot("Tekan butang di bawah untuk hantar ringkasan ini ke WhatsApp saya. Saya akan balas dengan sebut harga dan promosi terkini 😊\n\nUntuk keselamatan anda, jangan hantar IC atau nombor kad bank di chat ini. Pendaftaran dibuat melalui sistem rasmi Coway selepas anda bersetuju.");
     }
-    const text = `Assalamualaikum, saya ${A.nama} (+${A.wa}).\n\n` + (daftar ? `Saya nak daftar pakej ini:\n${pakej}\n` : `Saya berminat dengan: ${A.produk}\n`) + `Isi rumah: ${A.rumah}\nLokasi: ${A.lokasi}\nPilihan bayaran: ${A.bayar}\nMasa sesuai dihubungi: ${A.masa}\n\n` + (daftar ? "Apa langkah seterusnya untuk pendaftaran?" : "Boleh beri sebut harga dan promosi terkini?");
+    const text = `Assalamualaikum, saya ${A.nama} (+${A.wa}).\n\n` + (daftar ? `Saya nak daftar pakej ini:\n${pakej}\n` : `Saya berminat dengan: ${A.produk}\n`) + `Isi rumah: ${A.rumah}\nLokasi: ${A.lokasi}\nPilihan bayaran: ${A.bayar}\nMasa sesuai dihubungi: ${A.masa}\n\n` + (daftar ? "Saya akan sediakan dokumen pendaftaran. Apa langkah seterusnya?" : "Boleh beri sebut harga dan promosi terkini?");
     const a = document.createElement("a"); a.className="btn btn-wa sendwa"; a.target="_blank"; a.rel="noopener";
     a.href = "https://wa.me/" + WA + "?text=" + encodeURIComponent(text);
     a.addEventListener("click", ()=>logLead("klik_whatsapp", {selesai:"Ya", klikWA:"Ya"}));
