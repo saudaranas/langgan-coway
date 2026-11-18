@@ -271,6 +271,8 @@
   .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
   @keyframes b{0%,60%,100%{opacity:.3}30%{opacity:1}}
   .bub img{display:block;width:100%;max-width:280px;border-radius:8px;border:1px solid #d5dbe0;margin-bottom:6px;cursor:zoom-in}
+  .topbar.wait>*{visibility:hidden}
+  #pop-img.wait{visibility:hidden}
   .choices{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;margin-top:4px}
   .choices button{background:#fff;border:1px solid #c9d4d1;color:var(--wa-dark);border-radius:999px;padding:7px 12px;font-size:14.5px;font-weight:600;cursor:pointer}
   .choices button:hover{background:#f0f7f5}
@@ -350,7 +352,7 @@
   <symbol id="send" viewBox="0 0 24 24"><path d="M3 20.5 21.5 12 3 3.5l.01 6.6L15 12 3.01 13.9z"/></symbol>
 </svg>
 
-<button type="button" class="topbar" id="topbar"><span id="tbText">Nikmati RM20/bulan + 2 bulan percuma</span><span class="go">Claim</span></button>
+<button type="button" class="topbar wait" id="topbar"><span id="tbText">Promosi terkini Coway, claim sekarang</span><span class="go">Claim</span></button>
 <header>
   <div class="wrap nav">
     <a class="brand" href="#"><b>Consultant Coway</b><small>Penasihat produk berdaftar · Malaysia</small></a>
@@ -593,8 +595,11 @@
   let CONS = DEFAULT, WA = DEFAULT.wa;
   const UID = (new URLSearchParams(location.search).get("id")||"").toLowerCase().replace(/[^a-z0-9-]/g,"").slice(0,30);
   /* profil (ejen / utama) + topbar dari dashboard admin. Simpanan sementara supaya page laju. */
+  let cfgOk = false;
   function applyCfg(r){
     if(!r || !r.ok) return;
+    cfgOk = true;
+    document.getElementById("topbar").classList.remove("wait");
     if(r.user && r.user.wa){ CONS = Object.assign({}, r.user, {foto: r.user.foto || (r.user.id==="utama" ? DEFAULT.foto : "")}); WA = r.user.wa; }
     if(r.topbar){
       const tb = document.getElementById("topbar");
@@ -616,6 +621,7 @@
       applyCfg(r);
       try{ localStorage.setItem(CFG_KEY, JSON.stringify(r)); }catch(e){}
     }catch(e){}
+    document.getElementById("topbar").classList.remove("wait");
   })();
   const newSid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
   let SID = newSid();
@@ -1056,9 +1062,13 @@
   function setPop(){
     document.getElementById("pop-wa").href = "https://wa.me/" + WA + "?text=" + encodeURIComponent("Saya nak claim 2 bulan percuma & voucher RM20/bulan");
     const im = document.getElementById("pop-img");
-    if(CONS.foto) im.src = CONS.foto; else im.removeAttribute("src");
+    if(!cfgOk && UID){ im.removeAttribute("src"); return; }
+    if(!CONS.foto){ im.removeAttribute("src"); return; }
+    if(im.getAttribute("src") === CONS.foto) return;
+    im.classList.add("wait"); im.src = CONS.foto;
   }
-  document.getElementById("pop-img").onerror = function(){ this.removeAttribute("src"); };
+  document.getElementById("pop-img").onload = function(){ this.classList.remove("wait"); };
+  document.getElementById("pop-img").onerror = function(){ this.classList.remove("wait"); this.removeAttribute("src"); };
   setPop(); consReady.then(setPop);
   /* menu telefon */
   const burger = document.getElementById("burger"), menu = document.getElementById("menu");
