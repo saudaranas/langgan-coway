@@ -40,6 +40,7 @@
   .ag h3{font-size:16px}
   .ag .meta{color:var(--muted);font-size:13.5px}
   .ag .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .ag .side{max-width:440px}.ag .acts{justify-content:flex-end}
   .pill{display:inline-block;font-size:12px;font-weight:600;border-radius:999px;padding:2px 9px;margin-left:6px;vertical-align:2px}
   .pill.Aktif{background:#e3f6ea;color:#17703a}
   .pill.Menunggu{background:#fff4dc;color:var(--amber)}
@@ -180,6 +181,10 @@
       <div class="setgrid">
         <div class="setcard">
           <h2>Profil anda</h2>
+          <p class="hint" style="margin-bottom:4px">Link anda:</p>
+          <div class="link">🌐 <span id="myWeb"></span></div> <button class="btn ghost sm" type="button" id="cpWeb">Salin</button><br>
+          <div class="link">💬 <span id="myChat"></span></div> <button class="btn ghost sm" type="button" id="cpChat">Salin</button>
+          <button class="btn ghost sm" type="button" id="cpAyat">Salin ayat promosi</button>
           <p class="hint">Dipaparkan pada website utama (tanpa ?id=), popup voucher dan chatbot. Lead dan klik WhatsApp akan pergi ke nombor ini.</p>
           <div class="fotorow">
             <div class="fotoprev" id="setFotoPrev"></div>
@@ -360,6 +365,10 @@
   let setFoto = "";
   function renderSettings(){
     const st = DATA.settings || {};
+    $("myWeb").textContent = DATA.site || "https://langgancoway.store/"; $("myChat").textContent = chatLink("");
+    $("cpWeb").onclick = () => copy($("myWeb").textContent, "Link website disalin.");
+    $("cpChat").onclick = () => copy(chatLink(""), "Link chatbot disalin.");
+    $("cpAyat").onclick = () => copy(affAyat(chatLink("")), "Ayat promosi disalin (dengan link chatbot).");
     $("setNama").value = st.nama || ""; $("setWa").value = st.wa ? "0" + String(st.wa).replace(/^60/, "") : "";
     $("setTb").value = st.topbar || ""; $("setTbOn").checked = st.topbarOn !== "0";
     setFoto = ""; showFoto(st.foto); tbPreview();
@@ -410,13 +419,14 @@
           <h3>${esc(x.nama)} ${statusPill(x.status)}${dupOf(x) ? `<span class="dup">Mungkin berganda</span>` : ""}</h3>
           <div class="meta">+${esc(x.wa)} · ${x.tg ? "@" + esc(x.tg) : "tiada Telegram"} · ${x.chatId ? "✅ Telegram bersambung" : "⚠️ Telegram belum disambung"}</div>
           <div class="meta">${leadCount(x.id)} lead · daftar ${esc(x.tarikh)} (${esc(x.sumber)})</div>
-          <div class="link">${esc(x.link)}</div>
+          <div class="link">🌐 ${esc(x.link)}</div><br><div class="link">💬 ${esc(chatLink(x.id))}</div>
         </div>
         <div class="side">
           <div class="acts">
             ${x.status === "Menunggu" ? `<button class="btn sm" data-act="approve" data-id="${esc(x.id)}">Luluskan</button>` : ""}
             <button class="btn ghost sm" data-act="onboard" data-id="${esc(x.id)}">Mesej onboarding</button>
-            <button class="btn ghost sm" data-act="copy" data-id="${esc(x.id)}">Salin link</button>
+            <button class="btn ghost sm" data-act="copy" data-id="${esc(x.id)}">Salin link website</button>
+            <button class="btn ghost sm" data-act="chat" data-id="${esc(x.id)}">Salin link chatbot</button>
             <button class="btn ghost sm" data-act="ayat" data-id="${esc(x.id)}">Salin ayat promosi</button>
             ${!x.chatId ? `<button class="btn ghost sm" data-act="tg" data-id="${esc(x.id)}">Sambung Telegram</button>` : ""}
             <button class="btn ghost sm" data-act="edit" data-id="${esc(x.id)}">Edit</button>
@@ -433,9 +443,10 @@
     const a = DATA.agents.find(x => x.id === b.dataset.id); if(!a) return;
     const act = b.dataset.act;
     if(act === "copy"){ copy(a.link, "Link " + a.nama + " disalin."); return; }
+    if(act === "chat"){ copy(chatLink(a.id), "Link chatbot " + a.nama + " disalin."); return; }
     if(act === "edit"){ openForm(a); return; }
     if(act === "onboard"){ openOnboard(a); return; }
-    if(act === "ayat"){ copy(affAyat(a.link), "Ayat promosi " + a.nama + " disalin (dengan link unik)."); return; }
+    if(act === "ayat"){ copy(affAyat(chatLink(a.id)), "Ayat promosi " + a.nama + " disalin (dengan link chatbot)."); return; }
     if(act === "del"){
       const n = leadCount(a.id);
       if(!confirm(`Padam ejen ini?\n\n${a.nama}\n+${a.wa}\nID: ${a.id}\n${n} lead\n\nLink ${a.link} akan berhenti berfungsi. Lead lama kekal dalam Sheet. Tindakan ini tidak boleh dibatalkan.`)) return;
@@ -458,6 +469,7 @@
 
   /* mesej onboarding */
   let obAgent = null, obType = "daftar", obKind = "ejen";
+  const chatLink = id => (DATA.site || "https://langgancoway.store/") + "chat" + (id ? "?id=" + id : "");
   function affAyat(link){
     return `Tengah cari penapis air, penapis udara, tilam atau aircond? 🏠
 
@@ -536,15 +548,19 @@ Ada soalan, WhatsApp saya terus ya 😊`;
 🔗 *Link website anda:*
 ${a.link}
 
+💬 *Link terus ke chatbot:*
+${chatLink(a.id)}
+Prospek terus masuk chat (skrin penuh): pilih produk, lihat pakej & harga, kira voucher RM20, sampai arahan hantar dokumen. Sesuai untuk WhatsApp Status, iklan dan balas DM.
+
 *Cara ia berfungsi:*
 ✅ Prospek buka link anda → nampak popup promosi dengan gambar anda
 ✅ Prospek tekan "Claim" atau isi chatbot → terus ke WhatsApp anda
 ✅ Bila prospek isi nama & nombor, anda dapat notifikasi di Telegram serta-merta
 ✅ Bila prospek habis isi chat, anda dapat ringkasan lengkap (produk, lokasi, bajet) + butang WhatsApp
 
-*Ayat siap untuk kongsi* (salin terus, link anda dah ada):
+*Ayat siap untuk kongsi* (salin terus, link chatbot anda dah ada):
 ──────────
-${affAyat(a.link)}
+${affAyat(chatLink(a.id))}
 ──────────
 
 *Cara dapatkan lead:*

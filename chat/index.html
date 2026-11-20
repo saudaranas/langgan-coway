@@ -16,8 +16,9 @@
 <meta name="twitter:card" content="summary_large_image">
 <script>
   (function(){
-    var q = new URLSearchParams(location.search), r = (q.get("ref") || "").toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 30);
-    location.replace("/?mode=chat" + (r ? "&ref=" + r : ""));
+    var q = new URLSearchParams(location.search), c = function(k){ return (q.get(k) || "").toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 30); };
+    var i = c("id"), r = c("ref");
+    location.replace("/?mode=chat" + (i ? "&id=" + i : r ? "&ref=" + r : ""));
   })();
 </script>
 </head>
