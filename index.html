@@ -277,6 +277,11 @@
   /* chat window (WhatsApp style) */
   .chat{position:fixed;right:18px;bottom:18px;z-index:60;width:min(380px,calc(100vw - 24px));height:min(620px,calc(100vh - 36px));background:var(--wa-bg);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.28);display:none;flex-direction:column;overflow:hidden}
   .chat.open{display:flex}
+  body.chatonly{background:var(--wa-bg)}
+  body.chatonly > :not(#chat):not(svg):not(script){display:none!important}
+  body.chatonly .chat{inset:0;right:auto;bottom:auto;width:100%;height:100dvh;max-height:none;border-radius:0;box-shadow:none}
+  @media (min-width:700px){ body.chatonly .chat{left:50%;transform:translateX(-50%);width:min(560px,100%);box-shadow:0 0 0 1px rgba(0,0,0,.06)} body.chatonly{background:#e9edef} }
+  body.chatonly #cx{display:none}
   .chat-top{background:var(--wa-dark);color:#fff;display:flex;align-items:center;gap:12px;padding:12px 12px 12px 16px}
   .ava{width:40px;height:40px;border-radius:50%;background:#dfe7e5;color:var(--wa-dark);display:grid;place-items:center;font-weight:700}
   .ava{overflow:hidden;background:#009dde}
@@ -618,6 +623,20 @@
   const DEFAULT = {id:"utama", wa:"60167388358", foto:"data:image/webp;base64,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"};
   let CONS = DEFAULT, WA = DEFAULT.wa;
   const UID = (new URLSearchParams(location.search).get("id")||"").toLowerCase().replace(/[^a-z0-9-]/g,"").slice(0,30);
+  /* affiliate: ?ref=ID disimpan 30 hari dalam browser. Lead affiliate pergi ke consultant utama. */
+  const REF = (function(){
+    if(UID) return "";
+    const clean = v => String(v||"").toLowerCase().replace(/[^a-z0-9-]/g,"").slice(0,30);
+    const q = clean(new URLSearchParams(location.search).get("ref"));
+    try{
+      if(q){ localStorage.setItem("aff_ref", JSON.stringify({r:q, t:Date.now()})); return q; }
+      const o = JSON.parse(localStorage.getItem("aff_ref")||"null");
+      if(o && o.r && Date.now() - o.t < 30*86400000) return clean(o.r);
+    }catch(e){ return q; }
+    return "";
+  })();
+  const CHAT_ONLY = new URLSearchParams(location.search).get("mode") === "chat";
+  if(CHAT_ONLY) document.body.classList.add("chatonly");
   /* profil (ejen / utama) + topbar dari dashboard admin. Simpanan sementara supaya page laju. */
   let cfgOk = false;
   function applyCfg(r){
@@ -663,14 +682,14 @@
   const newSid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
   let SID = newSid();
   function logLead(step, extra){
-    saveLead(Object.assign({sid:SID, step:step, page:location.href, uid:CONS.id,
+    saveLead(Object.assign({sid:SID, step:step, page:location.href, uid:CONS.id, ref:REF,
       nama:A.nama, telefon:A.wa, wa:A.wa, produk:A.produk, rumah:A.rumah, lokasi:A.lokasi, bayar:A.bayar, masa:A.masa}, extra||{}));
   }
   /* statistik: hantar event ringkas ke Google Sheet */
   function track(ev){
     if(!GAS_URL) return;
     consReady.then(()=>{
-      try{ fetch(GAS_URL,{method:"POST",mode:"no-cors",keepalive:true,headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({ev:ev,uid:CONS.id})}).catch(()=>{}); }catch(e){}
+      try{ fetch(GAS_URL,{method:"POST",mode:"no-cors",keepalive:true,headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({ev:ev,uid:REF ? "af-" + REF : CONS.id})}).catch(()=>{}); }catch(e){}
     });
   }
   function saveLead(d){
@@ -980,6 +999,18 @@
     const f = waitText; waitText = null; inp.value = ""; f(v);
   });
 
+  /* voucher RM20 ikut kategori & kontrak (Homecare: tilam, aircond, urutan) */
+  const HC = ["tilam","aircond","urut"];
+  function voucherBulan(c, k){
+    const hc = HC.indexOf(c) !== -1;
+    if(k === "7+0") return hc ? 5 : 7;
+    if(k === "5+0") return hc ? 3 : 5;
+    return 0;
+  }
+  function voucherTeks(c, k){
+    const n = voucherBulan(c, k);
+    return n ? `🎁 Promo voucher: bayar RM20 sebulan sahaja untuk ${n} bulan pertama.` : "🎁 Promo voucher RM20 untuk kontrak ini saya sahkan di WhatsApp.";
+  }
   let run = 0;
   async function flow(pre){
     const my = ++run;
@@ -1017,6 +1048,9 @@
     }
     if(P) A.produk = P.n;
     logLead("produk");
+    if(P && P.f && P.f.length){
+      await bot(`Sedikit info tentang ${P.n} 👇\n\n` + P.f.slice(0,4).map(x=>"✅ " + x).join("\n"));
+    }
     await bot((P ? `${P.n}, pilihan yang bagus! 👍 ` : "Takpe, saya boleh bantu cadangkan 👍 ") + "Rumah anda berapa orang?");
     A.rumah = await choose(["1–2 orang","3–4 orang","5 orang ke atas"]); logLead("rumah");
     await bot(A.rumah.startsWith("5") ? "Wah, rumah meriah! 😄 Noted." : "Baik, noted 👌");
@@ -1036,6 +1070,7 @@
       } else rows = P.pk[vs[0]];
       const ks = [...new Set(rows.map(r=>r[0]))];
       await bot(`Sekarang kita pilih pakej 📋 Untuk ${P.n}, ada ${ks.length} pilihan tempoh kontrak. Tip: kontrak lebih panjang, bulanan lebih ringan 😉` + (P.promo ? " Harga di bawah harga biasa ya. Harga promosi semasa saya sahkan di WhatsApp 🎉" : ""));
+      if(ks.some(k=>voucherBulan(P.c,k))) await bot("Promo semasa 🎁 Voucher RM20: bayar RM20 sebulan sahaja untuk beberapa bulan pertama. Tempohnya ikut kontrak: " + ks.filter(k=>voucherBulan(P.c,k)).map(k=>`${k} = ${voucherBulan(P.c,k)} bulan`).join(", ") + ".");
       const kp = await choose(ks.map(k=>`${k} (dari ${rm(Math.min(...rows.filter(r=>r[0]===k).map(r=>r[2])))})`));
       const k = kp.split(" ")[0];
       const kr = rows.filter(r=>r[0]===k);
@@ -1045,9 +1080,10 @@
         const sp = await choose(kr.map(x=>`${x[1]}: ${rm(x[2])}`));
         r = kr.find(x=>sp.startsWith(x[1]+":"));
       }
-      pakej = `${P.n}${vn?" ("+vn+")":""}, kontrak ${r[0]}, servis ${r[1]}, ${rm(r[2])} sebulan`;
+      const vb = voucherBulan(P.c, r[0]);
+      pakej = `${P.n}${vn?" ("+vn+")":""}, kontrak ${r[0]}, servis ${r[1]}, ${rm(r[2])} sebulan` + (vb ? `, voucher RM20 x ${vb} bulan` : "");
       A.produk = pakej; logLead("pakej");
-      await bot(`Pakej pilihan anda:\n\n${P.n}${vn?" ("+vn+")":""}\nKontrak: ${r[0]}\nServis: ${r[1]}\nSewa: ${rm(r[2])} sebulan (lebih kurang ${rm(r[2]/30)} sehari)` + (r[0]==="3+2" ? "\n\nHarga pakej 3+2 tertakluk kepada 8% SST." : "") + "\n\n🚚 Penghantaran dan pemasangan PERCUMA!");
+      await bot(`Pakej pilihan anda:\n\n${P.n}${vn?" ("+vn+")":""}\nKontrak: ${r[0]}\nServis: ${r[1]}\nSewa: ${rm(r[2])} sebulan (lebih kurang ${rm(r[2]/30)} sehari)` + (r[0]==="3+2" ? "\n\nHarga pakej 3+2 tertakluk kepada 8% SST." : "") + "\n\n" + voucherTeks(P.c, r[0]) + (vb ? ` Selepas itu ${rm(r[2])} sebulan.` : "") + "\n🚚 Penghantaran dan pemasangan PERCUMA!");
       await bot("Pakej ni nampak sesuai untuk anda 😊 Nak saya terus proses pendaftaran?");
       daftar = (await choose(["Ya, saya nak daftar","Saya nak tanya dulu"])).startsWith("Ya");
       await bot(daftar ? "Alhamdulillah, terima kasih! 🎉 Sikit lagi je." : "Boleh, tak ada masalah 😊 Saya sedia jawab apa-apa soalan.");
@@ -1066,7 +1102,7 @@
     } else {
       await bot("Tekan butang di bawah untuk hantar ringkasan ini ke WhatsApp saya. Saya akan balas dengan sebut harga dan promosi terkini 😊\n\nUntuk keselamatan anda, jangan hantar IC atau nombor kad bank di chat ini. Pendaftaran dibuat melalui sistem rasmi Coway selepas anda bersetuju.");
     }
-    const text = `Assalamualaikum, saya ${A.nama} (+${A.wa}).\n\n` + (daftar ? `Saya nak daftar pakej ini:\n${pakej}\n` : `Saya berminat dengan: ${A.produk}\n`) + `Isi rumah: ${A.rumah}\nLokasi: ${A.lokasi}\nPilihan bayaran: ${A.bayar}\nMasa sesuai dihubungi: ${A.masa}\n\n` + (daftar ? "Saya akan sediakan dokumen pendaftaran. Apa langkah seterusnya?" : "Boleh beri sebut harga dan promosi terkini?");
+    const text = `Assalamualaikum, saya ${A.nama} (+${A.wa}).\n\n` + (daftar ? `Saya nak daftar pakej ini:\n${pakej}\n` : `Saya berminat dengan: ${A.produk}\n`) + `Isi rumah: ${A.rumah}\nLokasi: ${A.lokasi}\nPilihan bayaran: ${A.bayar}\nMasa sesuai dihubungi: ${A.masa}\n\n` + (daftar ? "Saya akan sediakan dokumen pendaftaran. Apa langkah seterusnya?" : "Boleh beri sebut harga dan promosi terkini?") + (REF ? `\n\n(Rujukan: ${REF})` : "");
     const a = document.createElement("a"); a.className="btn btn-wa sendwa"; a.target="_blank"; a.rel="noopener";
     a.href = "https://wa.me/" + WA + "?text=" + encodeURIComponent(text);
     a.addEventListener("click", ()=>logLead("klik_whatsapp", {selesai:"Ya", klikWA:"Ya"}));
@@ -1083,7 +1119,7 @@
     if(innerWidth<=520) document.body.classList.add("locked");
     if(!started || pre){ started = true; msgs.innerHTML=""; waitText=null; inp.disabled=true; sendb.disabled=true; flow(pre||null); }
   }
-  function closeChat(){ chat.classList.remove("open"); launch.style.display=""; document.body.classList.remove("locked"); launch.focus(); }
+  function closeChat(){ if(CHAT_ONLY) return; chat.classList.remove("open"); launch.style.display=""; document.body.classList.remove("locked"); launch.focus(); }
   document.getElementById("cx").onclick = closeChat;
   document.addEventListener("click", e=>{
     const t = e.target.closest("[data-chat]"); if(!t) return;
@@ -1180,7 +1216,8 @@
     setFilter(products[deepI].c);
     document.getElementById("produk").scrollIntoView();
     openModal(deepI, null);
-  } else setTimeout(()=>consReady.then(openPop), 1200);
+  } else if(CHAT_ONLY){ openChat(null); }
+  else setTimeout(()=>consReady.then(openPop), 1200);
 
   /* kira klik ke WhatsApp dari mana-mana butang */
   document.addEventListener("click", e=>{
