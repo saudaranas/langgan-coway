@@ -325,7 +325,8 @@
             <button class="btn ghost sm" data-af="pin" data-id="${esc(x.id)}">Tetapkan PIN</button>
             ${x.status === "Aktif" ? `<button class="btn ghost sm" data-af="off" data-id="${esc(x.id)}">Nyahaktif</button>` : ""}
             ${x.status === "Tidak aktif" ? `<button class="btn ghost sm" data-af="approve" data-id="${esc(x.id)}">Aktifkan</button>` : ""}
-            <a class="btn wa sm" href="https://wa.me/${esc(x.wa)}?text=${encodeURIComponent(x.status === "Aktif" ? "Assalamualaikum " + x.nama.split(" ")[0] + ", akaun affiliate Coway anda sudah aktif 🎉\n\nLog masuk di " + (DATA.affDaftar || "") + " dengan nombor WhatsApp dan PIN anda untuk dapatkan link dan pantau lead.\n\nLink anda: " + x.link : "Assalamualaikum " + x.nama.split(" ")[0] + " 😊")}" target="_blank" rel="noopener">WhatsApp</a>
+            <button class="btn ghost sm" data-af="onboard" data-id="${esc(x.id)}">Mesej onboarding</button>
+            <a class="btn wa sm" href="https://wa.me/${esc(x.wa)}" target="_blank" rel="noopener">WhatsApp</a>
             <button class="btn del sm" data-af="del" data-id="${esc(x.id)}">Padam</button>
           </div>
         </div>
@@ -336,12 +337,13 @@
     const a = (DATA.affiliates || []).find(x => x.id === b.dataset.id); if(!a) return;
     const act = b.dataset.af;
     if(act === "copy"){ copy(a.link, "Link " + a.nama + " disalin."); return; }
+    if(act === "onboard"){ openOnboard(a, "aff"); return; }
     let np = "";
     if(act === "pin"){ np = prompt("PIN baharu untuk " + a.nama + " (4 hingga 6 digit):"); if(!np) return; }
     if(act === "del" && !confirm(`Padam affiliate ini?\n\n${a.nama}\n+${a.wa}\nID: ${a.id}\n\nLink ${a.link} akan berhenti dikira. Lead lama kekal dalam Sheet.`)) return;
     b.disabled = true;
     try{
-      if(act === "approve"){ await call("adminAffSetStatus", PIN, a.id, "Aktif"); toast(a.nama + " kini aktif. Tekan WhatsApp untuk maklumkan."); }
+      if(act === "approve"){ await call("adminAffSetStatus", PIN, a.id, "Aktif"); toast(a.nama + " kini aktif."); await load(); const na = (DATA.affiliates || []).find(x => x.id === a.id); if(na) openOnboard(na, "aff"); return; }
       if(act === "off"){ await call("adminAffSetStatus", PIN, a.id, "Tidak aktif"); toast(a.nama + " dinyahaktifkan."); }
       if(act === "pin"){ await call("adminAffResetPin", PIN, a.id, np); toast("PIN " + a.nama + " ditukar. Maklumkan PIN baharu kepada mereka."); }
       if(act === "del"){ await call("adminAffDelete", PIN, a.id); toast(a.nama + " dipadam."); }
@@ -449,7 +451,49 @@
   $("copyDaftar").onclick = () => copy(DATA.daftar, "Link daftar ejen disalin.");
 
   /* mesej onboarding */
-  let obAgent = null, obType = "daftar";
+  let obAgent = null, obType = "daftar", obKind = "ejen";
+  function affMsg(a, type){
+    const nama = a.nama.split(" ")[0] || a.nama;
+    const login = (DATA.affDaftar || "https://langgancoway.store/affiliate");
+    if(type === "daftar") return `Assalamualaikum ${nama} 👋
+
+Terima kasih kerana mendaftar program affiliate Langgan Coway. Pendaftaran anda sudah diterima dan sedang disemak.
+
+Saya akan maklumkan di sini bila akaun anda aktif. Ada soalan, terus balas mesej ini ya 😊`;
+    return `Tahniah ${nama}! 🎉 Akaun affiliate Langgan Coway anda sudah AKTIF.
+
+🔗 *Link affiliate anda:*
+${a.link}
+
+📊 *Dashboard anda:*
+${login}
+Log masuk dengan nombor WhatsApp ini dan PIN yang anda cipta masa daftar.
+
+💰 *Komisen:*
+RM100 untuk setiap produk yang berjaya didaftarkan melalui link anda. Dibayar pada 10hb setiap bulan.
+
+*Cara ia berfungsi:*
+✅ Orang buka link anda → terus berbual dengan chatbot consultant Coway
+✅ Chatbot tunjuk pakej, harga bulanan dan promosi semasa
+✅ Saya sendiri follow-up dan uruskan pendaftaran sehingga pemasangan
+✅ Lead dikira untuk anda selama 30 hari selepas mereka buka link anda
+✅ Status setiap lead (termasuk Closed) boleh dilihat di dashboard
+
+*Cara dapatkan lead:*
+📲 Kongsi di WhatsApp Status 2–3 kali seminggu (guna butang "Kongsi di WhatsApp" dalam dashboard)
+📲 Letak link di bio Facebook, Instagram dan TikTok
+📲 Hantar terus kepada kenalan yang tanya pasal penapis air, tilam atau aircond
+💡 Cerita pengalaman sebenar lebih berkesan daripada iklan
+
+*Penting:*
+🔒 Jangan minta IC, nombor kad atau dokumen pelanggan. Semua dokumen dihantar terus kepada saya
+💬 Jangan janji harga atau promosi yang tiada dalam chat. Biar saya yang sahkan
+🚫 Jangan spam group yang tidak benarkan iklan
+
+Lupa PIN? WhatsApp saya untuk tetapkan PIN baharu.
+
+Selamat maju jaya! 💪`;
+  }
   function obMsg(a, type){
     const nama = a.nama.split(" ")[0] || a.nama;
     const bot = DATA.bot ? "https://t.me/" + DATA.bot : "[link bot Telegram]";
@@ -494,16 +538,17 @@ ${a.link}
 Selamat maju jaya! Ada apa-apa, terus WhatsApp saya 💪`;
   }
   function renderOb(){
-    const a = obAgent, t = obMsg(a, obType);
+    const a = obAgent, t = obKind === "aff" ? affMsg(a, obType) : obMsg(a, obType);
     document.querySelectorAll("[data-ob]").forEach(b => b.setAttribute("aria-pressed", b.dataset.ob === obType));
     $("obText").value = t;
     $("obWa").href = "https://wa.me/" + a.wa + "?text=" + encodeURIComponent(t);
     const w = [];
-    if(obType === "aktif" && a.status !== "Aktif") w.push("⚠️ Ejen ini belum aktif. Luluskan dahulu sebelum hantar mesej ini.");
-    if(obType === "aktif" && !a.chatId) w.push("⚠️ Telegram ejen belum disambung. Lead akan dihantar kepada anda sehingga disambung.");
+    if(obType === "aktif" && a.status !== "Aktif") w.push("⚠️ " + (obKind === "aff" ? "Affiliate" : "Ejen") + " ini belum aktif. Luluskan dahulu sebelum hantar mesej ini.");
+    if(obKind === "ejen" && obType === "aktif" && !a.chatId) w.push("⚠️ Telegram ejen belum disambung. Lead akan dihantar kepada anda sehingga disambung.");
     $("obWarn").textContent = w.join(" ");
   }
-  function openOnboard(a){
+  function openOnboard(a, kind){
+    obKind = kind || "ejen";
     obAgent = a; obType = a.status === "Aktif" ? "aktif" : "daftar";
     $("obWho").textContent = a.nama + " · +" + a.wa;
     renderOb(); $("obOv").classList.add("open");
