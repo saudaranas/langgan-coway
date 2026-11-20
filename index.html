@@ -1007,9 +1007,22 @@
     if(k === "5+0") return hc ? 3 : 5;
     return 0;
   }
-  function voucherTeks(c, k){
+  /* bulan voucher dikira bermula bulan pendaftaran (bulan semasa, waktu Malaysia) */
+  const BLN = ["Januari","Februari","Mac","April","Mei","Jun","Julai","Ogos","September","Oktober","November","Disember"];
+  function bulanIni(){
+    const p = new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Kuala_Lumpur",year:"numeric",month:"numeric"}).formatToParts(new Date());
+    return { y: +p.find(x=>x.type==="year").value, m: +p.find(x=>x.type==="month").value - 1 };
+  }
+  function bulanTambah(n){
+    const b = bulanIni(), t = b.m + n;
+    return BLN[((t % 12) + 12) % 12] + " " + (b.y + Math.floor(t / 12));
+  }
+  const sehingga = n => bulanTambah(n - 1);
+  function voucherTeks(c, k, harga){
     const n = voucherBulan(c, k);
-    return n ? `🎁 Promo voucher: bayar RM20 sebulan sahaja untuk ${n} bulan pertama.` : "🎁 Promo voucher RM20 untuk kontrak ini saya sahkan di WhatsApp.";
+    if(!n) return "🎁 Promo voucher RM20 untuk kontrak ini saya sahkan di WhatsApp.";
+    return `🎁 Promo voucher: bayar RM20 sebulan sahaja untuk ${n} bulan pertama.\n\n📅 Kalau daftar bulan ini (${bulanTambah(0)}), anda bayar RM20 sahaja sehingga ${sehingga(n)}.` +
+      (harga ? ` Mulai ${bulanTambah(n)}, ${harga} sebulan.` : "");
   }
   let run = 0;
   async function flow(pre){
@@ -1067,11 +1080,11 @@
       const ks = [...new Set(rows.map(r=>r[0]))];
       const senarai = ks.map(k=>{
         const vb = voucherBulan(P.c, k);
-        return `📋 Kontrak ${k}` + (vb ? ` (voucher RM20 x ${vb} bulan)` : "") + "\n" +
-          rows.filter(r=>r[0]===k).map(r=>`   • ${/^servis/i.test(r[1]) ? r[1] : "Servis " + r[1]}: ${rm(r[2])} sebulan`).join("\n");
+        return `📋 Kontrak ${k}` + (vb ? ` (RM20 sahaja sehingga ${sehingga(vb)})` : "") + "\n" +
+          rows.filter(r=>r[0]===k).map(r=>`   • ${/^(servis|tanpa)/i.test(r[1]) ? r[1] : "Servis " + r[1]}: ${rm(r[2])} sebulan`).join("\n");
       }).join("\n\n");
       await bot(`Ini semua pilihan pakej ${P.n}${vn?" ("+vn+")":""} 👇\n\n${senarai}\n\n` +
-        "🎁 Voucher RM20: bayar RM20 sebulan sahaja untuk bulan-bulan pertama, ikut tempoh di atas. Selepas itu harga bulanan biasa." +
+        `🎁 Voucher RM20: kalau daftar bulan ini (${bulanTambah(0)}), anda bayar RM20 sebulan sahaja sehingga bulan yang tertera. Selepas itu harga bulanan biasa.` +
         (P.promo ? "\n\nHarga di atas harga biasa. Harga promosi semasa saya sahkan di WhatsApp 🎉" : "") +
         (ks.includes("3+2") ? "\n\nPakej 3+2 tertakluk kepada 8% SST." : ""));
       await bot("Pilih pakej yang anda nak 👇");
@@ -1079,10 +1092,10 @@
       const sp = await choose(opts);
       const r = rows[opts.indexOf(sp)];
       const vb = voucherBulan(P.c, r[0]);
-      pakej = `${P.n}${vn?" ("+vn+")":""}, kontrak ${r[0]}, servis ${r[1]}, ${rm(r[2])} sebulan` + (vb ? `, voucher RM20 x ${vb} bulan` : "");
+      pakej = `${P.n}${vn?" ("+vn+")":""}, kontrak ${r[0]}, servis ${r[1]}, ${rm(r[2])} sebulan` + (vb ? `, voucher RM20 x ${vb} bulan (sehingga ${sehingga(vb)})` : "");
       A.produk = pakej; logLead("pakej");
       await bot(`✅ Pakej pilihan anda:\n\n${P.n}${vn?" ("+vn+")":""}\nKontrak: ${r[0]}\nServis: ${r[1]}\nSewa: ${rm(r[2])} sebulan\n\n` +
-        voucherTeks(P.c, r[0]) + (vb ? ` Selepas itu ${rm(r[2])} sebulan.` : "") + "\n🚚 Penghantaran dan pemasangan PERCUMA!");
+        voucherTeks(P.c, r[0], rm(r[2])) + "\n\n🚚 Penghantaran dan pemasangan PERCUMA!");
     }
 
     /* terus beri arahan dokumen pendaftaran */
