@@ -66,6 +66,11 @@
   .pill.Berminat{background:#e6f2fb;color:#0b5d93}
   .pill.Tak{background:#fbeaea;color:#a12d22}
   .empty{color:var(--muted);font-size:15px;padding:8px 0}
+  .ay{border:1px solid var(--line);border-radius:10px;padding:14px;margin-top:12px;background:var(--panel)}
+  .ay h3{font-size:15px;margin-bottom:6px}
+  .ay pre{white-space:pre-wrap;font-family:inherit;font-size:14.5px;margin:0 0 10px;color:var(--ink)}
+  .ay .row{display:flex;gap:8px;flex-wrap:wrap}
+  .ay .btn{width:auto;margin-top:0;padding:9px 14px;font-size:14.5px}
   .tips{margin:0;padding-left:20px;display:grid;gap:6px;font-size:15px}
   .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:8px;font-size:14.5px;display:none;z-index:9}
   @media (max-width:640px){
@@ -159,6 +164,11 @@
       <p class="hint" style="margin-top:8px">Nama pelanggan disingkatkan untuk privasi. Status dikemas kini oleh consultant.</p>
     </div>
     <div class="box">
+      <h2>Ayat siap untuk kongsi</h2>
+      <p class="hint" style="margin:-4px 0 10px">Link anda dah dimasukkan dalam setiap ayat. Tekan Salin, atau terus kongsi di WhatsApp.</p>
+      <div id="ayat"></div>
+    </div>
+    <div class="box">
       <h2>Tips dapat lebih lead</h2>
       <ul class="tips">
         <li>Kongsi link bersama cerita sebenar, contohnya pengalaman guna penapis air di rumah.</li>
@@ -225,8 +235,10 @@
     const p = d.profil, sum = k => d.hari.reduce((a, x) => a + (x[k] || 0), 0);
     $("dName").innerHTML = esc(p.nama) + "<small>Affiliate · ID " + esc(p.id) + "</small>";
     $("myLink").textContent = p.link;
-    const msg = "Assalamualaikum 😊 Kalau tengah cari penapis air, penapis udara, tilam atau aircond Coway, boleh tanya terus di sini. Ada promo voucher RM20 sebulan:\n" + p.link;
-    $("shareWa").href = "https://wa.me/?text=" + encodeURIComponent(msg);
+    const A = ayat(p.link);
+    $("shareWa").href = "https://wa.me/?text=" + encodeURIComponent(A[0].t);
+    $("ayat").innerHTML = A.map((x, i) => `<div class="ay"><h3>${esc(x.h)}</h3><pre>${esc(x.t)}</pre><div class="row"><button class="btn ghost" type="button" data-cp="${i}">Salin</button><a class="btn wa" href="https://wa.me/?text=${encodeURIComponent(x.t)}" target="_blank" rel="noopener">Kongsi di WhatsApp</a></div></div>`).join("");
+    $("ayat").onclick = e => { const b = e.target.closest("[data-cp]"); if(b) cp(A[+b.dataset.cp].t, "Ayat disalin."); };
     $("stats").innerHTML = `
       <div class="stat"><span>Pelawat (30 hari)</span><b>${sum("visitor")}</b></div>
       <div class="stat"><span>Buka chat (30 hari)</span><b>${sum("chat")}</b></div>
@@ -239,11 +251,40 @@
     </table>` : `<p class="empty">Belum ada lead. Kongsi link anda untuk mula 💪</p>`;
     show("vDash");
   }
-  $("copyLink").onclick = () => {
-    const t = $("myLink").textContent;
-    if(navigator.clipboard) navigator.clipboard.writeText(t).then(() => toast("Link disalin."), () => prompt("Salin link ini:", t));
-    else prompt("Salin link ini:", t);
-  };
+  function cp(t, m){
+    if(navigator.clipboard) navigator.clipboard.writeText(t).then(() => toast(m), () => prompt("Salin:", t));
+    else prompt("Salin:", t);
+  }
+  $("copyLink").onclick = () => cp($("myLink").textContent, "Link disalin.");
+  /* ayat promosi siap dengan link affiliate */
+  function ayat(link){
+    return [
+      { h: "WhatsApp Status / mesej pendek", t:
+`Tengah cari penapis air, penapis udara, tilam atau aircond? 🏠
+
+🎁 Promo Coway sekarang: bayar *RM20 sebulan sahaja* untuk bulan-bulan pertama (sehingga 7 bulan, ikut produk) + 1 bulan PERCUMA
+✅ Pemasangan & penghantaran PERCUMA seluruh Malaysia
+
+Semak pakej dan harga dalam 2 minit 👇
+${link}` },
+      { h: "Facebook / cerita", t:
+`Ramai tanya saya, "penapis air Coway tu mahal tak?" 🤔
+
+Sebenarnya sekarang ada promo voucher RM20 sebulan. Maksudnya, bulan-bulan pertama anda bayar *RM20 sebulan sahaja* (sehingga 7 bulan, ikut produk dan kontrak), dan ada 1 bulan PERCUMA. Pemasangan dan penghantaran pun percuma.
+
+Bukan penapis air je. Penapis udara, tilam, aircond, kerusi urut, mesin basuh dan peti ais pun ada.
+
+Nak tahu pakej mana sesuai dengan rumah anda? Tekan link ni, chat terus dengan consultant Coway 👇
+${link}
+
+*Tertakluk kepada terma & syarat promosi Coway semasa.` },
+      { h: "Balas kawan yang bertanya", t:
+`Ada, cuba tengok sini 😊 Sekarang Coway ada promo bayar RM20 sebulan sahaja untuk bulan-bulan pertama + 1 bulan percuma. Pasang & hantar pun free.
+
+Boleh semak pakej & harga terus, consultant akan bantu:
+${link}` }
+    ];
+  }
 </script>
 </body>
 </html>
