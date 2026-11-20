@@ -155,7 +155,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:8px 18px}
     <a data-keep href="/artikel/makanan-cepat-rosak-peti-ais"><span class="th" style="background-image:url(/img/makanan-cepat-rosak-peti-ais-1.jpg),url(/artikel/img/makanan-cepat-rosak-peti-ais-1.jpg)"></span><span>Berapa banyak makanan yang anda buang setiap bulan?<small>Dapur</small></span></a>
   </nav>
   <nav class="more" aria-labelledby="t-kerja" style="margin-top:28px"><h2 id="t-kerja">Kerjaya & pendapatan</h2>
-    <a data-keep href="/artikel/program-affiliate-langgan-coway"><span class="th" style="background-image:url(/img/program-affiliate-langgan-coway-1.jpg),url(/artikel/img/program-affiliate-langgan-coway-1.jpg)"></span><span>Program Affiliate Langgan Coway: kongsi link dari rumah, kami uruskan jualan<small>Affiliate</small></span></a>
+    <a data-keep data-utama href="/artikel/program-affiliate-langgan-coway"><span class="th" style="background-image:url(/img/program-affiliate-langgan-coway-1.jpg),url(/artikel/img/program-affiliate-langgan-coway-1.jpg)"></span><span>Program Affiliate Langgan Coway: kongsi link dari rumah, kami uruskan jualan<small>Affiliate</small></span></a>
     <a data-keep href="/artikel/kerjaya-consultant-coway"><span class="th" style="background-image:url(/img/kerjaya-consultant-coway-1.jpg),url(/artikel/img/kerjaya-consultant-coway-1.jpg)"></span><span>Kerja sebagai consultant Coway: apa sebenarnya kerjanya, dan sesuai ke untuk anda?<small>Kerjaya</small></span></a>
   </nav>
 </main>
@@ -189,6 +189,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:8px 18px}
   const WA_TEXT = "Hai, saya baca artikel di laman anda. Nak tanya pasal produk Coway.";
   const UID = (new URLSearchParams(location.search).get("id")||"").toLowerCase().replace(/[^a-z0-9-]/g,"").slice(0,30);
   const Q = UID ? "id=" + UID : "";
+  if (UID) document.querySelectorAll("[data-utama]").forEach(e => e.remove());
   document.querySelectorAll("a[data-keep]").forEach(a => { const u = a.getAttribute("href"); a.href = u + (Q ? (u.includes("?") ? "&" : "?") + Q : ""); });
   const setWa = n => document.querySelectorAll("a.wa").forEach(b => b.href = "https://wa.me/" + n + "?text=" + encodeURIComponent(WA_TEXT));
   setWa(DEFAULT_WA);
