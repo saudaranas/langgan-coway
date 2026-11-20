@@ -415,6 +415,7 @@
             ${x.status === "Menunggu" ? `<button class="btn sm" data-act="approve" data-id="${esc(x.id)}">Luluskan</button>` : ""}
             <button class="btn ghost sm" data-act="onboard" data-id="${esc(x.id)}">Mesej onboarding</button>
             <button class="btn ghost sm" data-act="copy" data-id="${esc(x.id)}">Salin link</button>
+            <button class="btn ghost sm" data-act="ayat" data-id="${esc(x.id)}">Salin ayat promosi</button>
             ${!x.chatId ? `<button class="btn ghost sm" data-act="tg" data-id="${esc(x.id)}">Sambung Telegram</button>` : ""}
             <button class="btn ghost sm" data-act="edit" data-id="${esc(x.id)}">Edit</button>
             ${x.status === "Aktif" ? `<button class="btn ghost sm" data-act="off" data-id="${esc(x.id)}">Nyahaktif</button>` : ""}
@@ -432,6 +433,7 @@
     if(act === "copy"){ copy(a.link, "Link " + a.nama + " disalin."); return; }
     if(act === "edit"){ openForm(a); return; }
     if(act === "onboard"){ openOnboard(a); return; }
+    if(act === "ayat"){ copy(affAyat(a.link), "Ayat promosi " + a.nama + " disalin (dengan link unik)."); return; }
     if(act === "del"){
       const n = leadCount(a.id);
       if(!confirm(`Padam ejen ini?\n\n${a.nama}\n+${a.wa}\nID: ${a.id}\n${n} lead\n\nLink ${a.link} akan berhenti berfungsi. Lead lama kekal dalam Sheet. Tindakan ini tidak boleh dibatalkan.`)) return;
@@ -537,6 +539,11 @@ ${a.link}
 ✅ Prospek tekan "Claim" atau isi chatbot → terus ke WhatsApp anda
 ✅ Bila prospek isi nama & nombor, anda dapat notifikasi di Telegram serta-merta
 ✅ Bila prospek habis isi chat, anda dapat ringkasan lengkap (produk, lokasi, bajet) + butang WhatsApp
+
+*Ayat siap untuk kongsi* (salin terus, link anda dah ada):
+──────────
+${affAyat(a.link)}
+──────────
 
 *Cara dapatkan lead:*
 📲 Letak link di bio Facebook, Instagram, TikTok & Threads

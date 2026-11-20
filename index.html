@@ -135,6 +135,9 @@
   .filter button{flex:none;font:600 14.5px var(--font);border:1px solid var(--line);background:#fff;color:var(--muted);padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap}
   .filter button[aria-pressed="true"]{border-color:var(--navy)}
   .filter button[aria-pressed="true"]{background:var(--navy);color:#fff}
+  .filter button.grp{border-color:#9cc7ea;color:#0b5d93;background:#eef6fc}
+  .filter button.grp[aria-pressed="true"]{background:#0079c2;border-color:#0079c2;color:#fff}
+  .filter button.grp + button:not(.grp){margin-left:10px}
   .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:26px}
   .card{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;text-align:left;cursor:pointer;padding:0;font:inherit;color:inherit}
   .card:hover{border-color:var(--navy)}
@@ -846,13 +849,17 @@
 
   /* filter chips */
   const filt = document.querySelector(".filter");
+  const HC_CATS = ["tilam","aircond","urut"];   /* Home Care; selebihnya Home Appliance */
+  const inF = (p, f) => f === "all" || p.c === f || (f === "hc" && HC_CATS.includes(p.c)) || (f === "ha" && !HC_CATS.includes(p.c));
   filt.innerHTML = `<button type="button" data-f="all" aria-pressed="true">Semua (${products.length})</button>` +
+    `<button type="button" data-f="hc" aria-pressed="false" class="grp">Home Care (${products.filter(p=>inF(p,"hc")).length})</button>` +
+    `<button type="button" data-f="ha" aria-pressed="false" class="grp">Home Appliance (${products.filter(p=>inF(p,"ha")).length})</button>` +
     Object.entries(CATS).map(([k,v])=>`<button type="button" data-f="${k}" aria-pressed="false">${v.n} (${products.filter(p=>p.c===k).length})</button>`).join("");
 
   /* product grid */
   function render(f){
     const g = document.getElementById("grid");
-    g.innerHTML = products.map((p,i)=>({p,i})).filter(({p})=>f==="all"||p.c===f).map(({p,i})=>`
+    g.innerHTML = products.map((p,i)=>({p,i})).filter(({p})=>inF(p,f)).map(({p,i})=>`
       <button class="card" data-i="${i}">
         <div class="im">${pic(p)}</div>
         <div class="bd">
@@ -1065,6 +1072,17 @@
     logLead("produk");
     if(P && P.f && P.f.length){
       await bot(`Sedikit info tentang ${P.n} 👇\n\n` + P.f.slice(0,4).map(x=>"✅ " + x).join("\n"));
+    }
+    if(P){
+      /* voucher terbaik untuk produk ini (kontrak 7+0 jika ada, jika tidak 5+0) */
+      const ks = P.pk ? [...new Set(Object.values(P.pk).flat().map(r=>r[0]))] : ["7+0","5+0"];
+      const kBest = ["7+0","5+0"].find(k=>ks.includes(k) && voucherBulan(P.c,k));
+      if(kBest){
+        const n = voucherBulan(P.c, kBest);
+        await bot(`🎁 Promo semasa untuk ${P.n}:\n\nKalau daftar bulan ini (${bulanTambah(0)}), ${bulanTambah(1)} PERCUMA, dan anda hanya perlu bayar RM20/bulan sahaja sehingga ${sehingga(n)} (kontrak ${kBest}).` +
+          (ks.includes("5+0") && kBest === "7+0" && voucherBulan(P.c,"5+0") ? ` Untuk kontrak 5+0, RM20/bulan sehingga ${sehingga(voucherBulan(P.c,"5+0"))}.` : "") +
+          `\n\nRM20 juga perlu ada dalam akaun bulan ini untuk pengaktifan kad.`);
+      }
     }
     /* bayaran */
     await bot((P ? `${P.n}, pilihan yang bagus! 👍 ` : "Takpe, saya boleh bantu cadangkan 👍 ") + "Anda nak sewa bulanan atau beli tunai?");
