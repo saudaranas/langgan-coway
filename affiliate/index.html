@@ -244,10 +244,11 @@
       <div class="stat"><span>Buka chat (30 hari)</span><b>${sum("chat")}</b></div>
       <div class="stat"><span>Jumlah lead</span><b>${d.ringkas.lead}</b></div>
       <div class="stat"><span>Closed</span><b>${d.ringkas.closed}</b></div>`;
-    $("komisen").innerHTML = `<span>Komisen terkumpul (RM100 x ${d.ringkas.closed} closed)</span><b>RM${(d.ringkas.closed * KOMISEN).toLocaleString("en-MY")}</b><small>Dibayar pada 10hb setiap bulan. Jumlah akhir disahkan oleh admin.</small>`;
+    const np = d.ringkas.produk != null ? d.ringkas.produk : d.ringkas.closed;
+    $("komisen").innerHTML = `<span>Komisen terkumpul (RM100 x ${np} produk)</span><b>RM${(np * KOMISEN).toLocaleString("en-MY")}</b><small>Dibayar pada 10hb setiap bulan. Jumlah akhir disahkan oleh admin.</small>`;
     $("leads").innerHTML = d.leads.length ? `<table>
       <thead><tr><th>Tarikh</th><th>Pelanggan</th><th>Produk</th><th>Status</th></tr></thead>
-      <tbody>${d.leads.map(l => `<tr><td>${esc(l.tarikh)}</td><td>${esc(l.nama)}${l.lengkap ? " ✅" : ""}</td><td>${esc(l.produk)}</td><td><span class="pill ${esc(l.status.split(" ")[0])}">${esc(l.status)}</span></td></tr>`).join("")}</tbody>
+      <tbody>${d.leads.map(l => `<tr><td>${esc(l.tarikh)}</td><td>${esc(l.nama)}${l.lengkap ? " ✅" : ""}</td><td>${esc(l.produk)}</td><td><span class="pill ${esc(l.status.split(" ")[0])}">${esc(l.status)}${l.bil > 1 ? " · " + l.bil + " produk" : ""}</span></td></tr>`).join("")}</tbody>
     </table>` : `<p class="empty">Belum ada lead. Kongsi link anda untuk mula 💪</p>`;
     show("vDash");
   }

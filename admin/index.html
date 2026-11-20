@@ -98,6 +98,8 @@
     .lead{grid-template-columns:1fr}
     .lead .r{align-items:flex-start;flex-direction:row;flex-wrap:wrap}
   }
+  .lead .r .bil{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);white-space:nowrap}
+  .lead .r .bil input{width:56px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;font:inherit}
 </style>
 </head>
 <body>
@@ -304,18 +306,18 @@
       <div class="stat"><span>Jumlah affiliate</span><b>${a.length}</b></div>
       <div class="stat"><span>Menunggu kelulusan</span><b>${n("Menunggu")}</b></div>
       <div class="stat"><span>Lead dari affiliate</span><b>${allL.length}</b></div>
-      <div class="stat"><span>Closed dari affiliate</span><b>${allL.filter(l => l["Status Follow-up"] === "Closed").length}</b></div>`;
+      <div class="stat"><span>Produk closed dari affiliate</span><b>${allL.filter(l => l["Status Follow-up"] === "Closed").reduce((a, l) => a + bilOf(l), 0)}</b></div>`;
     if(!a.length){ $("afList").innerHTML = `<div class="empty">Belum ada affiliate. Kongsi link daftar affiliate.</div>`; return; }
     const order = {"Menunggu":0,"Aktif":1,"Tidak aktif":2};
     $("afList").innerHTML = a.slice().sort((x,y) => (order[x.status] ?? 3) - (order[y.status] ?? 3)).map(x => {
-      const L = affLeads(x.id), c = L.filter(l => l["Status Follow-up"] === "Closed").length;
+      const L = affLeads(x.id), c = L.filter(l => l["Status Follow-up"] === "Closed").reduce((a, l) => a + bilOf(l), 0);
       return `
       <div class="ag">
         <div class="ph">${esc(x.nama.charAt(0))}</div>
         <div>
           <h3>${esc(x.nama)} ${statusPill(x.status)}</h3>
           <div class="meta">+${esc(x.wa)} · daftar ${esc(x.tarikh)}</div>
-          <div class="meta">${L.length} lead · ${c} closed · komisen RM${c * 100}</div>
+          <div class="meta">${L.length} lead · ${c} produk closed · komisen RM${c * 100}</div>
           <div class="link">${esc(x.link)}</div>
         </div>
         <div class="side">
@@ -655,20 +657,32 @@ Selamat maju jaya! Ada apa-apa, terus WhatsApp saya 💪`;
         </div>
         <div class="r">
           <select data-sid="${esc(l["Session"])}">${DATA.statuses.map(s => `<option ${s === l["Status Follow-up"] ? "selected" : ""}>${esc(s)}</option>`).join("")}</select>
+          ${l["Status Follow-up"] === "Closed" ? `<label class="bil">Bil. produk <input type="number" min="1" max="20" value="${esc(bilOf(l))}" data-bil="${esc(l["Session"])}"></label>` : ""}
           ${l["Telefon"] ? `<a class="btn wa sm" href="https://wa.me/${esc(l["Telefon"])}" target="_blank" rel="noopener">WhatsApp</a>` : ""}
         </div>
       </div>`).join("");
   }
   $("leadList").onchange = async e => {
+    const bi = e.target.closest("input[data-bil]");
+    if(bi){
+      const l = DATA.leads.find(x => x["Session"] === bi.dataset.bil); if(!l) return;
+      const n = Math.min(Math.max(parseInt(bi.value, 10) || 1, 1), 20); bi.value = n;
+      bi.disabled = true;
+      try{ await call("adminUpdateLead", PIN, l["Session"], "Closed", n); l["Bil Produk"] = String(n); toast("Bilangan produk: " + n + "."); renderAffs(); }
+      catch(err){ toast(err, 5000); }
+      bi.disabled = false; return;
+    }
     const s = e.target.closest("select[data-sid]"); if(!s) return;
     s.disabled = true;
     try{
       await call("adminUpdateLead", PIN, s.dataset.sid, s.value);
-      const l = DATA.leads.find(x => x["Session"] === s.dataset.sid); if(l) l["Status Follow-up"] = s.value;
-      toast("Status dikemas kini.");
-    }catch(err){ toast(err, 5000); }
-    s.disabled = false;
+      const l = DATA.leads.find(x => x["Session"] === s.dataset.sid);
+      if(l){ l["Status Follow-up"] = s.value; if(s.value === "Closed" && !Number(l["Bil Produk"])) l["Bil Produk"] = "1"; }
+      toast("Status dikemas kini." + (s.value === "Closed" ? " Tetapkan bilangan produk jika lebih dari 1." : ""));
+      renderLeads(); renderAffs();
+    }catch(err){ toast(err, 5000); s.disabled = false; }
   };
+  function bilOf(l){ return Math.max(Number(l["Bil Produk"]) || 1, 1); }
 
   /* statistik */
   let STATS = null, chart = null;
