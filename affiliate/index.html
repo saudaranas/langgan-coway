@@ -56,6 +56,8 @@
   .stat b{font-size:26px;line-height:1.2}
   .stat.hi{border-color:var(--green)}
   .stat.hi b{color:var(--green)}
+  .stat.kom{margin-top:10px}
+  .stat.kom small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
   table{width:100%;border-collapse:collapse;font-size:15px}
   th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
   th{font-size:13px;color:var(--muted);font-weight:600}
@@ -99,7 +101,7 @@
 <div class="card" id="vDaftar" hidden>
   <div class="top">
     <h1>Daftar affiliate Coway</h1>
-    <p>Percuma. Tiada jualan atau stok. Anda cuma kongsi link.</p>
+    <p>Percuma. Tiada jualan atau stok. Anda kongsi link, dapat RM100 untuk setiap produk.</p>
   </div>
   <div class="body">
     <ol class="how">
@@ -107,6 +109,7 @@
       <li><b class="n">2</b><span>Kongsi link di WhatsApp, Facebook, TikTok atau group.</span></li>
       <li><b class="n">3</b><span>Pelanggan berbual dengan chatbot. Consultant Coway terus hubungi dan uruskan pendaftaran.</span></li>
       <li><b class="n">4</b><span>Pantau lead dan status closing di dashboard ini.</span></li>
+      <li><b class="n">💰</b><span><b>Komisen RM100 untuk setiap produk</b> yang berjaya didaftarkan. Dibayar pada 10hb setiap bulan.</span></li>
     </ol>
     <form id="fDaftar" novalidate>
       <label for="dNama">Nama penuh</label>
@@ -149,6 +152,7 @@
       <p class="hint" style="margin-top:8px">Link ini terus buka chat dengan consultant Coway. Lead dikira untuk anda selama 30 hari selepas pelanggan buka link.</p>
     </div>
     <div class="stats" id="stats"></div>
+    <div class="stat hi kom" id="komisen"></div>
     <div class="box">
       <h2>Lead anda</h2>
       <div id="leads"></div>
@@ -171,6 +175,7 @@
 <script>
   const $ = id => document.getElementById(id);
   const API = "https://script.google.com/macros/s/AKfycbzxiDAR0APLLQvlI-peaoL89dsabpLZd-PHxqAuEgeaGVqtiX3NngTdNbbnhCLyxX3kVw/exec";
+  const KOMISEN = 100;   // RM setiap produk
   const esc = t => String(t == null ? "" : t).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const toast = m => { const t = $("toast"); t.textContent = m; t.style.display = "block"; clearTimeout(t._h); t._h = setTimeout(() => t.style.display = "none", 3000); };
   const call = (fn, ...args) => fetch(API, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: fn, args: args }) })
@@ -226,7 +231,8 @@
       <div class="stat"><span>Pelawat (30 hari)</span><b>${sum("visitor")}</b></div>
       <div class="stat"><span>Buka chat (30 hari)</span><b>${sum("chat")}</b></div>
       <div class="stat"><span>Jumlah lead</span><b>${d.ringkas.lead}</b></div>
-      <div class="stat hi"><span>Closed</span><b>${d.ringkas.closed}</b></div>`;
+      <div class="stat"><span>Closed</span><b>${d.ringkas.closed}</b></div>`;
+    $("komisen").innerHTML = `<span>Komisen terkumpul (RM100 x ${d.ringkas.closed} closed)</span><b>RM${(d.ringkas.closed * KOMISEN).toLocaleString("en-MY")}</b><small>Dibayar pada 10hb setiap bulan. Jumlah akhir disahkan oleh admin.</small>`;
     $("leads").innerHTML = d.leads.length ? `<table>
       <thead><tr><th>Tarikh</th><th>Pelanggan</th><th>Produk</th><th>Status</th></tr></thead>
       <tbody>${d.leads.map(l => `<tr><td>${esc(l.tarikh)}</td><td>${esc(l.nama)}${l.lengkap ? " ✅" : ""}</td><td>${esc(l.produk)}</td><td><span class="pill ${esc(l.status.split(" ")[0])}">${esc(l.status)}</span></td></tr>`).join("")}</tbody>
