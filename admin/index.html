@@ -326,6 +326,7 @@
             ${x.status === "Aktif" ? `<button class="btn ghost sm" data-af="off" data-id="${esc(x.id)}">Nyahaktif</button>` : ""}
             ${x.status === "Tidak aktif" ? `<button class="btn ghost sm" data-af="approve" data-id="${esc(x.id)}">Aktifkan</button>` : ""}
             <button class="btn ghost sm" data-af="onboard" data-id="${esc(x.id)}">Mesej onboarding</button>
+            <button class="btn ghost sm" data-af="ayat" data-id="${esc(x.id)}">Salin ayat promosi</button>
             <a class="btn wa sm" href="https://wa.me/${esc(x.wa)}" target="_blank" rel="noopener">WhatsApp</a>
             <button class="btn del sm" data-af="del" data-id="${esc(x.id)}">Padam</button>
           </div>
@@ -338,6 +339,7 @@
     const act = b.dataset.af;
     if(act === "copy"){ copy(a.link, "Link " + a.nama + " disalin."); return; }
     if(act === "onboard"){ openOnboard(a, "aff"); return; }
+    if(act === "ayat"){ copy(affAyat(a.link), "Ayat promosi " + a.nama + " disalin (dengan link unik)."); return; }
     let np = "";
     if(act === "pin"){ np = prompt("PIN baharu untuk " + a.nama + " (4 hingga 6 digit):"); if(!np) return; }
     if(act === "del" && !confirm(`Padam affiliate ini?\n\n${a.nama}\n+${a.wa}\nID: ${a.id}\n\nLink ${a.link} akan berhenti dikira. Lead lama kekal dalam Sheet.`)) return;
@@ -452,6 +454,15 @@
 
   /* mesej onboarding */
   let obAgent = null, obType = "daftar", obKind = "ejen";
+  function affAyat(link){
+    return `Tengah cari penapis air, penapis udara, tilam atau aircond? 🏠
+
+🎁 Promo Coway sekarang: bayar *RM20 sebulan sahaja* untuk bulan-bulan pertama (sehingga 7 bulan, ikut produk) + 1 bulan PERCUMA
+✅ Pemasangan & penghantaran PERCUMA seluruh Malaysia
+
+Semak pakej dan harga dalam 2 minit 👇
+${link}`;
+  }
   function affMsg(a, type){
     const nama = a.nama.split(" ")[0] || a.nama;
     const login = (DATA.affDaftar || "https://langgancoway.store/affiliate");
@@ -492,13 +503,7 @@ RM100 untuk setiap produk yang berjaya didaftarkan melalui link anda. Dibayar pa
 
 *Ayat siap untuk kongsi* (salin terus, link anda dah ada):
 ──────────
-Tengah cari penapis air, penapis udara, tilam atau aircond? 🏠
-
-🎁 Promo Coway sekarang: bayar *RM20 sebulan sahaja* untuk bulan-bulan pertama (sehingga 7 bulan, ikut produk) + 1 bulan PERCUMA
-✅ Pemasangan & penghantaran PERCUMA seluruh Malaysia
-
-Semak pakej dan harga dalam 2 minit 👇
-${a.link}
+${affAyat(a.link)}
 ──────────
 Lebih banyak ayat siap ada dalam dashboard anda.
 
