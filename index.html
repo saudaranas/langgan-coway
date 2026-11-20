@@ -1023,7 +1023,7 @@
   function voucherTeks(c, k, harga){
     const n = voucherBulan(c, k);
     if(!n) return "🎁 Promo voucher RM20 untuk kontrak ini saya sahkan di WhatsApp.";
-    return `🎁 Promo voucher RM20 x ${n} bulan + 1 bulan PERCUMA.\n\n📅 Kalau daftar bulan ini (${bulanTambah(0)}):\n• ${bulanTambah(1)}: PERCUMA\n• Bayar RM20 sebulan sahaja sehingga ${sehingga(n)}` +
+    return `🎁 Promo voucher RM20 x ${n} bulan + 1 bulan PERCUMA.\n\n📅 Kalau daftar bulan ini (${bulanTambah(0)}):\n• ${bulanTambah(0)}: sediakan RM20 dalam akaun untuk pengaktifan kad\n• ${bulanTambah(1)}: PERCUMA\n• Bayar RM20 sebulan sahaja sehingga ${sehingga(n)}` +
       (harga ? `\n• Mulai ${bulanTambah(n + 1)}: ${harga} sebulan` : "");
   }
   let run = 0;
@@ -1103,7 +1103,7 @@
     /* terus beri arahan dokumen pendaftaran */
     await bot("📝 Untuk daftar, sediakan 3 perkara ini dan hantar di WhatsApp saya (bukan di chat ini):\n\n" +
       "1️⃣ Gambar IC bahagian DEPAN sahaja. Palang dan tulis \"FOR COWAY ONLY\" di atas IC. Pastikan nombor IC dan nama masih jelas.\n\n" +
-      "2️⃣ Kad debit/kredit untuk potongan bulanan: 6 digit pertama dan 4 digit terakhir SAHAJA. Jangan hantar nombor penuh, CVV atau OTP.\n\n" +
+      "2️⃣ Kad debit/kredit untuk potongan bulanan: 6 digit pertama dan 4 digit terakhir SAHAJA. Jangan hantar nombor penuh, CVV atau OTP. Pastikan ada RM20 dalam akaun untuk pengaktifan kad.\n\n" +
       "3️⃣ Gambar tandatangan anda di atas kertas putih, dengan tulisan \"Coway use only\" di bawahnya.");
     if(run===my) await sayImg("/img/dokumen-pendaftaran.webp", "Contoh IC yang dipalang \"FOR COWAY ONLY\" dan contoh tandatangan 👆 Tekan gambar untuk besarkan.");
     if(run===my) await sayImg("/img/contoh-kertas-tandatangan.webp", "Contoh kertas tandatangan ✍️ Tandatangan di ruang kosong, tulis \"Coway use only\" di bawah.");
