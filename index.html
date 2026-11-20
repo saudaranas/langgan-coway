@@ -629,6 +629,19 @@
     }
     const n = CONS.nama && CONS.nama !== "Consultant Coway" ? CONS.nama : "Consultant Coway";
     document.getElementById("chatName").textContent = n;
+    setAva();
+  }
+  /* gambar profil dalam chat: gambar consultant/ejen; jika tiada, huruf awal nama */
+  function initialsAva(nama){
+    const t = String(nama||"C").trim().split(/\s+/).slice(0,2).map(w=>w[0]).join("").toUpperCase() || "C";
+    return "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><rect width="80" height="80" fill="#0079c2"/><text x="40" y="52" font-family="Arial,sans-serif" font-size="32" font-weight="700" fill="#fff" text-anchor="middle">' + t.replace(/[<&>]/g,"") + '</text></svg>');
+  }
+  function setAva(){
+    const im = document.querySelector("#chat .ava img");
+    if(!im) return;
+    const src = CONS.foto || initialsAva(CONS.nama);
+    if(im.getAttribute("src") !== src) im.src = src;
+    im.alt = CONS.nama || "Consultant Coway";
   }
   const CFG_KEY = "cfg_" + (UID || "utama");
   try{ applyCfg(JSON.parse(localStorage.getItem(CFG_KEY))); }catch(e){}
@@ -969,7 +982,7 @@
     const my = ++run;
     const bot = t => run===my ? say(t) : new Promise(()=>{});
     A = {}; SID = newSid();
-    await bot("Assalamualaikum 👋 " + (CONS.nama && CONS.nama !== "Consultant Coway" ? "Saya " + CONS.nama + ", consultant Coway" : "Saya consultant Coway") + " di sini. Terima kasih sudi singgah! 😊");
+    await bot("Assalamualaikum 👋 Saya consultant Coway" + (CONS.nama && CONS.nama !== "Consultant Coway" ? ", " + CONS.nama : "") + " di sini. Terima kasih sudi singgah! 😊");
     await bot("Saya akan bantu cari pakej yang paling sesuai untuk rumah anda. Jawapan dalam chat ni saya simpan untuk hubungi anda tentang Coway sahaja ya 🔒");
     await bot("Boleh saya tahu nak panggil anda apa? 🙂");
     A.nama = await ask("Taip nama anda"); logLead("nama");
