@@ -32,7 +32,7 @@ body{margin:0;font-family:var(--sans);color:var(--ink);background:#fff;font-size
 a{color:var(--navy)}
 .bar{position:fixed;top:0;left:0;height:3px;width:0;background:#4aa3d8;z-index:20}
 .top{border-bottom:1px solid var(--line);padding:12px 20px;font-size:15px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.top a{text-decoration:none;font-weight:600;color:var(--navy)}
+.top a{text-decoration:none;font-weight:600;color:var(--navy)}.top a.brand-a{display:inline-flex;align-items:center;gap:9px}.top a.brand-a img{border-radius:50%;flex:none;display:block}
 .top a.sub{font-weight:400;color:var(--muted);text-decoration:underline}
 
 .crumb{font-size:14px;color:var(--muted);margin:28px 0 10px}
@@ -135,7 +135,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:8px 18px}
 </head>
 <body>
 <div class="bar" id="bar"></div>
-<header class="top"><a data-keep href="/">Consultant Coway</a>
+<header class="top"><a data-keep href="/" class="brand-a"><img src="/img/coway-icon.png" alt="" width="34" height="34">Consultant Coway</a>
 </header>
 <div class="ahero"><div class="in"><div>
   <nav class="crumb" aria-label="Lokasi halaman"><ol><li><a data-keep href="/artikel/">Artikel</a></li><li>Udara di rumah</li></ol></nav>

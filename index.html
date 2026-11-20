@@ -66,7 +66,9 @@
   .topbar:focus-visible{outline:3px solid #fff;outline-offset:-5px}
   header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line)}
   .nav{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
-  .brand{text-decoration:none;line-height:1.15}
+  .brand{text-decoration:none;line-height:1.15;display:flex;align-items:center;gap:10px}
+.brand-ic{width:46px;height:46px;border-radius:50%;flex:none;display:block}
+@media (max-width:600px){.brand-ic{width:40px;height:40px}}
   .brand b{display:block;font-size:19px;color:var(--navy)}
   .brand small{font-size:13px;color:var(--muted)}
   .menu{display:flex;gap:28px;font-size:15px;font-weight:500}
@@ -373,7 +375,7 @@
 <button type="button" class="topbar wait" id="topbar"><span id="tbText">Promosi terkini Coway, claim sekarang</span><span class="go">Claim</span></button>
 <header>
   <div class="wrap nav">
-    <a class="brand" href="#"><b>Consultant Coway</b><small>Penasihat produk berdaftar · Malaysia</small></a>
+    <a class="brand" href="#"><img class="brand-ic" src="img/coway-icon.png" alt="" width="46" height="46"><span><b>Consultant Coway</b><small>Penasihat produk berdaftar · Malaysia</small></span></a>
     <nav class="menu" id="menu" aria-label="Menu utama">
       <a href="#produk">Produk</a>
       <a href="#kira">Kira kos sehari</a>
