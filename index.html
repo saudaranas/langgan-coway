@@ -1017,12 +1017,14 @@
     const b = bulanIni(), t = b.m + n;
     return BLN[((t % 12) + 12) % 12] + " " + (b.y + Math.floor(t / 12));
   }
-  const sehingga = n => bulanTambah(n - 1);
+  /* daftar bulan ini, bulan berikutnya PERCUMA, RM20 sehingga (bulan daftar + n), harga biasa selepas itu.
+     Contoh: daftar Nov, Dis percuma, 5 bulan: RM20 sehingga April, harga biasa mula Mei. */
+  const sehingga = n => bulanTambah(n);
   function voucherTeks(c, k, harga){
     const n = voucherBulan(c, k);
     if(!n) return "🎁 Promo voucher RM20 untuk kontrak ini saya sahkan di WhatsApp.";
-    return `🎁 Promo voucher: bayar RM20 sebulan sahaja untuk ${n} bulan pertama.\n\n📅 Kalau daftar bulan ini (${bulanTambah(0)}), anda bayar RM20 sahaja sehingga ${sehingga(n)}.` +
-      (harga ? ` Mulai ${bulanTambah(n)}, ${harga} sebulan.` : "");
+    return `🎁 Promo voucher RM20 x ${n} bulan + 1 bulan PERCUMA.\n\n📅 Kalau daftar bulan ini (${bulanTambah(0)}):\n• ${bulanTambah(1)}: PERCUMA\n• Bayar RM20 sebulan sahaja sehingga ${sehingga(n)}` +
+      (harga ? `\n• Mulai ${bulanTambah(n + 1)}: ${harga} sebulan` : "");
   }
   let run = 0;
   async function flow(pre){
@@ -1084,7 +1086,7 @@
           rows.filter(r=>r[0]===k).map(r=>`   • ${/^(servis|tanpa)/i.test(r[1]) ? r[1] : "Servis " + r[1]}: ${rm(r[2])} sebulan`).join("\n");
       }).join("\n\n");
       await bot(`Ini semua pilihan pakej ${P.n}${vn?" ("+vn+")":""} 👇\n\n${senarai}\n\n` +
-        `🎁 Voucher RM20: kalau daftar bulan ini (${bulanTambah(0)}), anda bayar RM20 sebulan sahaja sehingga bulan yang tertera. Selepas itu harga bulanan biasa.` +
+        `🎁 Kalau daftar bulan ini (${bulanTambah(0)}), ${bulanTambah(1)} PERCUMA, kemudian bayar RM20 sebulan sahaja sehingga bulan yang tertera. Selepas itu harga bulanan biasa.` +
         (P.promo ? "\n\nHarga di atas harga biasa. Harga promosi semasa saya sahkan di WhatsApp 🎉" : "") +
         (ks.includes("3+2") ? "\n\nPakej 3+2 tertakluk kepada 8% SST." : ""));
       await bot("Pilih pakej yang anda nak 👇");
