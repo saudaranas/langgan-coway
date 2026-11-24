@@ -302,6 +302,7 @@
   .typing i{width:6px;height:6px;border-radius:50%;background:#9aa6ad;animation:b 1s infinite}
   .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
   @keyframes b{0%,60%,100%{opacity:.3}30%{opacity:1}}
+  .bub img.pimg{width:180px;height:180px;object-fit:contain;background:#fff;cursor:default;padding:6px}
   .bub img{display:block;width:100%;max-width:280px;border-radius:8px;border:1px solid #d5dbe0;margin-bottom:6px;cursor:zoom-in}
   .topbar.wait>*{visibility:hidden}
   #pop-img.wait{visibility:hidden}
@@ -1010,6 +1011,15 @@
     a.innerHTML = `<img src="${src}" alt="${esc(cap)}" loading="lazy">`;
     b.insertBefore(a, b.firstChild); msgs.scrollTop = msgs.scrollHeight;
   }
+  /* mesej dengan gambar produk di atas (gambar gagal dimuat = disembunyikan) */
+  async function sayProd(p, text){
+    await say(text);
+    if(!p || !p.img) return;
+    const b = msgs.lastElementChild, im = document.createElement("img");
+    im.className = "pimg"; im.alt = p.n; im.referrerPolicy = "no-referrer"; im.src = p.img;
+    im.onerror = () => im.remove(); im.onload = () => { msgs.scrollTop = msgs.scrollHeight; };
+    b.insertBefore(im, b.firstChild); msgs.scrollTop = msgs.scrollHeight;
+  }
   function choose(opts){
     return new Promise(res=>{
       const w = document.createElement("div"); w.className="choices";
@@ -1094,8 +1104,10 @@
     }
     if(P) A.produk = P.n;
     logLead("produk");
-    if(P && P.f && P.f.length){
-      await bot(`Sedikit info tentang ${P.n} 👇\n\n` + P.f.slice(0,4).map(x=>"✅ " + x).join("\n"));
+    if(P && run===my){
+      await sayProd(P, (P.f && P.f.length)
+        ? `Sedikit info tentang ${P.n} 👇\n\n` + P.f.slice(0,4).map(x=>"✅ " + x).join("\n")
+        : `${P.n}${P.t ? ": " + P.t : ""} 👆`);
     }
     if(P){
       /* voucher terbaik untuk produk ini (kontrak 7+0 jika ada, jika tidak 5+0) */
