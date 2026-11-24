@@ -993,7 +993,8 @@
 
   function bubble(text, who){
     const b = document.createElement("div"); b.className = "bub " + who;
-    b.textContent = text; const t = document.createElement("time"); t.textContent = now(); b.appendChild(t);
+    if(who === "bot") b.innerHTML = esc(text).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+    else b.textContent = text; const t = document.createElement("time"); t.textContent = now(); b.appendChild(t);
     msgs.appendChild(b); msgs.scrollTop = msgs.scrollHeight; return b;
   }
   async function say(text){
@@ -1064,7 +1065,7 @@
   function voucherTeks(c, k, harga){
     const n = voucherBulan(c, k);
     if(!n) return "🎁 Promo voucher RM20 untuk kontrak ini saya sahkan di WhatsApp.";
-    return `🎁 Promo voucher RM20 x ${n} bulan + 1 bulan PERCUMA.\n\n📅 Kalau daftar bulan ini (${bulanTambah(0)}):\n• ${bulanTambah(0)}: sediakan RM20 dalam akaun untuk pengaktifan kad\n• ${bulanTambah(1)}: PERCUMA\n• Bayar RM20 sebulan sahaja sehingga ${sehingga(n)}` +
+    return `🎁 **Voucher RM20 x ${n} bulan + 1 bulan PERCUMA**\n\n📅 Kalau daftar bulan ini (${bulanTambah(0)}):\n• ${bulanTambah(0)}: sediakan RM20 dalam akaun untuk pengaktifan kad\n• ${bulanTambah(1)}: **PERCUMA**\n• Bayar **RM20 sebulan sahaja sehingga ${sehingga(n)}**` +
       (harga ? `\n• Mulai ${bulanTambah(n + 1)}: ${harga} sebulan` : "");
   }
   let run = 0;
@@ -1073,7 +1074,8 @@
     const bot = t => run===my ? say(t) : new Promise(()=>{});
     A = {}; SID = newSid();
     await bot("Assalamualaikum 👋 Saya consultant Coway" + (CONS.nama && CONS.nama !== "Consultant Coway" ? ", " + CONS.nama : "") + " di sini. Terima kasih sudi singgah! 😊");
-    await bot("Saya akan bantu cari pakej yang paling sesuai untuk rumah anda. Jawapan dalam chat ni saya simpan untuk hubungi anda tentang Coway sahaja ya 🔒");
+    await bot("🎁 Bulan ini ada promo **voucher RM20/bulan** untuk produk Coway, **sehingga 7 bulan**! Bulan kedua pula **PERCUMA** 🎉\n\n🚚 Penghantaran dan pemasangan juga percuma.");
+    await bot("Saya bantu kira voucher untuk produk pilihan anda, siap dengan tarikhnya 📅 Jawapan dalam chat ni saya simpan untuk hubungi anda tentang Coway sahaja ya 🔒");
     await bot("Boleh saya tahu nak panggil anda apa? 🙂");
     A.nama = await ask("Taip nama anda"); logLead("nama");
     await bot(`Hai ${A.nama}! Selamat berkenalan 😊 Boleh kongsi nombor WhatsApp? Senang saya hantar sebut harga nanti 📲`);
@@ -1115,9 +1117,9 @@
       const kBest = ["7+0","5+0"].find(k=>ks.includes(k) && voucherBulan(P.c,k));
       if(kBest){
         const n = voucherBulan(P.c, kBest);
-        await bot(`🎁 Promo semasa untuk ${P.n}:\n\nKalau daftar bulan ini (${bulanTambah(0)}), ${bulanTambah(1)} PERCUMA, dan anda hanya perlu bayar RM20/bulan sahaja sehingga ${sehingga(n)} (kontrak ${kBest}).` +
-          (ks.includes("5+0") && kBest === "7+0" && voucherBulan(P.c,"5+0") ? ` Untuk kontrak 5+0, RM20/bulan sehingga ${sehingga(voucherBulan(P.c,"5+0"))}.` : "") +
-          `\n\nRM20 juga perlu ada dalam akaun bulan ini untuk pengaktifan kad.`);
+        await bot(`🎁 **Voucher untuk ${P.n}**\n\nKalau daftar bulan ini (${bulanTambah(0)}):\n• ${bulanTambah(1)}: **PERCUMA** 🎉\n• Kontrak ${kBest}: bayar **RM20/bulan sahaja sehingga ${sehingga(n)}**` +
+          (ks.includes("5+0") && kBest === "7+0" && voucherBulan(P.c,"5+0") ? `\n• Kontrak 5+0: RM20/bulan sehingga ${sehingga(voucherBulan(P.c,"5+0"))}` : "") +
+          `\n\n💳 Sediakan RM20 dalam akaun bulan ini untuk pengaktifan kad.`);
       }
     }
     /* bayaran */
@@ -1136,11 +1138,11 @@
       const ks = [...new Set(rows.map(r=>r[0]))];
       const senarai = ks.map(k=>{
         const vb = voucherBulan(P.c, k);
-        return `📋 Kontrak ${k}` + (vb ? ` (RM20 sahaja sehingga ${sehingga(vb)})` : "") + "\n" +
+        return `📋 **Kontrak ${k}**` + (vb ? ` (RM20 sahaja sehingga ${sehingga(vb)})` : "") + "\n" +
           rows.filter(r=>r[0]===k).map(r=>`   • ${/^(servis|tanpa)/i.test(r[1]) ? r[1] : "Servis " + r[1]}: ${rm(r[2])} sebulan`).join("\n");
       }).join("\n\n");
       await bot(`Ini semua pilihan pakej ${P.n}${vn?" ("+vn+")":""} 👇\n\n${senarai}\n\n` +
-        `🎁 Kalau daftar bulan ini (${bulanTambah(0)}), ${bulanTambah(1)} PERCUMA, kemudian bayar RM20 sebulan sahaja sehingga bulan yang tertera. Selepas itu harga bulanan biasa.` +
+        `🎁 Kalau daftar bulan ini (${bulanTambah(0)}), ${bulanTambah(1)} **PERCUMA**, kemudian bayar RM20 sebulan sahaja sehingga bulan yang tertera. Selepas itu harga bulanan biasa.` +
         (P.promo ? "\n\nHarga di atas harga biasa. Harga promosi semasa saya sahkan di WhatsApp 🎉" : "") +
         (ks.includes("3+2") ? "\n\nPakej 3+2 tertakluk kepada 8% SST." : ""));
       await bot("Pilih pakej yang anda nak 👇");
@@ -1150,15 +1152,15 @@
       const vb = voucherBulan(P.c, r[0]);
       pakej = `${P.n}${vn?" ("+vn+")":""}, kontrak ${r[0]}, servis ${r[1]}, ${rm(r[2])} sebulan` + (vb ? `, voucher RM20 x ${vb} bulan (sehingga ${sehingga(vb)})` : "");
       A.produk = pakej; logLead("pakej");
-      await bot(`✅ Pakej pilihan anda:\n\n${P.n}${vn?" ("+vn+")":""}\nKontrak: ${r[0]}\nServis: ${r[1]}\nSewa: ${rm(r[2])} sebulan\n\n` +
-        voucherTeks(P.c, r[0], rm(r[2])) + "\n\n🚚 Penghantaran dan pemasangan PERCUMA!");
+      await bot(`✅ **Pakej pilihan anda**\n\n📦 ${P.n}${vn?" ("+vn+")":""}\n📋 Kontrak: ${r[0]}\n🔧 Servis: ${r[1]}\n💰 Sewa: ${rm(r[2])} sebulan\n\n` +
+        voucherTeks(P.c, r[0], rm(r[2])) + "\n\n🚚 Penghantaran dan pemasangan **PERCUMA**!");
     }
 
     /* terus beri arahan dokumen pendaftaran */
-    await bot("📝 Untuk daftar, sediakan 3 perkara ini dan hantar di WhatsApp saya (bukan di chat ini):\n\n" +
-      "1️⃣ Gambar IC bahagian DEPAN sahaja. Palang dan tulis \"FOR COWAY ONLY\" di atas IC. Pastikan nombor IC dan nama masih jelas.\n\n" +
-      "2️⃣ Kad debit/kredit untuk potongan bulanan: 6 digit pertama dan 4 digit terakhir SAHAJA. Jangan hantar nombor penuh, CVV atau OTP. Pastikan ada RM20 dalam akaun untuk pengaktifan kad.\n\n" +
-      "3️⃣ Gambar tandatangan anda di atas kertas putih, dengan tulisan \"Coway use only\" di bawahnya.");
+    await bot("📝 Untuk daftar, sediakan **3 perkara** ini dan hantar di WhatsApp saya (bukan di chat ini):\n\n" +
+      "1️⃣ **Gambar IC** bahagian DEPAN sahaja. Palang dan tulis \"FOR COWAY ONLY\" di atas IC. Pastikan nombor IC dan nama masih jelas.\n\n" +
+      "2️⃣ **Kad debit/kredit** untuk potongan bulanan: 6 digit pertama dan 4 digit terakhir SAHAJA. **Jangan** hantar nombor penuh, CVV atau OTP. Pastikan ada RM20 dalam akaun untuk pengaktifan kad.\n\n" +
+      "3️⃣ **Gambar tandatangan** anda di atas kertas putih, dengan tulisan \"Coway use only\" di bawahnya.");
     if(run===my) await sayImg("/img/dokumen-pendaftaran.webp", "Contoh IC yang dipalang \"FOR COWAY ONLY\" dan contoh tandatangan 👆 Tekan gambar untuk besarkan.");
     if(run===my) await sayImg("/img/contoh-kertas-tandatangan.webp", "Contoh kertas tandatangan ✍️ Tandatangan di ruang kosong, tulis \"Coway use only\" di bawah.");
     await bot("Tip 💡 Untuk palang IC: ambil gambar IC, tekan Edit di galeri telefon, pilih Teks atau Lukis, dan tulis FOR COWAY ONLY.");
@@ -1166,17 +1168,17 @@
     /* maklumat pemasangan */
     await bot("Sikit lagi 😊 Anda duduk di kawasan mana? 📍 Untuk semak jadual pemasangan.");
     A.lokasi = await ask("Contoh: Shah Alam, Selangor"); logLead("lokasi");
-    await bot("Rumah anda berapa orang?");
+    await bot("Rumah anda berapa orang? 👨‍👩‍👧");
     A.rumah = await choose(["1–2 orang","3–4 orang","5 orang ke atas"]); logLead("rumah");
     await bot("Bila masa paling sesuai untuk saya hubungi anda? ⏰");
     A.masa = await choose(["Pagi","Petang","Malam","Bila-bila masa"]);
-    await bot("Anda nak terus daftar sekarang?");
+    await bot("Anda nak terus daftar sekarang? ✍️");
     daftar = (await choose(["Ya, saya nak daftar","Saya nak tanya dulu"])).startsWith("Ya");
     if(daftar) A.bayar += " (nak daftar)";
     logLead("selesai", {selesai:"Ya", sumber:pre||""});
-    await bot(`Terima kasih ${A.nama}! 🙏 Ini ringkasan anda:\n\nWhatsApp: +${A.wa}\nProduk: ${A.produk}\nIsi rumah: ${A.rumah}\nLokasi: ${A.lokasi}\nBayaran: ${A.bayar}\nMasa dihubungi: ${A.masa}`);
+    await bot(`Terima kasih ${A.nama}! 🙏 Ini **ringkasan** anda:\n\n📱 WhatsApp: +${A.wa}\n📦 Produk: ${A.produk}\n👨‍👩‍👧 Isi rumah: ${A.rumah}\n📍 Lokasi: ${A.lokasi}\n💳 Bayaran: ${A.bayar}\n⏰ Masa dihubungi: ${A.masa}`);
     await bot(daftar
-      ? "Tekan butang di bawah untuk hantar ringkasan ke WhatsApp saya, kemudian hantar 3 dokumen tadi di situ 📲 Saya sahkan pakej dan tarikh pemasangan dengan anda. Pendaftaran dibuat melalui sistem rasmi Coway."
+      ? "Tekan butang di bawah untuk hantar ringkasan ke **WhatsApp** saya, kemudian hantar 3 dokumen tadi di situ 📲 Saya sahkan pakej dan tarikh pemasangan dengan anda. Pendaftaran dibuat melalui sistem rasmi Coway."
       : "Tekan butang di bawah untuk hantar ringkasan ke WhatsApp saya. Saya akan jawab soalan anda dan sahkan promosi terkini 😊");
     const text = `Assalamualaikum, saya ${A.nama} (+${A.wa}).\n\n` + (daftar ? `Saya nak daftar pakej ini:\n${pakej || A.produk}\n` : `Saya berminat dengan: ${A.produk}\n`) + `Isi rumah: ${A.rumah}\nLokasi: ${A.lokasi}\nPilihan bayaran: ${A.bayar}\nMasa sesuai dihubungi: ${A.masa}\n\n` + (daftar ? "Saya akan sediakan dokumen pendaftaran. Apa langkah seterusnya?" : "Boleh beri sebut harga dan promosi terkini?") + (REF ? `\n\n(Rujukan: ${REF})` : "");
     const a = document.createElement("a"); a.className="btn btn-wa sendwa"; a.target="_blank"; a.rel="noopener";
