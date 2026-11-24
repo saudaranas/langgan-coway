@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Hikayat Pahlawan Rezeki</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0c0a08">
+<link rel="icon" href="/img/coway-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--emas:#e9b75a;--emas2:#f6d48f;--kertas:#fbf3e4;--dakwat:#2b2118;--kayu:#5b3a22;--merah:#a8402f}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;background:#0c0a08;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+  body{font-family:"Nunito Sans",system-ui,sans-serif;color:var(--kertas)}
+  canvas{position:fixed;inset:0;width:100vw;height:100vh;display:block}
+  button{font:inherit;cursor:pointer}
+  [hidden]{display:none!important}
+  .serif{font-family:"Cormorant Garamond",Georgia,serif}
+
+  /* HUD */
+  .hud{position:fixed;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:calc(12px + env(safe-area-inset-top)) 12px 0;pointer-events:none;z-index:5;transition:opacity .5s}
+  .misi{background:rgba(12,10,8,.62);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(233,183,90,.35);border-radius:12px;padding:8px 13px;max-width:72vw;pointer-events:auto}
+  .misi small{display:block;color:var(--emas);font-size:11px;font-weight:800;letter-spacing:1.2px}
+  .misi b{display:block;font-size:15px;font-weight:600;line-height:1.3}
+  .ikon{display:flex;gap:6px;pointer-events:auto}
+  .ikon button,.ikon a{width:42px;height:42px;border-radius:12px;border:1px solid rgba(233,183,90,.35);background:rgba(12,10,8,.62);color:var(--kertas);font-size:18px;display:flex;align-items:center;justify-content:center;text-decoration:none}
+
+  .kayu{position:fixed;width:116px;height:116px;border-radius:50%;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.28);transform:translate(-50%,-50%);z-index:4;pointer-events:none}
+  .kayu i{position:absolute;left:50%;top:50%;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:rgba(255,255,255,.32)}
+  .btnA{position:fixed;right:calc(20px + env(safe-area-inset-right));bottom:calc(28px + env(safe-area-inset-bottom));width:70px;height:70px;border-radius:50%;border:2px solid var(--emas);background:rgba(20,14,8,.7);color:var(--emas2);font-weight:800;font-size:13px;z-index:5;opacity:.55;transition:opacity .3s,transform .1s}
+  .btnA.dekat{opacity:1;animation:denyut 1.2s infinite}
+  .btnA:active{transform:scale(.94)}
+  @keyframes denyut{50%{box-shadow:0 0 0 10px rgba(233,183,90,.22)}}
+  .tip{position:fixed;left:50%;bottom:calc(118px + env(safe-area-inset-bottom));transform:translateX(-50%);background:rgba(12,10,8,.75);border:1px solid rgba(233,183,90,.35);border-radius:12px;padding:9px 15px;font-size:14px;z-index:6;text-align:center;max-width:86vw;transition:opacity .5s}
+
+  /* bar sinematik */
+  .bar{position:fixed;left:0;right:0;height:0;background:#000;z-index:7;transition:height .9s cubic-bezier(.6,0,.2,1)}
+  .bar.atas{top:0}.bar.bawah{bottom:0}
+  body.wayang .bar{height:13vh}
+  body.wayang .hud,body.wayang .btnA{opacity:0;pointer-events:none}
+  .kapsyen{position:fixed;left:50%;bottom:3.5vh;transform:translateX(-50%);width:min(620px,90vw);text-align:center;z-index:8;font-size:clamp(19px,5vw,26px);line-height:1.35;color:#f3e6cf;opacity:0;transition:opacity .9s;text-shadow:0 2px 10px #000}
+  .kapsyen.nampak{opacity:1}
+
+  /* dialog */
+  .dialog{position:fixed;left:0;right:0;bottom:0;z-index:8;pointer-events:auto;padding:0 10px calc(12px + env(safe-area-inset-bottom))}
+  .dialog .potret{position:absolute;right:max(4px,calc(50vw - 360px));bottom:calc(100% - 64px);height:min(46vh,340px);max-width:70vw;object-fit:contain;object-position:bottom;filter:drop-shadow(0 8px 18px rgba(0,0,0,.5));animation:masuk .45s cubic-bezier(.2,1.2,.4,1)}
+  .dialog .potret.kiri{right:auto;left:max(4px,calc(50vw - 360px))}
+  @keyframes masuk{from{transform:translateY(24px);opacity:0}}
+  .kotak{position:relative;max-width:700px;margin:0 auto;background:var(--kertas);color:var(--dakwat);border-radius:16px;box-shadow:0 12px 36px rgba(0,0,0,.55),0 0 0 2px rgba(91,58,34,.6) inset;padding:18px 18px 16px;min-height:118px}
+  .nama{position:absolute;top:-15px;left:18px;background:var(--kayu);color:var(--emas2);font-weight:800;font-size:13px;letter-spacing:.5px;padding:5px 14px;border-radius:999px;box-shadow:0 3px 8px rgba(0,0,0,.35)}
+  .teks{font-size:17px;line-height:1.5;min-height:52px;white-space:pre-wrap;padding-top:4px}
+  .teks em{font-style:normal;color:var(--merah);font-weight:700}
+  .lagi{position:absolute;right:16px;bottom:10px;font-size:13px;color:var(--kayu);animation:lompat .8s infinite}
+  @keyframes lompat{50%{transform:translateY(-4px)}}
+  .pilihan{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+  .pilihan button{background:#fff;border:1.5px solid rgba(91,58,34,.5);border-radius:12px;padding:11px 14px;color:var(--dakwat);font-size:16px;font-weight:600;text-align:left}
+  .pilihan button:hover,.pilihan button:focus-visible{background:var(--emas2);outline:none}
+
+  /* skrin */
+  .tirai{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
+  .judul{background:linear-gradient(180deg,rgba(12,10,8,.55),rgba(12,10,8,.92)),url("aset/jeti.webp") center/cover}
+  .judul small{letter-spacing:3px;font-size:12px;font-weight:800;color:var(--emas)}
+  .judul h1{font-family:"Cormorant Garamond",serif;font-weight:700;font-size:clamp(40px,11vw,68px);line-height:.95;margin:10px 0 12px;color:#f7e7c6;text-shadow:0 4px 30px rgba(0,0,0,.6)}
+  .judul p{color:#d8ccb6;max-width:400px;font-size:15px;line-height:1.55;margin:0 0 20px}
+  .pilihW{display:flex;gap:14px;margin-bottom:22px}
+  .pilihW button{width:132px;padding:10px 8px 12px;border-radius:16px;border:1.5px solid rgba(233,183,90,.3);background:rgba(255,255,255,.05);color:var(--kertas);font-weight:700;font-size:15px}
+  .pilihW button img{display:block;height:150px;margin:0 auto 8px;object-fit:contain}
+  .pilihW button[aria-pressed="true"]{border-color:var(--emas);background:rgba(233,183,90,.14);box-shadow:0 0 0 3px rgba(233,183,90,.18)}
+  .mula{background:var(--emas);color:#1c140b;border:0;border-radius:14px;padding:15px 38px;font-size:18px;font-weight:800;box-shadow:0 8px 24px rgba(233,183,90,.25)}
+  .mula:active{transform:scale(.97)}
+  .kecil{font-size:12px;color:#a49884;margin-top:16px}
+  .gulung{background:rgba(8,6,4,.78)}
+  .kertasG{background:var(--kertas);color:var(--dakwat);border-radius:18px;max-width:460px;width:100%;padding:24px 22px;text-align:left;max-height:86vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.6);animation:buka .5s cubic-bezier(.2,1.3,.4,1)}
+  @keyframes buka{from{transform:scale(.7) rotate(-2deg);opacity:0}}
+  .kertasG h2{font-family:"Cormorant Garamond",serif;font-size:30px;margin:0;text-align:center;color:var(--kayu)}
+  .kertasG .sub{text-align:center;font-size:12px;font-weight:800;letter-spacing:1.5px;color:var(--merah);margin:2px 0 14px}
+  .kertasG ul{padding-left:20px;margin:0 0 14px;font-size:15px;line-height:1.55}
+  .kertasG li{margin-bottom:7px}
+  .kertasG .pesan{font-family:"Cormorant Garamond",serif;font-size:19px;line-height:1.4;background:#f2e3c6;border-left:4px solid var(--merah);padding:12px 14px;border-radius:8px;margin-bottom:16px}
+  .kertasG button{width:100%}
+  .putih{position:fixed;inset:0;background:#fff;z-index:12;pointer-events:none;opacity:0;transition:opacity .7s}
+  .hitam{position:fixed;inset:0;background:#000;z-index:11;pointer-events:none;opacity:1;transition:opacity .9s}
+  @media (prefers-reduced-motion:reduce){.bar,.kapsyen,.hitam,.putih{transition-duration:.01s}}
+</style>
+</head>
+<body>
+<canvas id="c" aria-label="Babak permainan"></canvas>
+
+<div class="hud" id="hud" hidden>
+  <div class="misi" aria-live="polite"><small id="mBab">PROLOG</small><b id="mTeks"></b></div>
+  <div class="ikon">
+    <button type="button" id="bunyi" aria-label="Bunyi">🔊</button>
+    <a href="/hikayat/" aria-label="Peta ujian">📜</a>
+  </div>
+</div>
+<div class="kayu" id="kayu" hidden><i id="kayuI"></i></div>
+<button type="button" class="btnA" id="btnA" hidden aria-label="Berinteraksi">BUAL</button>
+<div class="tip" id="tip" hidden></div>
+<div class="bar atas"></div><div class="bar bawah"></div>
+<div class="kapsyen serif" id="kapsyen" aria-live="polite"></div>
+
+<div class="dialog" id="dialog" hidden role="dialog" aria-live="polite">
+  <img class="potret" id="dPotret" alt="">
+  <div class="kotak">
+    <div class="nama" id="dNama"></div>
+    <div class="teks" id="dTeks"></div>
+    <div class="pilihan" id="dPilih" hidden></div>
+    <span class="lagi" id="dLagi" aria-hidden="true">▼</span>
+  </div>
+</div>
+
+<section class="tirai judul" id="sJudul">
+  <small>LANGGAN COWAY PRESENTS</small>
+  <h1>Hikayat<br>Pahlawan Rezeki</h1>
+  <p>Hidup yang sempit. Sebilah keris lama. Satu pengembaraan ke Melaka kurun ke-15 untuk mengubah nasib.</p>
+  <div class="pilihW" id="pilihW" role="group" aria-label="Pilih watak">
+    <button type="button" data-w="L" aria-pressed="false"><img src="aset/hafiz-depan.webp" alt="">Hafiz</button>
+    <button type="button" data-w="P" aria-pressed="false"><img src="aset/aisyah-depan.webp" alt="">Aisyah</button>
+  </div>
+  <button type="button" class="mula" id="mula">Mulakan kisah</button>
+  <div class="kecil">🎧 Gunakan fon telinga untuk pengalaman terbaik</div>
+</section>
+
+<section class="tirai gulung" id="sGulung" hidden role="dialog" aria-modal="true" aria-labelledby="gJudul">
+  <div class="kertasG">
+    <h2 id="gJudul">Gulungan Ilmu</h2>
+    <div class="sub">ILMU TOK MALIK · BAB 1</div>
+    <ul id="gIlmu"></ul>
+    <div class="pesan" id="gPesan"></div>
+    <button type="button" class="mula" id="gTutup">Simpan dalam beg</button>
+  </div>
+</section>
+<div class="hitam" id="hitam"></div>
+<div class="putih" id="putih"></div>
+
+<script>
+(function(){
+"use strict";
+const $ = id => document.getElementById(id);
+const LS = { get:k=>{try{return localStorage.getItem(k)}catch(e){return null}}, set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}} };
+const tidur = ms => new Promise(r => setTimeout(r, ms));
+
+/* ---------- Simpanan ---------- */
+const S = Object.assign({ babak:"rumah", meja:0, jumpaTok:0, gulungan:0, lapor:0 }, JSON.parse(LS.get("hk_kisah") || "{}"));
+const simpan = () => LS.set("hk_kisah", JSON.stringify(S));
+let WATAK = LS.get("hk_w") || "";
+const NAMA = () => WATAK === "P" ? "Aisyah" : "Hafiz";
+const isi = s => s.replace(/\{N\}/g, NAMA());
+
+/* ---------- Aset ---------- */
+const IMG = {};
+const muat = (k, src) => new Promise(r => { const i = new Image(); i.onload = () => { IMG[k] = i; r(); }; i.onerror = r; i.src = src; });
+
+/* ---------- Bunyi ---------- */
+let AC = null, BUNYI = LS.get("hk_bunyi") !== "0";
+const BUF = {};
+const A = n => { const a = new Audio("aset/audio/" + n + ".mp3"); a.loop = true; a.volume = 0; return a; };
+const LAGU = { judul:A("judul"), kampung:A("kampung"), hujan:A("hujan"), ombak:A("ombak") };
+const SASAR = { judul:0, kampung:0, hujan:0, ombak:0 };
+function bukaAudio(){
+  if(AC) return;
+  try{ AC = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){ return; }
+  ["pilih","gerak","gulungan","syiling","seru","lulus","rahsia"].forEach(n =>
+    fetch("aset/audio/" + n + ".mp3").then(r => r.arrayBuffer()).then(b => AC.decodeAudioData(b, d => BUF[n] = d, () => {})).catch(() => {}));
+}
+function sfx(n, vol){
+  if(!BUNYI || !AC || !BUF[n]) return;
+  const s = AC.createBufferSource(), g = AC.createGain(); g.gain.value = vol == null ? .6 : vol;
+  s.buffer = BUF[n]; s.connect(g).connect(AC.destination); s.start();
+}
+function blip(p){
+  if(!BUNYI || !AC) return;
+  const o = AC.createOscillator(), g = AC.createGain(), t = AC.currentTime;
+  o.type = "sine"; o.frequency.value = p * (0.95 + Math.random() * .1);
+  g.gain.setValueAtTime(.035, t); g.gain.exponentialRampToValueAtTime(.0001, t + .05);
+  o.connect(g).connect(AC.destination); o.start(t); o.stop(t + .06);
+}
+function suasana(o){ Object.keys(SASAR).forEach(k => SASAR[k] = o[k] || 0); Object.keys(LAGU).forEach(k => { if(SASAR[k] && BUNYI) LAGU[k].play().catch(() => {}); }); }
+function campurBunyi(dt){
+  Object.keys(LAGU).forEach(k => {
+    const a = LAGU[k], t = BUNYI ? SASAR[k] : 0;
+    a.volume = Math.max(0, Math.min(1, a.volume + (t - a.volume) * Math.min(1, dt * 1.5)));
+    if(a.volume < .005 && !t && !a.paused) a.pause();
+  });
+}
+function setBunyi(on){ BUNYI = on; LS.set("hk_bunyi", on ? "1" : "0"); $("bunyi").textContent = on ? "🔊" : "🔇"; if(on) suasana(SASAR); }
+$("bunyi").onclick = () => { bukaAudio(); setBunyi(!BUNYI); sfx("pilih"); };
+
+/* ---------- Babak ---------- */
+const BABAK = {
+  rumah: {
+    bg:"rumah", bab:"PROLOG · MALAM ITU",
+    jalan:[[[1210,880],[1480,860],[1720,880],[1760,1100],[1780,1280],[1600,1330],[1450,1430],[1340,1430],[1330,1180],[1290,1020]]],
+    saiz:[[880,430],[1430,520]], mula:[1520,1200], laju:420,
+    tona:"rgba(40,60,70,.30)", cahaya:{x:1255,y:120,r:520,warna:"255,214,140"},
+    hujan:[[460,330],[880,150],[880,610],[470,760]],
+    bunyi:{ judul:.35, hujan:.5 },
+    benda:[
+      { id:"meja", x:1300, y:930, r:170, label:"PERIKSA", ada:()=>!S.meja, seru:[1000,760] },
+      { id:"pintu", x:1640, y:900, r:150, label:"KELUAR", ada:()=>S.meja, seru:[1640,330] }
+    ]
+  },
+  jeti: {
+    bg:"jeti", bab:"BAB 1 · SURAT CAP MOHOR",
+    jalan:[
+      [[660,1438],[1330,1438],[1290,1300],[1170,1260],[960,1150],[900,1100],[940,1040],[1010,1010],[1100,930],[1260,800],[1420,680],[1500,560],[1440,500],[1340,450],[1250,470],[1190,560],[1080,640],[960,650],[880,700],[900,820],[930,940],[900,1030],[820,1130],[760,1230],[700,1330]],
+      [[930,1110],[950,1010],[1060,930],[1400,640],[1500,540],[1520,520],[1610,500],[1960,555],[1950,600],[1860,640],[1570,880],[1270,1250],[1200,1260],[1050,1180]]
+    ],
+    saiz:[[480,150],[1438,320]], mula:[1700,570], laju:720,
+    tona:"rgba(255,170,90,.10)", debu:true,
+    bunyi:{ kampung:.4, ombak:.35 },
+    benda:[
+      { id:"tok", x:900, y:1000, r:200, label:"BUAL", ada:()=>true, seru:[640,600] },
+      { id:"gulungan", x:790, y:1370, r:90, label:"AMBIL", ada:()=>S.jumpaTok && !S.gulungan, kilau:true, auto:true }
+    ]
+  }
+};
+let B = null;   // babak semasa
+const pemain = { x:0, y:0, arah:"depan", jalan:0, cermin:false };
+
+const dalam = (p, x, y) => { let c = false; for(let i = 0, j = p.length - 1; i < p.length; j = i++){ const [xi, yi] = p[i], [xj, yj] = p[j]; if(((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) c = !c; } return c; };
+const bolehJalan = (x, y) => B.jalan.some(p => dalam(p, x, y));
+const tinggi = y => { const [[y0, h0], [y1, h1]] = B.saiz; return h0 + (h1 - h0) * Math.max(0, Math.min(1, (y - y0) / (y1 - y0))); };
+
+/* ---------- Kanvas & kamera ---------- */
+const cv = $("c"), ctx = cv.getContext("2d");
+let DPR = 1, SW = 0, SH = 0;
+const kam = { x:0, y:0, z:1, sk:1, zSasar:1 };
+function saiz(){ DPR = Math.min(window.devicePixelRatio || 1, 2); SW = innerWidth; SH = innerHeight; cv.width = Math.round(SW * DPR); cv.height = Math.round(SH * DPR); }
+addEventListener("resize", saiz); saiz();
+function kemasKamera(dt){
+  const bg = IMG[B.bg]; if(!bg) return;
+  kam.z += (kam.zSasar - kam.z) * Math.min(1, dt * .8);
+  const asas = Math.max(SW / bg.width, SH / bg.height);
+  kam.sk = asas * kam.z;
+  const vw = SW / kam.sk, vh = SH / kam.sk;
+  const tx = Math.max(0, Math.min(bg.width - vw, pemain.x - vw / 2));
+  const ty = Math.max(0, Math.min(bg.height - vh, pemain.y - tinggi(pemain.y) * .5 - vh / 2));
+  kam.x += (tx - kam.x) * Math.min(1, dt * 3); kam.y += (ty - kam.y) * Math.min(1, dt * 3);
+}
+
+/* ---------- Zarah ---------- */
+const HUJAN = Array.from({ length:70 }, () => ({ x:Math.random(), y:Math.random(), v:.8 + Math.random() * .7 }));
+const DEBU = Array.from({ length:40 }, () => ({ x:Math.random() * 2576, y:Math.random() * 1438, s:1 + Math.random() * 2.5, f:Math.random() * 6 }));
+
+/* ---------- Lukis ---------- */
+let T = 0;
+function lukis(){
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.fillStyle = "#0c0a08"; ctx.fillRect(0, 0, cv.width, cv.height);
+  if(!B || !IMG[B.bg]) return;
+  const s = kam.sk * DPR;
+  ctx.setTransform(s, 0, 0, s, -kam.x * s, -kam.y * s);
+  ctx.drawImage(IMG[B.bg], 0, 0);
+  // hujan di tingkap
+  if(B.hujan){
+    ctx.save(); ctx.beginPath(); B.hujan.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.closePath(); ctx.clip();
+    ctx.strokeStyle = "rgba(190,210,235,.35)"; ctx.lineWidth = 2;
+    HUJAN.forEach(d => { const x = 460 + d.x * 420, y = 150 + ((d.y + T * d.v * .6) % 1) * 620; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - 4, y + 26); ctx.stroke(); });
+    ctx.restore();
+  }
+  // benda bercahaya
+  B.benda.forEach(b => {
+    if(!b.kilau || !b.ada()) return;
+    const p = .5 + Math.sin(T * 3) * .5;
+    const g = ctx.createRadialGradient(b.x, b.y - 20, 4, b.x, b.y - 20, 90);
+    g.addColorStop(0, `rgba(255,230,150,${.55 + p * .3})`); g.addColorStop(1, "rgba(255,230,150,0)");
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(b.x, b.y - 20, 90, 0, 7); ctx.fill();
+    ctx.save(); ctx.translate(b.x, b.y - 24 + Math.sin(T * 2.4) * 6); ctx.rotate(-.35);
+    ctx.fillStyle = "#e8d3a4"; ctx.strokeStyle = "#6b4a2a"; ctx.lineWidth = 3;
+    ctx.fillRect(-34, -14, 68, 28); ctx.strokeRect(-34, -14, 68, 28);
+    ctx.fillStyle = "#c79a55"; [-38, 38].forEach(x => { ctx.beginPath(); ctx.ellipse(x, 0, 7, 17, 0, 0, 7); ctx.fill(); ctx.stroke(); });
+    ctx.fillStyle = "#a8402f"; ctx.fillRect(-4, -14, 8, 28);
+    ctx.restore();
+  });
+  // pemain
+  lukisPemain();
+  // tona warna & cahaya
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
+  if(B.tona){ ctx.globalCompositeOperation = "multiply"; ctx.fillStyle = B.tona; ctx.fillRect(0, 0, cv.width, cv.height); }
+  ctx.restore();
+  if(B.cahaya){
+    const c = B.cahaya, f = .85 + Math.sin(T * 7) * .04 + (Math.random() < .02 ? -.2 : 0);
+    ctx.save(); ctx.globalCompositeOperation = "screen";
+    const g = ctx.createRadialGradient(c.x, c.y, 10, c.x, c.y, c.r); g.addColorStop(0, `rgba(${c.warna},${.45 * f})`); g.addColorStop(1, `rgba(${c.warna},0)`);
+    ctx.fillStyle = g; ctx.fillRect(c.x - c.r, c.y - c.r, c.r * 2, c.r * 2); ctx.restore();
+  }
+  if(B.debu){
+    ctx.save(); ctx.globalCompositeOperation = "screen";
+    DEBU.forEach(d => { const x = (d.x + T * 14 * d.s) % 2576, y = d.y + Math.sin(T * .7 + d.f) * 18; ctx.fillStyle = `rgba(255,214,150,${.25 + .25 * Math.sin(T * 1.5 + d.f)})`; ctx.beginPath(); ctx.arc(x, y, d.s * 1.6, 0, 7); ctx.fill(); });
+    ctx.restore();
+  }
+  // tanda seru
+  B.benda.forEach(b => {
+    if(!b.seru || !b.ada() || sibuk) return;
+    const [x, y] = b.seru, bob = Math.sin(T * 4) * 10, k = 1 / kam.z;
+    ctx.save(); ctx.translate(x, y + bob); ctx.scale(k, k);
+    ctx.fillStyle = "rgba(0,0,0,.25)"; ctx.beginPath(); ctx.arc(2, 4, 34, 0, 7); ctx.fill();
+    ctx.fillStyle = "#e9b75a"; ctx.beginPath(); ctx.arc(0, 0, 34, 0, 7); ctx.fill();
+    ctx.fillStyle = "#1c140b"; ctx.font = "800 46px 'Nunito Sans',sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("!", 0, 2);
+    ctx.restore();
+  });
+  // anak panah ke tanda di luar skrin
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  B.benda.forEach(b => {
+    if(!b.seru || !b.ada() || sibuk) return;
+    const sx = (b.seru[0] - kam.x) * kam.sk, sy = (b.seru[1] - kam.y) * kam.sk;
+    if(sx > 20 && sx < SW - 20 && sy > 60 && sy < SH - 20) return;
+    const cx = SW / 2, cy = SH / 2, a = Math.atan2(sy - cy, sx - cx);
+    const px = Math.max(34, Math.min(SW - 34, sx)), py = Math.max(110, Math.min(SH - 140, sy));
+    ctx.save(); ctx.scale(DPR, DPR); ctx.translate(px, py); ctx.rotate(a);
+    ctx.globalAlpha = .75 + Math.sin(T * 5) * .25;
+    ctx.fillStyle = "#e9b75a"; ctx.beginPath(); ctx.moveTo(18, 0); ctx.lineTo(-10, -13); ctx.lineTo(-4, 0); ctx.lineTo(-10, 13); ctx.closePath(); ctx.fill();
+    ctx.restore();
+  });
+  // vignet
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  const v = ctx.createRadialGradient(cv.width / 2, cv.height / 2, Math.min(cv.width, cv.height) * .35, cv.width / 2, cv.height / 2, Math.max(cv.width, cv.height) * .75);
+  v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, B.cahaya ? "rgba(0,0,0,.6)" : "rgba(20,8,0,.42)");
+  ctx.fillStyle = v; ctx.fillRect(0, 0, cv.width, cv.height);
+}
+function lukisPemain(){
+  const w = WATAK === "P" ? "aisyah" : "hafiz";
+  const im = IMG[w + "-" + pemain.arah]; if(!im) return;
+  const h = tinggi(pemain.y), wd = im.width * h / im.height;
+  const lang = pemain.jalan ? Math.abs(Math.sin(pemain.jalan)) : 0;
+  // bayang
+  ctx.fillStyle = "rgba(0,0,0,.32)"; ctx.beginPath(); ctx.ellipse(pemain.x, pemain.y, wd * .42, h * .045, 0, 0, 7); ctx.fill();
+  ctx.save(); ctx.translate(pemain.x, pemain.y - lang * h * .025);
+  if(pemain.jalan) ctx.rotate(Math.sin(pemain.jalan) * .025);
+  if(pemain.cermin) ctx.scale(-1, 1);
+  ctx.drawImage(im, -wd / 2, -h, wd, h * (1 - lang * .012));
+  ctx.restore();
+}
+
+/* ---------- Input ---------- */
+const kunci = {};
+let vx = 0, vy = 0, sibuk = true, main = false, tekan = null;
+const henti = () => { vx = vy = 0; for(const k in kunci) kunci[k] = false; tekan = null; $("kayu").hidden = true; };
+addEventListener("keydown", e => {
+  if(!main) return;
+  if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault();
+  if(e.key === " " || e.key === "Enter"){ if(dialogBuka){ if(langkau) langkau(); else if(sambung) sambung(); } else tindak(); return; }
+  kunci[e.key.toLowerCase()] = true;
+});
+addEventListener("keyup", e => { kunci[e.key.toLowerCase()] = false; });
+cv.addEventListener("pointerdown", e => {
+  if(!main || sibuk) return; bukaAudio();
+  tekan = { id:e.pointerId, x:e.clientX, y:e.clientY };
+  const k = $("kayu"); k.style.left = e.clientX + "px"; k.style.top = e.clientY + "px"; k.hidden = false; $("kayuI").style.transform = "";
+});
+addEventListener("pointermove", e => {
+  if(!tekan || e.pointerId !== tekan.id) return;
+  let dx = e.clientX - tekan.x, dy = e.clientY - tekan.y; const d = Math.hypot(dx, dy), m = 44;
+  if(d > m){ dx = dx / d * m; dy = dy / d * m; }
+  $("kayuI").style.transform = `translate(${dx}px,${dy}px)`;
+  vx = Math.abs(dx) > 6 ? dx / m : 0; vy = Math.abs(dy) > 6 ? dy / m : 0;
+});
+const lepas = e => { if(tekan && e.pointerId === tekan.id){ tekan = null; vx = vy = 0; $("kayu").hidden = true; } };
+addEventListener("pointerup", lepas); addEventListener("pointercancel", lepas);
+$("btnA").addEventListener("pointerdown", e => { e.stopPropagation(); bukaAudio(); tindak(); });
+
+function dekatSekali(){
+  let best = null, bd = 1e9;
+  B.benda.forEach(b => { if(!b.ada() || b.auto) return; const d = Math.hypot(b.x - pemain.x, b.y - pemain.y); if(d < b.r && d < bd){ bd = d; best = b; } });
+  return best;
+}
+function tindak(){ if(sibuk || dialogBuka) return; const b = dekatSekali(); if(b) interaksi(b); }
+
+/* ---------- Kemas kini ---------- */
+let tTip = 0;
+function kemas(dt){
+  let dx = vx, dy = vy;
+  if(kunci["arrowleft"] || kunci["a"]) dx = -1;
+  if(kunci["arrowright"] || kunci["d"]) dx = 1;
+  if(kunci["arrowup"] || kunci["w"]) dy = -1;
+  if(kunci["arrowdown"] || kunci["s"]) dy = 1;
+  if(sibuk) dx = dy = 0;
+  const m = Math.hypot(dx, dy);
+  if(m > .15){
+    if(m > 1){ dx /= m; dy /= m; }
+    if(Math.abs(dx) > Math.abs(dy) * 1.2){ pemain.arah = "kanan"; pemain.cermin = dx < 0; }
+    else { pemain.arah = dy < 0 ? "belakang" : "depan"; pemain.cermin = false; }
+    const sp = B.laju * (tinggi(pemain.y) / B.saiz[1][1]) * dt;
+    const nx = pemain.x + dx * sp, ny = pemain.y + dy * sp * .8;
+    if(bolehJalan(nx, pemain.y)) pemain.x = nx;
+    if(bolehJalan(pemain.x, ny)) pemain.y = ny;
+    pemain.jalan += dt * 9;
+  } else pemain.jalan = 0;
+  B.benda.forEach(b => { if(b.auto && b.ada() && !sibuk && Math.hypot(b.x - pemain.x, b.y - pemain.y) < b.r) interaksi(b); });
+  const d = !sibuk && dekatSekali();
+  const A = $("btnA"); A.classList.toggle("dekat", !!d); A.textContent = d ? d.label : "BUAL";
+  if(tTip && (tTip -= dt) <= 0){ tTip = 0; $("tip").style.opacity = 0; setTimeout(() => { if(!tTip) $("tip").hidden = true; }, 500); }
+}
+function tunjuk(t, s){ const el = $("tip"); el.textContent = t; el.hidden = false; el.style.opacity = 1; tTip = s || 4.5; }
+
+/* ---------- Dialog ---------- */
+let dialogBuka = false, langkau = null, sambung = null;
+const WATAK_D = {
+  tok:{ nama:"Tok Malik", potret:"aset/tok-potret.webp", nada:170 },
+  aku:{ nama:() => NAMA(), potret:() => "aset/" + (WATAK === "P" ? "aisyah" : "hafiz") + "-depan.webp", nada:() => WATAK === "P" ? 420 : 260, kiri:true }
+};
+const nilai = v => typeof v === "function" ? v() : v;
+function cakap(siapa, teks){
+  return new Promise(async res => {
+    dialogBuka = true;
+    const w = WATAK_D[siapa], D = $("dialog"), P = $("dPotret");
+    $("dNama").textContent = nilai(w.nama);
+    const src = nilai(w.potret);
+    if(P.getAttribute("src") !== src){ P.src = src; P.style.animation = "none"; P.offsetHeight; P.style.animation = ""; }
+    P.classList.toggle("kiri", !!w.kiri);
+    $("dPilih").hidden = true; $("dLagi").hidden = true; D.hidden = false;
+    const t = isi(teks), el = $("dTeks"); el.textContent = "";
+    let i = 0, habis = false; langkau = () => { habis = true; };
+    while(i < t.length && !habis){
+      el.textContent = t.slice(0, ++i);
+      if(i % 3 === 0 && /\S/.test(t[i - 1])) blip(nilai(w.nada));
+      await tidur(/[.,!?…]/.test(t[i - 1]) ? 110 : 26);
+    }
+    el.textContent = t; langkau = null; $("dLagi").hidden = false;
+    sambung = () => { sambung = null; sfx("gerak", .3); res(); };
+  });
+}
+function pilih(op){
+  return new Promise(res => {
+    const P = $("dPilih"); P.innerHTML = ""; P.hidden = false; $("dLagi").hidden = true;
+    op.forEach((o, i) => { const b = document.createElement("button"); b.type = "button"; b.textContent = o;
+      b.onclick = e => { e.stopPropagation(); sfx("pilih"); P.hidden = true; res(i); }; P.appendChild(b); });
+  });
+}
+const tutupDialog = () => { $("dialog").hidden = true; dialogBuka = false; };
+$("dialog").addEventListener("pointerdown", e => { if(e.target.closest("button")) return; if(langkau) langkau(); else if(sambung) sambung(); });
+
+/* ---------- Wayang (babak sinematik) ---------- */
+async function wayang(baris, opsi){
+  opsi = opsi || {};
+  document.body.classList.add("wayang"); sibuk = true; henti();
+  await tidur(900);
+  const K = $("kapsyen");
+  for(const b of baris){
+    K.classList.remove("nampak"); await tidur(450);
+    K.textContent = isi(b); K.classList.add("nampak");
+    await new Promise(r => { const t = setTimeout(r, Math.max(2600, b.length * 55)); const f = () => { clearTimeout(t); removeEventListener("pointerdown", f); r(); }; setTimeout(() => addEventListener("pointerdown", f), 400); });
+  }
+  K.classList.remove("nampak"); await tidur(500);
+  if(!opsi.kekal){ document.body.classList.remove("wayang"); await tidur(700); sibuk = false; }
+}
+const hitam = v => { $("hitam").style.opacity = v ? 1 : 0; return tidur(900); };
+
+/* ---------- Interaksi & cerita ---------- */
+async function interaksi(b){
+  if(sibuk || dialogBuka) return;
+  sibuk = true; henti(); sfx("pilih", .4);
+  const tok = t => cakap("tok", t), aku = t => cakap("aku", t);
+  if(b.id === "meja"){
+    await aku("Bil elektrik. Sewa rumah. Ansuran kereta…");
+    await aku("Gaji bulan ni dah habis. Bil masih bertimbun.");
+    await aku("Sampai bila aku nak hidup macam ni?");
+    tutupDialog(); S.meja = 1; simpan(); misi();
+    tunjuk("Keluar ambil angin");
+  } else if(b.id === "pintu"){
+    tutupDialog();
+    await wayang([
+      "{N} keluar ke tebing Sungai Melaka dalam renyai hujan.",
+      "Di celah akar pokok, sesuatu berkilau. Sebilah keris lama, hulunya berukir emas.",
+      "Sebaik keris itu digenggam…"
+    ], { kekal:true });
+    sfx("rahsia", .8); $("putih").style.opacity = 1; await tidur(1200);
+    S.babak = "jeti"; simpan(); masukBabak("jeti", true);
+    return;
+  } else if(b.id === "tok"){
+    if(!S.jumpaTok){
+      await tok("Hah. Akhirnya kau sampai juga, {N}.");
+      await aku("Tok… saya di mana ni? Tadi saya di tebing sungai…");
+      await tok("Kau di Melaka. Keris berhulu emas itu hanya memilih orang yang sedang mencari jalan.");
+      await tok("Aku Tok Malik. Empat puluh tahun aku berdagang di pelabuhan ini.");
+      await tok("Kalau mahu pulang ke zamanmu, kau mesti lulus sembilan ujian pedagang.");
+      await tok("Tapi sebelum ujian pertama, ada segulung ilmu tercicir di hujung jalan, dekat tempayan. Pergi ambil.");
+      const p = await pilih(["Baik, Tok.", "Ujian apa tu, Tok?"]);
+      if(p === 1) await tok("Ujian pertama: dapatkan Surat Cap Mohor, tanda kau pedagang yang sah. Di zamanmu, orang panggil ia link affiliate.");
+      S.jumpaTok = 1; simpan(); sfx("seru");
+      tutupDialog(); misi(); tunjuk("Cari gulungan yang bercahaya ✨");
+    } else if(!S.gulungan){
+      await tok("Gulungan itu di hujung jalan, dekat tempayan. Pergilah."); tutupDialog();
+    } else {
+      if(!S.lapor){
+        await tok("Bagus. Kau sudah baca ilmunya.");
+        await tok("Ingat pesanku: betulkan niat. Rezeki yang halal itu berkat.");
+        S.lapor = 1; simpan(); misi();
+      }
+      await tok("Sekarang, dapatkan Surat Cap Mohor kau. Bila siap, datang jumpa aku semula.");
+      const p = await pilih(["⚔️  Buka Ujian Pertama", "Nanti dulu, Tok"]);
+      tutupDialog();
+      if(p === 0){ sfx("lulus"); await hitam(true); location.href = "/hikayat/"; return; }
+    }
+  } else if(b.id === "gulungan"){
+    sfx("gulungan"); setTimeout(() => sfx("rahsia", .6), 250);
+    $("gIlmu").innerHTML = [
+      "Link affiliate anda ialah Surat Cap Mohor anda. Sesiapa yang buka link ini, sistem kenal ia datang dari anda.",
+      "Link ini terus membuka chatbot. Chatbot terangkan produk, harga, voucher RM20 dan cara daftar.",
+      "Anda tak perlu hafal harga. Tugas anda: kongsi link dan ajak orang berbual.",
+      "Komisen RM100 setiap produk. Capai 11 jualan dalam sebulan, semua jualan bulan itu jadi RM200."
+    ].map(x => "<li>" + x + "</li>").join("");
+    $("gPesan").textContent = "“Betulkan niat. Berniaga kerana mahu menyara keluarga dengan rezeki yang halal. Niat yang baik menjadikan penat itu ibadah.” — Tok Malik";
+    $("sGulung").hidden = false;
+    await new Promise(r => $("gTutup").onclick = r);
+    sfx("syiling"); $("sGulung").hidden = true; S.gulungan = 1; simpan(); misi();
+    tunjuk("Kembali kepada Tok Malik");
+  }
+  sibuk = false;
+}
+
+function misi(){
+  let t = "";
+  if(S.babak === "rumah") t = S.meja ? "Keluar ambil angin" : "Periksa meja makan";
+  else if(!S.jumpaTok) t = "Cari Tok Malik di gerai rempah";
+  else if(!S.gulungan) t = "Ambil Gulungan Ilmu";
+  else if(!S.lapor) t = "Kembali kepada Tok Malik";
+  else t = "Dapatkan Surat Cap Mohor (Ujian 1)";
+  $("mBab").textContent = B ? B.bab : ""; $("mTeks").textContent = t;
+}
+
+async function masukBabak(id, dariPutih){
+  B = BABAK[id];
+  [pemain.x, pemain.y] = S.babak === "jeti" && S.jumpaTok ? [1000, 1080] : B.mula;
+  pemain.arah = id === "jeti" ? "depan" : "belakang"; pemain.cermin = false;
+  kam.z = 1.18; kam.zSasar = 1; kam.x = 99999; kam.y = 99999;
+  kemasKamera(1); kam.x = Math.max(0, kam.x); kam.y = Math.max(0, kam.y);
+  suasana(B.bunyi); misi();
+  $("hud").hidden = false; $("btnA").hidden = false;
+  if(dariPutih){ $("hitam").style.opacity = 0; await tidur(300); $("putih").style.opacity = 0; }
+  else await hitam(false);
+  if(id === "rumah" && !S.meja) await wayang(["Malam. Hujan tak berhenti sejak petang.", "Dan di atas meja, bil-bil yang tak terbayar."]);
+  else if(id === "jeti" && !S.jumpaTok) await wayang(["Bila {N} membuka mata, bunyi kereta sudah hilang.", "Bandar Melaka. Kurun ke-15."]);
+  sibuk = false;
+  if(!S.jumpaTok || S.babak === "rumah"){
+    const sentuh = matchMedia("(pointer:coarse)").matches;
+    tunjuk(sentuh ? "Seret jari di skrin untuk berjalan" : "Anak panah atau WASD untuk berjalan, Space untuk berinteraksi", 5);
+  }
+}
+
+/* ---------- Gelung ---------- */
+let akhir = performance.now();
+function gelung(t){
+  const dt = Math.min(.05, (t - akhir) / 1000); akhir = t; T += dt;
+  if(main && B){ kemas(dt); kemasKamera(dt); }
+  campurBunyi(dt);
+  lukis();
+  requestAnimationFrame(gelung);
+}
+
+/* ---------- Skrin judul ---------- */
+document.querySelectorAll("[data-w]").forEach(b => {
+  if(b.dataset.w === WATAK) b.setAttribute("aria-pressed", "true");
+  b.onclick = () => { bukaAudio(); sfx("gerak"); WATAK = b.dataset.w; document.querySelectorAll("[data-w]").forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false")); };
+});
+$("mula").onclick = async () => {
+  if(!WATAK){ $("pilihW").animate([{transform:"translateX(-6px)"},{transform:"translateX(6px)"},{transform:"none"}], 260); return; }
+  bukaAudio(); sfx("pilih"); LS.set("hk_w", WATAK);
+  $("hitam").style.opacity = 1; await tidur(700);
+  $("sJudul").hidden = true; main = true;
+  masukBabak(S.babak);
+};
+
+(async function(){
+  await Promise.all([
+    muat("rumah", "aset/rumah.webp"), muat("jeti", "aset/jeti.webp"),
+    ...["hafiz", "aisyah"].flatMap(w => ["depan", "belakang", "kanan"].map(a => muat(w + "-" + a, "aset/" + w + "-" + a + ".webp")))
+  ]);
+  setBunyi(BUNYI); suasana({ judul:.45 });
+  $("hitam").style.opacity = 0;
+  requestAnimationFrame(gelung);
+})();
+})();
+</script>
+</body>
+</html>
