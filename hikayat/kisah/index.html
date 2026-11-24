@@ -212,13 +212,16 @@ const BABAK = {
     saiz:[[480,150],[1438,320]], mula:[1700,570], laju:720,
     tona:"rgba(255,170,90,.10)", debu:true,
     bunyi:{ kampung:.4, ombak:.35 },
+    npc:[ { id:"tok", img:"tok", x:960, y:990, arah:"depan", cermin:false } ],
     benda:[
-      { id:"tok", x:900, y:1000, r:200, label:"BUAL", ada:()=>true, seru:[640,600] },
+      { id:"tok", x:960, y:990, r:230, label:"BUAL", ada:()=>true, seruNpc:"tok" },
       { id:"gulungan", x:790, y:1370, r:90, label:"AMBIL", ada:()=>S.jumpaTok && !S.gulungan, kilau:true, auto:true }
     ]
   }
 };
 let B = null;   // babak semasa
+const npc = id => (B.npc || []).find(n => n.id === id);
+const seruDi = b => { if(b.seruNpc){ const n = npc(b.seruNpc); return [n.x, n.y - tinggi(n.y) - 50]; } return b.seru; };
 const pemain = { x:0, y:0, arah:"depan", jalan:0, cermin:false };
 
 const dalam = (p, x, y) => { let c = false; for(let i = 0, j = p.length - 1; i < p.length; j = i++){ const [xi, yi] = p[i], [xj, yj] = p[j]; if(((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) c = !c; } return c; };
@@ -276,8 +279,9 @@ function lukis(){
     ctx.fillStyle = "#a8402f"; ctx.fillRect(-4, -14, 8, 28);
     ctx.restore();
   });
-  // pemain
-  lukisPemain();
+  // watak ikut kedalaman
+  (B.npc || []).map(n => ({ y:n.y, f:() => lukisWatak(n.img, n) })).concat([{ y:pemain.y, f:() => lukisWatak(WATAK === "P" ? "aisyah" : "hafiz", pemain) }])
+    .sort((a, b) => a.y - b.y).forEach(o => o.f());
   // tona warna & cahaya
   ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
   if(B.tona){ ctx.globalCompositeOperation = "multiply"; ctx.fillStyle = B.tona; ctx.fillRect(0, 0, cv.width, cv.height); }
@@ -295,8 +299,8 @@ function lukis(){
   }
   // tanda seru
   B.benda.forEach(b => {
-    if(!b.seru || !b.ada() || sibuk) return;
-    const [x, y] = b.seru, bob = Math.sin(T * 4) * 10, k = 1 / kam.z;
+    if(!(b.seru || b.seruNpc) || !b.ada() || sibuk) return;
+    const [x, y] = seruDi(b), bob = Math.sin(T * 4) * 10, k = 1 / kam.z;
     ctx.save(); ctx.translate(x, y + bob); ctx.scale(k, k);
     ctx.fillStyle = "rgba(0,0,0,.25)"; ctx.beginPath(); ctx.arc(2, 4, 34, 0, 7); ctx.fill();
     ctx.fillStyle = "#e9b75a"; ctx.beginPath(); ctx.arc(0, 0, 34, 0, 7); ctx.fill();
@@ -306,8 +310,8 @@ function lukis(){
   // anak panah ke tanda di luar skrin
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   B.benda.forEach(b => {
-    if(!b.seru || !b.ada() || sibuk) return;
-    const sx = (b.seru[0] - kam.x) * kam.sk, sy = (b.seru[1] - kam.y) * kam.sk;
+    if(!(b.seru || b.seruNpc) || !b.ada() || sibuk) return;
+    const sx = (seruDi(b)[0] - kam.x) * kam.sk, sy = (seruDi(b)[1] - kam.y) * kam.sk;
     if(sx > 20 && sx < SW - 20 && sy > 60 && sy < SH - 20) return;
     const cx = SW / 2, cy = SH / 2, a = Math.atan2(sy - cy, sx - cx);
     const px = Math.max(34, Math.min(SW - 34, sx)), py = Math.max(110, Math.min(SH - 140, sy));
@@ -322,16 +326,16 @@ function lukis(){
   v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, B.cahaya ? "rgba(0,0,0,.6)" : "rgba(20,8,0,.42)");
   ctx.fillStyle = v; ctx.fillRect(0, 0, cv.width, cv.height);
 }
-function lukisPemain(){
-  const w = WATAK === "P" ? "aisyah" : "hafiz";
-  const im = IMG[w + "-" + pemain.arah]; if(!im) return;
-  const h = tinggi(pemain.y), wd = im.width * h / im.height;
-  const lang = pemain.jalan ? Math.abs(Math.sin(pemain.jalan)) : 0;
+function lukisWatak(w, o){
+  const im = IMG[w + "-" + o.arah]; if(!im) return;
+  const h = tinggi(o.y), wd = im.width * h / im.height;
+  const lang = o.jalan ? Math.abs(Math.sin(o.jalan)) : 0;
   // bayang
-  ctx.fillStyle = "rgba(0,0,0,.32)"; ctx.beginPath(); ctx.ellipse(pemain.x, pemain.y, wd * .42, h * .045, 0, 0, 7); ctx.fill();
-  ctx.save(); ctx.translate(pemain.x, pemain.y - lang * h * .025);
-  if(pemain.jalan) ctx.rotate(Math.sin(pemain.jalan) * .025);
-  if(pemain.cermin) ctx.scale(-1, 1);
+  ctx.fillStyle = "rgba(0,0,0,.32)"; ctx.beginPath(); ctx.ellipse(o.x, o.y, wd * .42, h * .045, 0, 0, 7); ctx.fill();
+  ctx.save(); ctx.translate(o.x, o.y - lang * h * .025);
+  if(o.jalan) ctx.rotate(Math.sin(o.jalan) * .025);
+  else if(o.nafas !== false) ctx.scale(1, 1 + Math.sin(T * 1.6 + o.x) * .004);
+  if(o.cermin) ctx.scale(-1, 1);
   ctx.drawImage(im, -wd / 2, -h, wd, h * (1 - lang * .012));
   ctx.restore();
 }
@@ -386,8 +390,9 @@ function kemas(dt){
     else { pemain.arah = dy < 0 ? "belakang" : "depan"; pemain.cermin = false; }
     const sp = B.laju * (tinggi(pemain.y) / B.saiz[1][1]) * dt;
     const nx = pemain.x + dx * sp, ny = pemain.y + dy * sp * .8;
-    if(bolehJalan(nx, pemain.y)) pemain.x = nx;
-    if(bolehJalan(pemain.x, ny)) pemain.y = ny;
+    const bebas = (x, y) => bolehJalan(x, y) && !(B.npc || []).some(n => Math.hypot((n.x - x) / 1.6, n.y - y) < tinggi(n.y) * .1);
+    if(bebas(nx, pemain.y)) pemain.x = nx;
+    if(bebas(pemain.x, ny)) pemain.y = ny;
     pemain.jalan += dt * 9;
   } else pemain.jalan = 0;
   B.benda.forEach(b => { if(b.auto && b.ada() && !sibuk && Math.hypot(b.x - pemain.x, b.y - pemain.y) < b.r) interaksi(b); });
@@ -455,6 +460,12 @@ async function interaksi(b){
   if(sibuk || dialogBuka) return;
   sibuk = true; henti(); sfx("pilih", .4);
   const tok = t => cakap("tok", t), aku = t => cakap("aku", t);
+  const n = npc(b.id);
+  if(n){   // saling menghadap
+    const dx = pemain.x - n.x;
+    n.arah = Math.abs(dx) < 40 ? "depan" : "kanan"; n.cermin = dx < 0;
+    pemain.arah = "kanan"; pemain.cermin = dx > 0;
+  }
   if(b.id === "meja"){
     await aku("Bil elektrik. Sewa rumah. Ansuran kereta…");
     await aku("Gaji bulan ni dah habis. Bil masih bertimbun.");
@@ -568,7 +579,7 @@ $("mula").onclick = async () => {
 (async function(){
   await Promise.all([
     muat("rumah", "aset/rumah.webp"), muat("jeti", "aset/jeti.webp"),
-    ...["hafiz", "aisyah"].flatMap(w => ["depan", "belakang", "kanan"].map(a => muat(w + "-" + a, "aset/" + w + "-" + a + ".webp")))
+    ...["hafiz", "aisyah", "tok"].flatMap(w => ["depan", "belakang", "kanan"].map(a => muat(w + "-" + a, "aset/" + w + "-" + a + ".webp")))
   ]);
   setBunyi(BUNYI); suasana({ judul:.45 });
   $("hitam").style.opacity = 0;
