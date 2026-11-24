@@ -58,6 +58,12 @@
   .stat.hi b{color:var(--green)}
   .stat.kom{margin-top:10px}
   .stat.kom small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+  .kbar{height:10px;background:var(--panel);border:1px solid var(--line);border-radius:99px;overflow:hidden;margin:10px 0 4px}
+  .kbar i{display:block;height:100%;background:var(--green)}
+  .kmon{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px}
+  .kmon td{padding:6px 0;border-top:1px solid var(--line)}
+  .kmon td:last-child{text-align:right;font-weight:600}
+  .stat.kom strong{font-weight:700;color:var(--ink)}
   table{width:100%;border-collapse:collapse;font-size:15px}
   th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
   th{font-size:13px;color:var(--muted);font-weight:600}
@@ -106,7 +112,7 @@
 <div class="card" id="vDaftar" hidden>
   <div class="top">
     <h1>Daftar affiliate Coway</h1>
-    <p>Percuma. Tiada jualan atau stok. Anda kongsi link, dapat RM100 untuk setiap produk.</p>
+    <p>Percuma. Tiada jualan atau stok. Anda kongsi link, dapat RM100 untuk setiap produk. Capai 11 jualan sebulan, semua jadi RM200.</p>
   </div>
   <div class="body">
     <ol class="how">
@@ -114,7 +120,7 @@
       <li><b class="n">2</b><span>Kongsi link di WhatsApp, Facebook, TikTok atau group.</span></li>
       <li><b class="n">3</b><span>Pelanggan berbual dengan chatbot. Consultant Coway terus hubungi dan uruskan pendaftaran.</span></li>
       <li><b class="n">4</b><span>Pantau lead dan status closing di dashboard ini.</span></li>
-      <li><b class="n">💰</b><span><b>Komisen RM100 untuk setiap produk</b> yang berjaya didaftarkan. Dibayar pada 10hb setiap bulan.</span></li>
+      <li><b class="n">💰</b><span><b>Komisen RM100 untuk setiap produk</b> yang berjaya didaftarkan. Capai <b>11 jualan dalam sebulan</b>, semua jualan bulan itu jadi <b>RM200</b>. Kiraan bermula semula setiap bulan. Dibayar pada 10hb setiap bulan.</span></li>
     </ol>
     <form id="fDaftar" novalidate>
       <label for="dNama">Nama penuh</label>
@@ -249,7 +255,14 @@
       <div class="stat"><span>Jumlah lead</span><b>${d.ringkas.lead}</b></div>
       <div class="stat"><span>Closed</span><b>${d.ringkas.closed}</b></div>`;
     const np = d.ringkas.produk != null ? d.ringkas.produk : d.ringkas.closed;
-    $("komisen").innerHTML = `<span>Komisen terkumpul (RM100 x ${np} produk)</span><b>RM${(np * KOMISEN).toLocaleString("en-MY")}</b><small>Dibayar pada 10hb setiap bulan. Jumlah akhir disahkan oleh admin.</small>`;
+    const K = d.komisen || { bulanIni: { produk: np, kadar: KOMISEN, komisen: np * KOMISEN, baki: 11 }, bulanan: [], jumlah: np * KOMISEN, sasaran: 11, tinggi: 200 };
+    const bi = K.bulanIni, RM = n => "RM" + Number(n).toLocaleString("en-MY");
+    const namaBulan = b => { const [y, m] = b.split("-"); return ["Jan","Feb","Mac","Apr","Mei","Jun","Jul","Ogo","Sep","Okt","Nov","Dis"][+m - 1] + " " + y; };
+    $("komisen").innerHTML = `<span>Komisen bulan ini (${bi.produk} produk x RM${bi.kadar})</span><b>${RM(bi.komisen)}</b>
+      <div class="kbar" aria-hidden="true"><i style="width:${Math.min(bi.produk / K.sasaran * 100, 100)}%"></i></div>
+      <small>${bi.baki > 0 ? `${bi.produk} / ${K.sasaran} jualan. Lagi <strong>${bi.baki} jualan</strong> bulan ini, semua jualan bulan ini jadi RM${K.tinggi} setiap satu 🔥` : `🔥 Tahniah! ${K.sasaran} jualan dicapai. Semua jualan bulan ini RM${K.tinggi} setiap satu.`}</small>
+      <small>Kiraan bermula semula setiap bulan. Dibayar pada 10hb bulan berikutnya. Jumlah akhir disahkan oleh admin.</small>
+      ${K.bulanan.length ? `<table class="kmon">${K.bulanan.map(x => `<tr><td>${namaBulan(x.bulan)} · ${x.produk} produk x RM${x.kadar}</td><td>${RM(x.komisen)}</td></tr>`).join("")}<tr><td><strong>Jumlah keseluruhan</strong></td><td>${RM(K.jumlah)}</td></tr></table>` : ""}`;
     $("leads").innerHTML = d.leads.length ? `<table>
       <thead><tr><th>Tarikh</th><th>Pelanggan</th><th>Produk</th><th>Status</th></tr></thead>
       <tbody>${d.leads.map(l => `<tr><td>${esc(l.tarikh)}</td><td>${esc(l.nama)}${l.lengkap ? " ✅" : ""}</td><td>${esc(l.produk)}</td><td><span class="pill ${esc(l.status.split(" ")[0])}">${esc(l.status)}${l.bil > 1 ? " · " + l.bil + " produk" : ""}</span></td></tr>`).join("")}</tbody>

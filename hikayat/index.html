@@ -280,7 +280,7 @@
   const BAB = [
     { t:"Surat Cap Mohor", img:"bab1", yt:"",
       cerita:[["tok","Surat Cap Mohor kau sudah siap."],["n","Tok Malik menghulurkan segulung kertas bercop merah."],["tok","Dengan surat ini, setiap orang yang datang melalui namamu, aku kenal. Simpan baik-baik. Inilah senjata pertamamu."]],
-      ilmu:["Link affiliate anda ialah Surat Cap Mohor anda. Sesiapa yang buka link ini, sistem kenal ia datang dari anda.","Link ini terus membuka chatbot. Chatbot terangkan produk, harga, voucher RM20 dan cara daftar.","Anda tak perlu hafal harga. Tugas anda: kongsi link dan ajak orang berbual.","Komisen dibayar untuk setiap produk yang berjaya didaftarkan melalui link anda, pada 10hb setiap bulan."],
+      ilmu:["Link affiliate anda ialah Surat Cap Mohor anda. Sesiapa yang buka link ini, sistem kenal ia datang dari anda.","Link ini terus membuka chatbot. Chatbot terangkan produk, harga, voucher RM20 dan cara daftar.","Anda tak perlu hafal harga. Tugas anda: kongsi link dan ajak orang berbual.","Komisen RM100 untuk setiap produk yang berjaya didaftarkan melalui link anda. Capai 11 jualan dalam sebulan, semua jualan bulan itu jadi RM200. Dibayar pada 10hb setiap bulan."],
       misi:{type:"link"},
       pesan:"Betulkan niat. Berniaga kerana mahu menyara keluarga dengan rezeki yang halal. Niat yang baik menjadikan penat itu ibadah." },
     { t:"Ilmu Dagangan", img:"bab2", yt:"",
@@ -320,8 +320,8 @@
       pesan:"Pelanggan yang sudah membeli tetap amanah kita. Layan dia dengan baik selepas jualan, sama seperti sebelum jualan." },
     { t:"Pulang ke Masa Kini", img:"bab9", yt:"",
       cerita:[["n","Di jeti, Tok Malik memulangkan keris berhulu emas itu."],["tok","Satu ujian terakhir. Buktikan ilmumu sudah sempurna."],["tok","Bila tiba masanya, pulanglah. Bawa ilmu ini kepada keluargamu."]],
-      ilmu:["Anda sudah ada semua ilmu: link, produk, hot market, status, tawaran, susulan dan rujukan.","Capai 11 jualan untuk menjadi Laksamana Rezeki.","Ganjaran: komisen naik taraf ke RM200 untuk setiap jualan. Syarat penuh disahkan oleh admin.","Teruskan. Ajarkan juga ilmu ini kepada keluarga anda."],
-      misi:{type:"auto", k:"produk", n:11, label:"jualan"},
+      ilmu:["Anda sudah ada semua ilmu: link, produk, hot market, status, tawaran, susulan dan rujukan.","Capai 11 jualan dalam SEBULAN untuk menjadi Laksamana Rezeki.","Ganjaran: bila capai 11 jualan dalam sebulan, semua jualan bulan itu jadi RM200 setiap satu. Kiraan bermula semula setiap bulan.","Teruskan. Ajarkan juga ilmu ini kepada keluarga anda."],
+      misi:{type:"auto", k:"maxBulan", n:11, label:"jualan dalam sebulan"},
       pesan:"Kita berusaha sebaik-baiknya, Allah yang menentukan rezeki. Bila dapat, bersyukur. Bila belum, bersabar dan terus berusaha." }
   ];
   const KUIZ = [
@@ -543,7 +543,7 @@
         <button class="btn emas full" type="button" id="twGo" ${tw >= 5 ? "disabled" : ""}>${tw >= 5 ? "✅ Lima tawaran sudah dihantar" : "+1 Saya dah hantar kepada seorang"}</button>`;
     } else if(t === "auto"){
       const nilai = m[b.misi.k] || 0;
-      h = `<h2>Misi: ${b.misi.n} ${b.misi.label}</h2><p>Misi ini disemak automatik oleh sistem.${b.misi.k === "produk" ? " Jualan dikira selepas admin mengesahkan pendaftaran dengan Coway." : ""}</p>
+      h = `<h2>Misi: ${b.misi.n} ${b.misi.label}</h2><p>Misi ini disemak automatik oleh sistem.${b.misi.k !== "lead" ? " Jualan dikira selepas admin mengesahkan pendaftaran dengan Coway." : ""}${b.misi.k === "maxBulan" ? " Dikira ikut bulan terbaik anda." : ""}</p>
         <p><span class="angka">${Math.min(nilai, b.misi.n)}</span> / ${b.misi.n} ${b.misi.label}</p>
         <div class="baris"><button class="btn emas" type="button" id="semak">🔄 Semak semula</button><a class="btn garis" href="/affiliate/">Lihat lead saya</a></div>`;
     }
