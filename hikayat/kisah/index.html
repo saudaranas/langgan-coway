@@ -193,29 +193,29 @@ $("bunyi").onclick = () => { bukaAudio(); setBunyi(!BUNYI); sfx("pilih"); };
 const BABAK = {
   rumah: {
     bg:"rumah", bab:"PROLOG · MALAM ITU",
-    jalan:[[[1210,880],[1480,860],[1720,880],[1760,1100],[1780,1280],[1600,1330],[1450,1430],[1340,1430],[1330,1180],[1290,1020]]],
-    saiz:[[880,430],[1430,520]], mula:[1520,1200], laju:420,
-    tona:"rgba(40,60,70,.30)", cahaya:{x:1255,y:120,r:520,warna:"255,214,140"},
-    hujan:[[460,330],[880,150],[880,610],[470,760]],
+    jalan:[[[1180,900],[1230,800],[1340,740],[1420,780],[1420,900],[1500,1000],[1760,1060],[1900,1080],[1950,1110],[1700,1220],[1400,1330],[1150,1400],[1080,1330],[1060,1120]]],
+    saiz:[[750,300],[1400,380]], mula:[1600,1180], laju:520,
+    tona:"rgba(40,60,90,.18)", cahaya:{x:1300,y:170,r:560,warna:"255,214,140"},
+    hujan:[[490,440],[800,250],[800,560],[500,760]],
     bunyi:{ judul:.35, hujan:.5 },
     benda:[
-      { id:"meja", x:1300, y:930, r:170, label:"PERIKSA", ada:()=>!S.meja, seru:[1000,760] },
-      { id:"pintu", x:1640, y:900, r:150, label:"KELUAR", ada:()=>S.meja, seru:[1640,330] }
+      { id:"meja", x:1640, y:1040, r:190, label:"PERIKSA", ada:()=>!S.meja, seru:[1640,640] },
+      { id:"pintu", x:1270, y:790, r:160, label:"KELUAR", ada:()=>S.meja, seru:[1150,300] }
     ]
   },
   jeti: {
     bg:"jeti", bab:"BAB 1 · SURAT CAP MOHOR",
     jalan:[
-      [[660,1438],[1330,1438],[1290,1300],[1170,1260],[960,1150],[900,1100],[940,1040],[1010,1010],[1100,930],[1260,800],[1420,680],[1500,560],[1440,500],[1340,450],[1250,470],[1190,560],[1080,640],[960,650],[880,700],[900,820],[930,940],[900,1030],[820,1130],[760,1230],[700,1330]],
-      [[930,1110],[950,1010],[1060,930],[1400,640],[1500,540],[1520,520],[1610,500],[1960,555],[1950,600],[1860,640],[1570,880],[1270,1250],[1200,1260],[1050,1180]]
+      [[560,1438],[1400,1438],[1350,1350],[1150,1330],[900,1250],[870,1180],[1050,1100],[1150,1050],[1300,900],[1400,780],[1450,700],[1300,640],[1150,560],[1100,450],[1050,330],[950,250],[850,280],[900,400],[950,520],[1000,650],[900,760],[820,920],[860,1020],[760,1120],[600,1180],[520,1260]],
+      [[870,1165],[1890,820],[1960,860],[1500,1085],[1000,1320],[940,1280]]
     ],
-    saiz:[[480,150],[1438,320]], mula:[1700,570], laju:720,
-    tona:"rgba(255,170,90,.10)", debu:true,
+    saiz:[[300,150],[1400,320]], mula:[1820,870], laju:720,
+    tona:"rgba(255,170,90,.06)", debu:true,
     bunyi:{ kampung:.4, ombak:.35 },
-    npc:[ { id:"tok", img:"tok", x:960, y:990, arah:"depan", cermin:false } ],
+    npc:[ { id:"tok", img:"tok", x:820, y:1080, arah:"depan", cermin:false } ],
     benda:[
-      { id:"tok", x:960, y:990, r:230, label:"BUAL", ada:()=>true, seruNpc:"tok" },
-      { id:"gulungan", x:790, y:1370, r:90, label:"AMBIL", ada:()=>S.jumpaTok && !S.gulungan, kilau:true, auto:true }
+      { id:"tok", x:820, y:1080, r:230, label:"BUAL", ada:()=>true, seruNpc:"tok" },
+      { id:"gulungan", x:640, y:1240, r:90, label:"AMBIL", ada:()=>S.jumpaTok && !S.gulungan, kilau:true, auto:true }
     ]
   }
 };
@@ -406,7 +406,7 @@ function tunjuk(t, s){ const el = $("tip"); el.textContent = t; el.hidden = fals
 let dialogBuka = false, langkau = null, sambung = null;
 const WATAK_D = {
   tok:{ nama:"Tok Malik", potret:"aset/tok-potret.webp", nada:170 },
-  aku:{ nama:() => NAMA(), potret:() => "aset/" + (WATAK === "P" ? "aisyah" : "hafiz") + "-depan.webp", nada:() => WATAK === "P" ? 420 : 260, kiri:true }
+  aku:{ nama:() => NAMA(), potret:() => "aset/" + (WATAK === "P" ? "aisyah" : "hafiz") + "-potret.webp", nada:() => WATAK === "P" ? 420 : 260, kiri:true }
 };
 const nilai = v => typeof v === "function" ? v() : v;
 function cakap(siapa, teks){
@@ -536,7 +536,7 @@ function misi(){
 
 async function masukBabak(id, dariPutih){
   B = BABAK[id];
-  [pemain.x, pemain.y] = S.babak === "jeti" && S.jumpaTok ? [1000, 1080] : B.mula;
+  [pemain.x, pemain.y] = S.babak === "jeti" && S.jumpaTok ? [960, 1200] : B.mula;
   pemain.arah = id === "jeti" ? "depan" : "belakang"; pemain.cermin = false;
   kam.z = 1.18; kam.zSasar = 1; kam.x = 99999; kam.y = 99999;
   kemasKamera(1); kam.x = Math.max(0, kam.x); kam.y = Math.max(0, kam.y);
