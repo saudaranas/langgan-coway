@@ -385,6 +385,14 @@ const BABAK = {
       { id:"pintu", x:1270, y:790, r:130, label:"KELUAR", ada:()=>S.meja, seru:[1150,300], auto:true }
     ]
   },
+  sungai: {
+    bg:"sungai", bab:"PROLOG · TEBING SUNGAI MELAKA",
+    jalan:[[[591,478],[729,516],[1056,704],[1408,830],[1760,956],[2138,1081],[2575,1182],[2575,1439],[1308,1439],[1107,1182],[956,1056],[754,830],[604,629]],[[377,1006],[754,1081],[956,1182],[1157,1439],[453,1439],[302,1207]]],
+    saiz:[[500,130],[1400,330]], mula:[2260,1330], laju:620,
+    tona:"rgba(30,45,80,.22)", cahaya:{x:480,y:1040,r:300,warna:"255,214,140"}, hujanPenuh:true,
+    bunyi:{ hujan:.6, judul:.3 },
+    benda:[ { id:"keris", x:500, y:1090, r:220, label:"AMBIL", ada:()=>true, seru:[480,800] } ]
+  },
   jeti: {
     bg:"jeti", bab:"BAB 1 · SURAT CAP MOHOR",
     jalan:[
@@ -483,7 +491,7 @@ const BABAK = {
     benda:[ { id:"imam", x:1720, y:1170, r:230, label:"BUAL", ada:()=>true } ]
   }
 };
-const GRAF = { jeti:["pasar"], pasar:["jeti","pantai","surau"], pantai:["pasar","hutan"], hutan:["pantai"], surau:["pasar"], rumah:[] };
+const GRAF = { sungai:[], jeti:["pasar"], pasar:["jeti","pantai","surau"], pantai:["pasar","hutan"], hutan:["pantai"], surau:["pasar"], rumah:[] };
 function langkahKe(dari, ke){   // babak seterusnya dalam laluan terpendek
   if(!ke || dari === ke) return null;
   const q = [[dari]], lawat = { [dari]:1 };
@@ -492,7 +500,7 @@ function langkahKe(dari, ke){   // babak seterusnya dalam laluan terpendek
   return null;
 }
 function sasaran(){
-  if(S.babak === "rumah") return null;
+  if(S.babak === "rumah" || S.babak === "sungai") return null;
   if(!S.jumpaTok) return "jeti";
   if(!S.kiah) return "pasar";
   if(!S.peta) return "pantai";
@@ -545,6 +553,12 @@ function lukis(){
     ctx.save(); ctx.beginPath(); B.hujan.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.closePath(); ctx.clip();
     ctx.strokeStyle = "rgba(190,210,235,.35)"; ctx.lineWidth = 2;
     HUJAN.forEach(d => { const x = 460 + d.x * 420, y = 150 + ((d.y + T * d.v * .6) % 1) * 620; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - 4, y + 26); ctx.stroke(); });
+    ctx.restore();
+  }
+  // hujan penuh (babak luar)
+  if(B.hujanPenuh){
+    ctx.save(); ctx.strokeStyle = "rgba(200,215,240,.4)"; ctx.lineWidth = 3;
+    [0, .33, .66].forEach(o => HUJAN.forEach(d => { const x = ((d.x + o) % 1) * 2576, y = ((d.y + o + T * d.v * .9) % 1) * 1438; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - 8, y + 44); ctx.stroke(); }));
     ctx.restore();
   }
   // peti harta
@@ -701,7 +715,7 @@ function kemas(dt){
     }
     pemain.jalan += dt * 9;
   } else pemain.jalan = 0;
-  B.benda.forEach(b => { if(b.auto && b.ada() && !sibuk && Math.hypot(b.x - pemain.x, b.y - pemain.y) < b.r) interaksi(b); });
+  B.benda.forEach(b => { if(b.auto && b.ada() && !sibuk && !pindahan && Math.hypot(b.x - pemain.x, b.y - pemain.y) < b.r) interaksi(b); });
   if(!sibuk && !pindahan) (B.pintu || []).forEach(p => { if(Math.hypot(p.x - pemain.x, (p.y - pemain.y) * 1.3) < p.r) pindah(p); });
   const d = !sibuk && dekatSekali();
   const A = $("btnA"); A.classList.toggle("dekat", !!d); A.textContent = d ? d.label : "BUAL"; A.style.fontSize = A.textContent.length > 5 ? "11px" : "";
@@ -789,11 +803,17 @@ async function interaksi(b){
     tunjuk("Keluar ambil angin");
   } else if(b.id === "pintu"){
     tutupDialog();
-    await wayang([
-      "{N} keluar ke tebing Sungai Melaka dalam renyai hujan.",
-      "Di celah akar pokok, sesuatu berkilau. Sebilah keris lama, hulunya berukir emas.",
-      "Sebaik keris itu digenggam…"
-    ], { kekal:true });
+    pindahan = true;
+    await wayang(["{N} keluar ke tebing Sungai Melaka dalam renyai hujan.", "Kepala terasa berat. Langkah kaki tak tahu hala."], { kekal:true });
+    await hitam(true); await asetBabak("sungai");
+    S.babak = "sungai"; simpan(); document.body.classList.remove("wayang");
+    await masukBabak("sungai", false); pindahan = false;
+    return;
+  } else if(b.id === "keris"){
+    await aku("Apa tu… bercahaya di celah akar pokok?");
+    await aku("Sebilah keris lama. Hulunya berukir emas…");
+    tutupDialog();
+    await wayang(["Sebaik keris itu digenggam…"], { kekal:true });
     sfx("rahsia", .8); $("putih").style.opacity = 1; await tidur(1200);
     S.babak = "jeti"; simpan(); await asetBabak("jeti"); masukBabak("jeti", true);
     return;
@@ -1046,6 +1066,7 @@ if(/[?&]azan=1/.test(location.search)) setInterval(() => semakAzan(true), 3000);
 function misi(){
   let t = "";
   if(S.babak === "rumah") t = S.meja ? "Keluar ambil angin" : "Periksa meja makan";
+  else if(S.babak === "sungai") t = "Periksa cahaya di bawah pokok";
   else if(!S.jumpaTok) t = "Cari Tok Malik di gerai rempah";
   else if(!S.kiah) t = "Ke pasar, jumpa Makcik Kiah";
   else if(!S.cabar) t = "Ke pantai, jumpa Pak Leman";
@@ -1086,6 +1107,7 @@ async function masukBabak(id, dariPutih, masuk){
   $("hud").hidden = false; $("btnA").hidden = false;
   if(dariPutih){ $("hitam").style.opacity = 0; await tidur(300); $("putih").style.opacity = 0; }
   else await hitam(false);
+  if(id === "sungai") tunjuk("Ada cahaya di celah akar pokok…", 4);
   if(id === "rumah" && !S.meja) await wayang(["Malam. Hujan tak berhenti sejak petang.", "Dan di atas meja, bil-bil yang tak terbayar."]);
   else if(id === "jeti" && !S.tiba){ S.tiba = 1; simpan(); await wayang(["Bila {N} membuka mata, bunyi kereta sudah hilang.", "Bandar Melaka. Kurun ke-15."]); }
   sibuk = false;
@@ -1200,6 +1222,7 @@ $("namaP").value = NAMA_SAYA; $("namaP").placeholder = "Contoh: " + (WATAK ? NAM
 /* ---------- Kembara: pergi terus & tukar nama ---------- */
 const TEMPAT = [
   { id:"rumah", nama:"🏠 Rumah sewa", buka:() => true },
+  { id:"sungai", nama:"🌧️ Sungai Melaka", buka:() => S.tiba || S.jumpaTok },
   { id:"jeti", nama:"⚓ Jeti", buka:() => S.tiba || S.jumpaTok },
   { id:"pasar", nama:"🧺 Pasar", buka:() => S.jumpaTok },
   { id:"surau", nama:"🕌 Surau", buka:() => S.jumpaTok },
