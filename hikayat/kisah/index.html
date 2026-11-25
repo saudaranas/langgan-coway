@@ -125,6 +125,12 @@
   .senarai li{display:flex;justify-content:space-between;gap:8px;padding:8px 4px;border-bottom:1px dashed #c9b48c;font-size:15px}
   .senarai li.saya{background:#fff3cf;border-radius:8px}
   .senarai small{color:#6b5638}
+  .namaP{display:block;width:min(300px,80vw);margin:4px auto 14px;font-size:17px;text-align:center;padding:11px 14px;border-radius:12px;border:1.5px solid rgba(246,212,143,.6);background:rgba(255,250,240,.95);color:#2b2118;font-weight:700}
+  .namaL{display:block;font-size:13px;letter-spacing:1px;color:var(--emas2);margin-top:4px}
+  .tempat{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+  .tempat button{background:var(--kayu);color:var(--emas2);border:0;border-radius:12px;padding:12px 8px;font-size:15px;font-weight:800}
+  .tempat button[disabled]{background:#cdbd9c;color:#7a6a50}
+  .tempat button.sini{outline:3px solid var(--emas);outline-offset:-3px}
   /* panel halaman dalam game */
   .panel{position:fixed;inset:0;z-index:20;background:#0c0a08;display:flex;flex-direction:column}
   .panel .atasP{display:flex;align-items:center;justify-content:space-between;padding:calc(8px + env(safe-area-inset-top)) 10px 8px;background:var(--kayu);color:var(--emas2);font-weight:800}
@@ -149,6 +155,7 @@
     <button type="button" id="bunyi" aria-label="Bunyi">🔊</button>
     <button type="button" id="btnBeg" aria-label="Kitab Jurus" hidden>📖</button>
     <button type="button" id="btnPeta" aria-label="Peta harta" hidden>🗺️</button>
+    <button type="button" id="btnKembara" aria-label="Peta dunia dan tetapan">🧭</button>
     <button type="button" id="btnPapan" aria-label="Papan kenyataan jualan">🏆</button>
     <button type="button" id="btnUjian" aria-label="Misi sebenar">📜</button>
   </div>
@@ -177,6 +184,8 @@
     <button type="button" data-w="L" aria-pressed="false"><img src="aset/hafiz-depan.webp" alt="">Hafiz</button>
     <button type="button" data-w="P" aria-pressed="false"><img src="aset/aisyah-depan.webp" alt="">Aisyah</button>
   </div>
+  <label class="namaL" for="namaP">NAMA PAHLAWAN ANDA</label>
+  <input class="namaP" id="namaP" maxlength="16" autocomplete="nickname" placeholder="Contoh: Hafiz">
   <button type="button" class="mula" id="mula">Mulakan kisah</button>
   <button type="button" class="lmasuk" id="btnLogin">🔐 Log masuk affiliate untuk simpan kemajuan</button>
   <div class="kecil">🎧 Gunakan fon telinga untuk pengalaman terbaik</div>
@@ -255,6 +264,20 @@
   </div>
 </section>
 
+<section class="tirai gulung" id="sKembara" hidden role="dialog" aria-modal="true" aria-labelledby="mJudul">
+  <div class="kertasG">
+    <h2 id="mJudul">Kembara</h2>
+    <div class="sub">PERGI TERUS KE TEMPAT YANG PERNAH DILAWATI</div>
+    <div class="tempat" id="mTempat"></div>
+    <h3>NAMA PAHLAWAN</h3>
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <input class="namaP" id="mNama" maxlength="16" style="margin:0;flex:1;width:auto;min-width:0" aria-label="Nama pahlawan">
+      <button type="button" class="mula" id="mSimpanNama" style="padding:10px 16px;font-size:15px;margin:0;width:auto;flex:none">Simpan</button>
+    </div>
+    <button type="button" class="mula" id="mTutup">Tutup</button>
+  </div>
+</section>
+
 <section class="tirai gulung" id="sPapan" hidden role="dialog" aria-modal="true" aria-labelledby="kJudul">
   <div class="kertasG">
     <h2 id="kJudul">Papan Kenyataan</h2>
@@ -292,11 +315,19 @@ let tSync = 0;
 function segerak(){
   if(!TOKEN) return;
   clearTimeout(tSync);
-  tSync = setTimeout(() => { call("gameAct", TOKEN, "kisah", { watak:WATAK, s:S }).catch(tamatSesi); }, 1500);
+  tSync = setTimeout(() => { call("gameAct", TOKEN, "kisah", { watak:WATAK, s:S, nama:NAMA() }).catch(tamatSesi); }, 1500);
 }
 const simpan = () => { LS.set("hk_kisah", JSON.stringify(S)); segerak(); };
 let WATAK = LS.get("hk_w") || "";
-const NAMA = () => WATAK === "P" ? "Aisyah" : "Hafiz";
+const NAMA_ASAL = () => WATAK === "P" ? "Aisyah" : "Hafiz";
+const bersihNama = t => String(t || "").replace(/[^\p{L}\p{M} .'-]/gu, "").replace(/\s+/g, " ").trim().slice(0, 16);
+let NAMA_SAYA = bersihNama(LS.get("hk_nama"));
+const NAMA = () => NAMA_SAYA || NAMA_ASAL();
+function tetapNama(t){
+  NAMA_SAYA = bersihNama(t);
+  if(NAMA_SAYA) LS.set("hk_nama", NAMA_SAYA); else { try{ localStorage.removeItem("hk_nama"); }catch(e){} }
+  segerak();
+}
 const isi = s => s.replace(/\{N\}/g, NAMA());
 
 /* ---------- Aset ---------- */
@@ -1094,6 +1125,7 @@ async function tarikAwan(){
     S.berkat = Math.max(+S.berkat || 0, +k.berkat || 0);
     if(awanLebih && k.babak) S.babak = k.babak;
     if(!WATAK && d.g.watak) WATAK = d.g.watak;
+    if(!NAMA_SAYA && d.g.namaWatak && !/^(Hafiz|Aisyah)$/.test(d.g.namaWatak)){ NAMA_SAYA = bersihNama(d.g.namaWatak); LS.set("hk_nama", NAMA_SAYA); $("namaP").value = NAMA_SAYA; }
     LS.set("hk_kisah", JSON.stringify(S)); segerak();
   }catch(e){ tamatSesi(e); }
 }
@@ -1160,11 +1192,47 @@ async function bentara(){
 /* ---------- Skrin judul ---------- */
 document.querySelectorAll("[data-w]").forEach(b => {
   if(b.dataset.w === WATAK) b.setAttribute("aria-pressed", "true");
-  b.onclick = () => { bukaAudio(); sfx("gerak"); WATAK = b.dataset.w; document.querySelectorAll("[data-w]").forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false")); };
+  b.onclick = () => { bukaAudio(); sfx("gerak"); WATAK = b.dataset.w; $("namaP").placeholder = "Contoh: " + NAMA_ASAL(); document.querySelectorAll("[data-w]").forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false")); };
 });
+$("namaP").value = NAMA_SAYA; $("namaP").placeholder = "Contoh: " + (WATAK ? NAMA_ASAL() : "Hafiz");
+
+/* ---------- Kembara: pergi terus & tukar nama ---------- */
+const TEMPAT = [
+  { id:"rumah", nama:"🏠 Rumah sewa", buka:() => true },
+  { id:"jeti", nama:"⚓ Jeti", buka:() => S.tiba || S.jumpaTok },
+  { id:"pasar", nama:"🧺 Pasar", buka:() => S.jumpaTok },
+  { id:"surau", nama:"🕌 Surau", buka:() => S.jumpaTok },
+  { id:"pantai", nama:"🎣 Pantai", buka:() => S.kiah },
+  { id:"hutan", nama:"🌴 Hutan kecil", buka:() => S.peta }
+];
+function bukaKembara(){
+  sibuk = true; henti();
+  $("mTempat").innerHTML = TEMPAT.map(t => `<button type="button" data-ke="${t.id}" ${t.buka() ? "" : "disabled"} class="${S.babak === t.id ? "sini" : ""}">${t.buka() ? t.nama : "🔒 ???"}</button>`).join("");
+  $("mNama").value = NAMA();
+  $("sKembara").hidden = false;
+}
+$("btnKembara").onclick = () => { if(!sibuk && !dialogBuka){ sfx("pilih"); bukaKembara(); } };
+$("mTutup").onclick = () => { $("sKembara").hidden = true; sibuk = false; sfx("pilih"); };
+$("mSimpanNama").onclick = () => {
+  const n = bersihNama($("mNama").value);
+  tetapNama(n === NAMA_ASAL() ? "" : n); $("mNama").value = NAMA(); sfx("syiling");
+  tunjuk("Nama pahlawan: " + NAMA());
+};
+$("mTempat").onclick = async e => {
+  const b = e.target.closest("[data-ke]"); if(!b || b.disabled) return;
+  const ke = b.dataset.ke; $("sKembara").hidden = true;
+  if(ke === S.babak){ sibuk = false; return; }
+  pindahan = true; sfx("gerak", .5);
+  await hitam(true); await asetBabak(ke);
+  S.babak = ke; simpan();
+  await masukBabak(ke, false, ke === "rumah" ? [1600, 1180] : null);
+  pindahan = false;
+  if(ke === "rumah" && S.meja) tunjuk("Keluar melalui pintu untuk kembali ke Melaka");
+};
 $("mula").onclick = async () => {
   if(!WATAK){ $("pilihW").animate([{transform:"translateX(-6px)"},{transform:"translateX(6px)"},{transform:"none"}], 260); return; }
   bukaAudio(); sfx("pilih"); LS.set("hk_w", WATAK);
+  tetapNama($("namaP").value === NAMA_ASAL() ? "" : $("namaP").value);
   $("hitam").style.opacity = 1; await Promise.all([tidur(700), tarikAwan()]);
   await asetBabak(S.babak);
   $("sJudul").hidden = true; main = true;
