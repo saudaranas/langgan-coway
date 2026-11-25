@@ -140,9 +140,13 @@
     .babak .dialog .ln{animation:muncul .45s ease both}
     @keyframes muncul{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   }
+  .balik{position:fixed;top:max(10px,env(safe-area-inset-top));left:10px;z-index:50;display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:999px;background:var(--emas);color:var(--malam);font-weight:700;font-size:14px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+  .balik:hover{background:var(--emas2)}
+  body{padding-top:52px}
 </style>
 </head>
 <body>
+<a class="balik" href="/hikayat/kisah/">🎮 Kembali ke dunia</a>
 
 <!-- 1. Judul -->
 <section id="sJudul" class="judul">
