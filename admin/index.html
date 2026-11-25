@@ -314,7 +314,7 @@
       <div class="stat"><span>Produk closed dari affiliate</span><b>${allL.filter(l => l["Status Follow-up"] === "Closed").reduce((a, l) => a + bilOf(l), 0)}</b></div>`;
     if(!a.length){ $("afList").innerHTML = `<div class="empty">Belum ada affiliate. Kongsi link daftar affiliate.</div>`; return; }
     const order = {"Menunggu":0,"Aktif":1,"Tidak aktif":2};
-    $("afList").innerHTML = a.slice().sort((x,y) => (order[x.status] ?? 3) - (order[y.status] ?? 3)).map(x => {
+    $("afList").innerHTML = a.map((x,i) => [x,i]).sort(([x,i],[y,j]) => ((order[x.status] ?? 3) - (order[y.status] ?? 3)) || (j - i)).map(([x]) => x).map(x => {
       const L = affLeads(x.id), c = L.filter(l => l["Status Follow-up"] === "Closed").reduce((a, l) => a + bilOf(l), 0), K = komisenAff(L);
       return `
       <div class="ag">
@@ -415,7 +415,7 @@
     const order = {"Menunggu":0,"Aktif":1,"Tidak aktif":2};
     const key = s => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
     const dupOf = x => a.some(y => y.id !== x.id && (key(y.wa) === key(x.wa) || key(y.nama) === key(x.nama)));
-    $("agList").innerHTML = a.slice().sort((x,y) => (order[x.status] ?? 3) - (order[y.status] ?? 3)).map(x => `
+    $("agList").innerHTML = a.map((x,i) => [x,i]).sort(([x,i],[y,j]) => ((order[x.status] ?? 3) - (order[y.status] ?? 3)) || (j - i)).map(([x]) => x).map(x => `
       <div class="ag">
         ${x.foto ? `<img src="${esc(x.foto)}" alt="" referrerpolicy="no-referrer">` : `<div class="ph">${esc(x.nama.charAt(0))}</div>`}
         <div>
