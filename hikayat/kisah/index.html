@@ -469,7 +469,7 @@ const BABAK = {
     bunyi:{ ombak:.15, kampung:.15 },
     pintu:[ { ke:"pantai", x:40, y:1180, r:90, masuk:[1690,680], nama:"Pantai" } ],
     benda:[
-      { id:"peti", x:970, y:960, r:210, label:"BUKA", ada:()=>!S.peti, seru:[960,640], seruBila:()=>S.peta && !S.peti }
+      { id:"peti", x:970, y:960, r:210, label:"BUKA", ada:()=>true, seru:[960,640], seruBila:()=>S.peta && !S.peti }
     ]
   },
   surau: {
@@ -873,7 +873,8 @@ async function interaksi(b){
     const menang = await memancing();
     if(menang){ S.pancing = 1; simpan(); misi(); tunjuk("Kembali kepada Pak Leman"); }
   } else if(b.id === "peti"){
-    if(!S.peta){ await aku("Peti lama… berkunci. Mesti ada petanya di mana-mana."); tutupDialog(); }
+    if(S.peti){ tutupDialog(); await bukaKitab(); }
+    else if(!S.peta){ await aku("Peti lama… berkunci. Mesti ada petanya di mana-mana."); tutupDialog(); }
     else {
       S.peti = 1; petiBuka = 0; simpan(); sfx("rahsia", .8); setTimeout(() => sfx("syiling"), 500);
       await tidur(1300);
