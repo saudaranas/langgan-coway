@@ -363,7 +363,7 @@ const BABAK = {
     saiz:[[300,150],[1400,320]], mula:[1820,870], laju:720,
     tona:"rgba(255,170,90,.06)", debu:true,
     bunyi:{ kampung:.4, ombak:.35 },
-    pintu:[ { ke:"pasar", x:975, y:300, r:90, masuk:[1010,470], nama:"Pasar" } ],
+    pintu:[ { ke:"pasar", x:1000, y:400, r:140, masuk:[200,960], nama:"Pasar" } ],
     npc:[
       { id:"tok", img:"tok", x:820, y:1080, arah:"depan", cermin:false },
       { id:"pengawal", img:"pengawal", x:1240, y:930, arah:"depan" }
@@ -388,7 +388,7 @@ const BABAK = {
     saiz:[[560,210],[1400,320]], mula:[200,960], laju:720, debu:true,
     bunyi:{ kampung:.45 },
     pintu:[
-      { ke:"jeti", x:70, y:960, r:90, masuk:[1000,420], nama:"Jeti" },
+      { ke:"jeti", x:70, y:960, r:90, masuk:[1020,600], nama:"Jeti" },
       { ke:"pantai", x:2520, y:1020, r:90, masuk:[2380,1250], nama:"Pantai" },
       { ke:"surau", x:1530, y:570, r:80, masuk:[1300,1290], nama:"Surau" }
     ],
@@ -473,6 +473,7 @@ let B = null;   // babak semasa
 const npc = id => (B.npc || []).find(n => n.id === id);
 const seruDi = b => { if(b.seruNpc){ const n = npc(b.seruNpc); return [n.x, n.y - tinggi(n.y) - 50]; } return b.seru; };
 const pemain = { x:0, y:0, arah:"depan", jalan:0, cermin:false };
+window.__hk = { pemain };
 
 const dalam = (p, x, y) => { let c = false; for(let i = 0, j = p.length - 1; i < p.length; j = i++){ const [xi, yi] = p[i], [xj, yj] = p[j]; if(((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) c = !c; } return c; };
 const bolehJalan = (x, y) => B.jalan.some(p => dalam(p, x, y)) && !(B.halang || []).some(p => dalam(p, x, y));
@@ -657,8 +658,16 @@ function kemas(dt){
     const sp = B.laju * (tinggi(pemain.y) / B.saiz[1][1]) * dt;
     const nx = pemain.x + dx * sp, ny = pemain.y + dy * sp * .8;
     const bebas = (x, y) => bolehJalan(x, y) && !(B.npc || []).some(n => Math.hypot((n.x - x) / 1.6, n.y - y) < tinggi(n.y) * .16);
+    const x0 = pemain.x, y0 = pemain.y;
     if(bebas(nx, pemain.y)) pemain.x = nx;
     if(bebas(pemain.x, ny)) pemain.y = ny;
+    // gelongsor di tepi halangan: jika tersekat, cuba serong sedikit supaya ikut lengkok jalan
+    if(pemain.x === x0 && pemain.y === y0){
+      for(const k of [1, -1]){
+        if(Math.abs(dy) >= Math.abs(dx) && bebas(x0 + k * sp * .8, y0 + dy * sp * .5)){ pemain.x = x0 + k * sp * .8; pemain.y = y0 + dy * sp * .5; break; }
+        if(Math.abs(dx) > Math.abs(dy) && bebas(x0 + dx * sp * .6, y0 + k * sp * .6)){ pemain.x = x0 + dx * sp * .6; pemain.y = y0 + k * sp * .6; break; }
+      }
+    }
     pemain.jalan += dt * 9;
   } else pemain.jalan = 0;
   B.benda.forEach(b => { if(b.auto && b.ada() && !sibuk && Math.hypot(b.x - pemain.x, b.y - pemain.y) < b.r) interaksi(b); });
@@ -1037,6 +1046,7 @@ async function masukBabak(id, dariPutih, masuk){
   else asetBabak(id);
   B = BABAK[id];
   [pemain.x, pemain.y] = masuk || (id === "jeti" && S.jumpaTok ? [960, 1200] : B.mula);
+  if(!bolehJalan(pemain.x, pemain.y)) [pemain.x, pemain.y] = B.mula;   // jaminan: jangan muncul di kawasan tak boleh jalan
   pemain.arah = id === "jeti" && !masuk ? "depan" : "belakang"; pemain.cermin = false;
   kam.z = 1.18; kam.zSasar = 1; kam.x = 99999; kam.y = 99999;
   kemasKamera(1); kam.x = Math.max(0, kam.x); kam.y = Math.max(0, kam.y);
