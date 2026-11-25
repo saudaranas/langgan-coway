@@ -15,7 +15,7 @@
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;height:100%;background:#0c0a08;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
   body{font-family:"Nunito Sans",system-ui,sans-serif;color:var(--kertas)}
-  canvas{position:fixed;inset:0;width:100vw;height:100vh;display:block}
+  #c{position:fixed;inset:0;width:100vw;height:100vh;display:block}
   button{font:inherit;cursor:pointer}
   [hidden]{display:none!important}
   .serif{font-family:"Cormorant Garamond",Georgia,serif}
@@ -81,6 +81,44 @@
   .kertasG li{margin-bottom:7px}
   .kertasG .pesan{font-family:"Cormorant Garamond",serif;font-size:19px;line-height:1.4;background:#f2e3c6;border-left:4px solid var(--merah);padding:12px 14px;border-radius:8px;margin-bottom:16px}
   .kertasG button{width:100%}
+  /* memancing */
+  .pancing{background:linear-gradient(180deg,#8fd3e8 0%,#4aa3c4 38%,#1f6f93 100%);z-index:10}
+  .pancing h2{font-family:"Cormorant Garamond",serif;font-size:32px;margin:0;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.35)}
+  .pancing .kira{font-weight:800;font-size:18px;color:#fff;margin:6px 0 4px}
+  .pancing .ikan{font-size:28px;letter-spacing:6px;min-height:40px}
+  .tasik{position:relative;width:min(340px,86vw);height:230px;margin:10px 0 14px;border-radius:50%;background:radial-gradient(ellipse at 50% 40%,rgba(255,255,255,.18),rgba(255,255,255,0) 70%)}
+  .tali{position:absolute;left:50%;top:0;width:2px;height:82px;background:rgba(255,255,255,.7);transform-origin:top}
+  .pel{position:absolute;left:50%;top:80px;width:34px;height:34px;margin-left:-17px;border-radius:50%;background:linear-gradient(180deg,#e8402f 50%,#fff 50%);box-shadow:0 0 0 2px rgba(0,0,0,.25);transition:transform .12s}
+  .pel.goyang{transform:translateY(5px)}
+  .pel.makan{transform:translateY(26px) scale(.85);transition:transform .08s}
+  .riak{position:absolute;left:50%;top:108px;width:90px;height:22px;margin-left:-45px;border:2px solid rgba(255,255,255,.55);border-radius:50%;opacity:0}
+  .riak.on{animation:riak .7s ease-out infinite}
+  @keyframes riak{from{transform:scale(.4);opacity:.9}to{transform:scale(1.8);opacity:0}}
+  .seruP{position:absolute;left:calc(50% + 30px);top:30px;margin-left:0;width:44px;height:44px;border-radius:50%;background:var(--emas);color:#1c140b;font-weight:800;font-size:30px;line-height:44px;opacity:0}
+  .seruP.on{opacity:1;animation:lompat .3s infinite}
+  .pesanP{min-height:48px;max-width:340px;color:#fff;font-size:16px;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.4)}
+  .tarik{background:var(--emas);color:#1c140b;border:0;border-radius:50%;width:120px;height:120px;font-size:20px;font-weight:800;box-shadow:0 10px 0 #a5762a,0 14px 30px rgba(0,0,0,.3);margin-top:6px}
+  .tarik:active{transform:translateY(6px);box-shadow:0 4px 0 #a5762a}
+  .lompatI{position:absolute;left:50%;top:60px;font-size:54px;margin-left:-27px;animation:ikanL .9s ease-out forwards}
+  @keyframes ikanL{0%{transform:translateY(40px) rotate(0)}50%{transform:translateY(-110px) rotate(-30deg)}100%{transform:translateY(-60px) rotate(20deg);opacity:0}}
+  .btnK{background:none;border:0;color:#fff;text-decoration:underline;margin-top:14px;font-size:14px}
+  /* peta & kitab */
+  .petaC{width:100%;border-radius:10px;border:3px solid #8a6a3e;display:block;margin:6px 0 12px}
+  .video{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#2b2118;color:#f6d48f;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:700;margin-bottom:14px}
+  .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .tindakan{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+  .tindakan button{background:var(--kayu);color:var(--emas2);border:0;border-radius:12px;padding:13px 14px;font-size:16px;font-weight:800;text-align:left}
+  .kertasG h3{font-size:14px;letter-spacing:1px;color:var(--kayu);margin:0 0 6px}
+  /* panel halaman dalam game */
+  .panel{position:fixed;inset:0;z-index:20;background:#0c0a08;display:flex;flex-direction:column}
+  .panel .atasP{display:flex;align-items:center;justify-content:space-between;padding:calc(8px + env(safe-area-inset-top)) 10px 8px;background:var(--kayu);color:var(--emas2);font-weight:800}
+  .panel .atasP button{background:var(--emas);color:#1c140b;border:0;border-radius:999px;padding:8px 14px;font-weight:800}
+  .panel iframe{flex:1;border:0;width:100%;background:#fff}
+  /* azan */
+  .azan{background:rgba(8,6,4,.85);z-index:15}
+  .azan .kertasG{text-align:center}
+  .azan .bulan{font-size:46px}
+  .azan .tindakan button{text-align:center}
   .putih{position:fixed;inset:0;background:#fff;z-index:12;pointer-events:none;opacity:0;transition:opacity .7s}
   .hitam{position:fixed;inset:0;background:#000;z-index:11;pointer-events:none;opacity:1;transition:opacity .9s}
   @media (prefers-reduced-motion:reduce){.bar,.kapsyen,.hitam,.putih{transition-duration:.01s}}
@@ -93,7 +131,9 @@
   <div class="misi" aria-live="polite"><small id="mBab">PROLOG</small><b id="mTeks"></b></div>
   <div class="ikon">
     <button type="button" id="bunyi" aria-label="Bunyi">🔊</button>
-    <a href="/hikayat/" aria-label="Peta ujian">📜</a>
+    <button type="button" id="btnBeg" aria-label="Kitab Jurus" hidden>📖</button>
+    <button type="button" id="btnPeta" aria-label="Peta harta" hidden>🗺️</button>
+    <button type="button" id="btnUjian" aria-label="Misi sebenar">📜</button>
   </div>
 </div>
 <div class="kayu" id="kayu" hidden><i id="kayuI"></i></div>
@@ -126,13 +166,61 @@
 
 <section class="tirai gulung" id="sGulung" hidden role="dialog" aria-modal="true" aria-labelledby="gJudul">
   <div class="kertasG">
-    <h2 id="gJudul">Gulungan Ilmu</h2>
-    <div class="sub">ILMU TOK MALIK · BAB 1</div>
+    <h2 id="gJudul">Kitab Jurus</h2>
+    <div class="sub" id="gSub">JURUS 1 · SURAT CAP MOHOR</div>
+    <div class="video" id="gVideo"></div>
+    <h3>ILMU</h3>
     <ul id="gIlmu"></ul>
     <div class="pesan" id="gPesan"></div>
+    <h3>TINDAKAN SEBENAR</h3>
+    <div class="tindakan">
+      <button type="button" id="gDaftar">📝 Daftar affiliate &amp; dapatkan link</button>
+      <button type="button" id="gUjian">⚔️ Semak misi sebenar</button>
+    </div>
     <button type="button" class="mula" id="gTutup">Simpan dalam beg</button>
   </div>
 </section>
+
+<section class="tirai gulung" id="sPeta" hidden role="dialog" aria-modal="true" aria-labelledby="pJudul">
+  <div class="kertasG">
+    <h2 id="pJudul">Peta Tok Malik</h2>
+    <div class="sub">IKUT JALAN BERTITIK KE TANDA ✕</div>
+    <canvas class="petaC" id="petaC" width="640" height="358"></canvas>
+    <p style="margin:0 0 14px;font-size:15px">Peti tertanam di bawah pohon, di tepi semak hujung jalan. Cari cahaya keemasan.</p>
+    <button type="button" class="mula" id="pTutupPeta">Simpan peta</button>
+  </div>
+</section>
+
+<section class="tirai pancing" id="sPancing" hidden role="dialog" aria-modal="true" aria-labelledby="mjJudul">
+  <h2 id="mjJudul">Ujian Sabar</h2>
+  <div class="kira" id="pKira">Ikan: 0 / 3</div>
+  <div class="ikan" id="pIkan" aria-hidden="true"></div>
+  <div class="tasik" id="pTasik"><div class="tali"></div><div class="seruP" id="pSeru">!</div><div class="riak" id="pRiak"></div><div class="pel" id="pPel"></div></div>
+  <div class="pesanP" id="pPesan" aria-live="polite">Tunggu pelampung tenggelam, baru tarik.</div>
+  <button type="button" class="tarik" id="pTarik">🎣<br>TARIK</button>
+  <button type="button" class="btnK" id="pBerhenti">Berhenti dulu</button>
+</section>
+
+<section class="tirai azan" id="sAzan" hidden role="dialog" aria-modal="true" aria-labelledby="aJudul">
+  <div class="kertasG">
+    <div class="bulan" aria-hidden="true">🕌</div>
+    <h2 id="aJudul">Sudah masuk waktu Zohor</h2>
+    <div class="pesan" id="aPesan">“Kerja macam mana pun, bila azan, berhenti dulu. Rezeki tak akan lari.” — Tok Malik</div>
+    <div class="tindakan" id="aPilih">
+      <button type="button" id="aSolat">🤲 Saya pergi solat dulu</button>
+      <button type="button" id="aNanti" style="background:#e9dcc2;color:#2b2118">Sambung main</button>
+    </div>
+    <div class="tindakan" id="aJeda" hidden>
+      <p style="margin:0 0 6px">Game dijeda. Selamat menunaikan solat.</p>
+      <button type="button" id="aSiap">✅ Sudah selesai solat</button>
+    </div>
+  </div>
+</section>
+
+<div class="panel" id="panel" hidden>
+  <div class="atasP"><span id="panelT">Misi</span><button type="button" id="panelTutup">✕ Kembali ke game</button></div>
+  <iframe id="panelF" title="Halaman dalam game"></iframe>
+</div>
 <div class="hitam" id="hitam"></div>
 <div class="putih" id="putih"></div>
 
@@ -144,7 +232,7 @@ const LS = { get:k=>{try{return localStorage.getItem(k)}catch(e){return null}}, 
 const tidur = ms => new Promise(r => setTimeout(r, ms));
 
 /* ---------- Simpanan ---------- */
-const S = Object.assign({ babak:"rumah", meja:0, jumpaTok:0, gulungan:0, lapor:0 }, JSON.parse(LS.get("hk_kisah") || "{}"));
+const S = Object.assign({ babak:"rumah", meja:0, jumpaTok:0, pancing:0, peta:0, peti:0, lapor:0, berkat:0 }, JSON.parse(LS.get("hk_kisah") || "{}"));
 const simpan = () => LS.set("hk_kisah", JSON.stringify(S));
 let WATAK = LS.get("hk_w") || "";
 const NAMA = () => WATAK === "P" ? "Aisyah" : "Hafiz";
@@ -190,6 +278,8 @@ function setBunyi(on){ BUNYI = on; LS.set("hk_bunyi", on ? "1" : "0"); $("bunyi"
 $("bunyi").onclick = () => { bukaAudio(); setBunyi(!BUNYI); sfx("pilih"); };
 
 /* ---------- Babak ---------- */
+const PETI = [660, 1370];
+const VIDEO = { 1:"" };   // ID video YouTube (unlisted) untuk setiap jurus
 const BABAK = {
   rumah: {
     bg:"rumah", bab:"PROLOG · MALAM ITU",
@@ -215,7 +305,8 @@ const BABAK = {
     npc:[ { id:"tok", img:"tok", x:820, y:1080, arah:"depan", cermin:false } ],
     benda:[
       { id:"tok", x:820, y:1080, r:230, label:"BUAL", ada:()=>true, seruNpc:"tok" },
-      { id:"gulungan", x:640, y:1240, r:90, label:"AMBIL", ada:()=>S.jumpaTok && !S.gulungan, kilau:true, auto:true }
+      { id:"pancing", x:1880, y:850, r:170, label:"PANCING", ada:()=>S.jumpaTok && !S.pancing, seru:[1880,580] },
+      { id:"peti", x:PETI[0], y:PETI[1], r:150, label:"BUKA", ada:()=>S.peta && !S.peti, seru:[PETI[0],PETI[1]-190] }
     ]
   }
 };
@@ -265,20 +356,8 @@ function lukis(){
     HUJAN.forEach(d => { const x = 460 + d.x * 420, y = 150 + ((d.y + T * d.v * .6) % 1) * 620; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - 4, y + 26); ctx.stroke(); });
     ctx.restore();
   }
-  // benda bercahaya
-  B.benda.forEach(b => {
-    if(!b.kilau || !b.ada()) return;
-    const p = .5 + Math.sin(T * 3) * .5;
-    const g = ctx.createRadialGradient(b.x, b.y - 20, 4, b.x, b.y - 20, 90);
-    g.addColorStop(0, `rgba(255,230,150,${.55 + p * .3})`); g.addColorStop(1, "rgba(255,230,150,0)");
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(b.x, b.y - 20, 90, 0, 7); ctx.fill();
-    ctx.save(); ctx.translate(b.x, b.y - 24 + Math.sin(T * 2.4) * 6); ctx.rotate(-.35);
-    ctx.fillStyle = "#e8d3a4"; ctx.strokeStyle = "#6b4a2a"; ctx.lineWidth = 3;
-    ctx.fillRect(-34, -14, 68, 28); ctx.strokeRect(-34, -14, 68, 28);
-    ctx.fillStyle = "#c79a55"; [-38, 38].forEach(x => { ctx.beginPath(); ctx.ellipse(x, 0, 7, 17, 0, 0, 7); ctx.fill(); ctx.stroke(); });
-    ctx.fillStyle = "#a8402f"; ctx.fillRect(-4, -14, 8, 28);
-    ctx.restore();
-  });
+  // peti harta
+  if(B.bg === "jeti" && (S.peta || S.peti)) lukisPeti(PETI[0], PETI[1]);
   // watak ikut kedalaman
   (B.npc || []).map(n => ({ y:n.y, f:() => lukisWatak(n.img, n) })).concat([{ y:pemain.y, f:() => lukisWatak(WATAK === "P" ? "aisyah" : "hafiz", pemain) }])
     .sort((a, b) => a.y - b.y).forEach(o => o.f());
@@ -325,6 +404,32 @@ function lukis(){
   const v = ctx.createRadialGradient(cv.width / 2, cv.height / 2, Math.min(cv.width, cv.height) * .35, cv.width / 2, cv.height / 2, Math.max(cv.width, cv.height) * .75);
   v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, B.cahaya ? "rgba(0,0,0,.6)" : "rgba(20,8,0,.42)");
   ctx.fillStyle = v; ctx.fillRect(0, 0, cv.width, cv.height);
+}
+let petiBuka = 0;
+function lukisPeti(x, y){
+  if(!S.peti){
+    const p = .5 + Math.sin(T * 3) * .5;
+    const g = ctx.createRadialGradient(x, y - 30, 6, x, y - 30, 130);
+    g.addColorStop(0, `rgba(255,224,130,${.45 + p * .3})`); g.addColorStop(1, "rgba(255,224,130,0)");
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y - 30, 130, 0, 7); ctx.fill();
+  }
+  const w = 110, h = 64;
+  ctx.fillStyle = "rgba(0,0,0,.3)"; ctx.beginPath(); ctx.ellipse(x, y, w * .62, 14, 0, 0, 7); ctx.fill();
+  ctx.lineWidth = 4; ctx.strokeStyle = "#3b2414";
+  ctx.fillStyle = "#7a4a26"; ctx.fillRect(x - w / 2, y - h, w, h); ctx.strokeRect(x - w / 2, y - h, w, h);
+  ctx.fillStyle = "#c9993f"; [x - w / 2, x + w / 2 - 12].forEach(px => ctx.fillRect(px, y - h, 12, h));
+  const buka = S.peti ? Math.min(1, petiBuka) : 0;
+  ctx.save(); ctx.translate(x, y - h);
+  ctx.scale(1, 1 - buka * 1.6);
+  ctx.fillStyle = "#8a5530"; ctx.beginPath(); ctx.moveTo(-w / 2, 0); ctx.lineTo(-w / 2, -26); ctx.quadraticCurveTo(0, -52, w / 2, -26); ctx.lineTo(w / 2, 0); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = "#e3b452"; ctx.fillRect(-9, -14, 18, 22);
+  ctx.restore();
+  if(S.peti && buka > .3){
+    ctx.save(); ctx.globalCompositeOperation = "screen";
+    const g = ctx.createRadialGradient(x, y - h - 20, 4, x, y - h - 20, 150);
+    g.addColorStop(0, `rgba(255,236,170,${.7 * Math.max(0, 1.6 - petiBuka)})`); g.addColorStop(1, "rgba(255,236,170,0)");
+    ctx.fillStyle = g; ctx.fillRect(x - 150, y - h - 170, 300, 300); ctx.restore();
+  }
 }
 function lukisWatak(w, o){
   const im = IMG[w + "-" + o.arah]; if(!im) return;
@@ -397,7 +502,7 @@ function kemas(dt){
   } else pemain.jalan = 0;
   B.benda.forEach(b => { if(b.auto && b.ada() && !sibuk && Math.hypot(b.x - pemain.x, b.y - pemain.y) < b.r) interaksi(b); });
   const d = !sibuk && dekatSekali();
-  const A = $("btnA"); A.classList.toggle("dekat", !!d); A.textContent = d ? d.label : "BUAL";
+  const A = $("btnA"); A.classList.toggle("dekat", !!d); A.textContent = d ? d.label : "BUAL"; A.style.fontSize = A.textContent.length > 5 ? "11px" : "";
   if(tTip && (tTip -= dt) <= 0){ tTip = 0; $("tip").style.opacity = 0; setTimeout(() => { if(!tTip) $("tip").hidden = true; }, 500); }
 }
 function tunjuk(t, s){ const el = $("tip"); el.textContent = t; el.hidden = false; el.style.opacity = 1; tTip = s || 4.5; }
@@ -488,49 +593,176 @@ async function interaksi(b){
       await aku("Tok… saya di mana ni? Tadi saya di tebing sungai…");
       await tok("Kau di Melaka. Keris berhulu emas itu hanya memilih orang yang sedang mencari jalan.");
       await tok("Aku Tok Malik. Empat puluh tahun aku berdagang di pelabuhan ini.");
-      await tok("Kalau mahu pulang ke zamanmu, kau mesti lulus sembilan ujian pedagang.");
-      await tok("Tapi sebelum ujian pertama, ada segulung ilmu tercicir di hujung jalan, dekat tempayan. Pergi ambil.");
-      const p = await pilih(["Baik, Tok.", "Ujian apa tu, Tok?"]);
-      if(p === 1) await tok("Ujian pertama: dapatkan Surat Cap Mohor, tanda kau pedagang yang sah. Di zamanmu, orang panggil ia link affiliate.");
+      await tok("Kalau mahu pulang ke zamanmu, kau mesti kuasai sembilan jurus pedagang.");
+      await tok("Jurus pertama: Surat Cap Mohor, tanda kau pedagang yang sah. Di zamanmu, orang panggil ia link affiliate.");
+      await tok("Surat itu aku simpan dalam peti. Petanya hanya aku beri kepada orang yang sabar.");
+      await tok("Pergi ke hujung jeti. Tangkap tiga ekor ikan.");
+      await aku("Memancing? Apa kaitannya dengan berniaga, Tok?");
+      await tok("Berniaga itu macam memancing. Umpan yang betul, tunggu masa yang tepat. Tarik terlalu awal, ikan lari.");
+      await tok("Dan bukan semua ikan akan makan umpan kau. Itu biasa. Yang penting, kau tak berhenti.");
       S.jumpaTok = 1; simpan(); sfx("seru");
-      tutupDialog(); misi(); tunjuk("Cari gulungan yang bercahaya ✨");
-    } else if(!S.gulungan){
-      await tok("Gulungan itu di hujung jalan, dekat tempayan. Pergilah."); tutupDialog();
+      tutupDialog(); misi(); tunjuk("Pergi ke hujung jeti 🎣");
+    } else if(!S.pancing){
+      await tok("Hujung jeti, {N}. Tiga ekor ikan. Sabar."); tutupDialog();
+    } else if(!S.peta){
+      await tok("Tiga ekor! Kau lihat tadi? Ada yang terlepas, ada yang dapat. Tapi kau tetap tunggu.");
+      await tok("Esok, bila kau kongsi link, ada orang tak balas. Jangan kecewa. Itu ikan yang belum lapar.");
+      await tok("Kau sudah layak. Nah, ambil peta ini.");
+      tutupDialog(); sfx("gulungan"); S.peta = 1; simpan(); misi();
+      await bukaPeta();
+      tunjuk("Ikut peta. Cari peti bercahaya ✨");
+    } else if(!S.peti){
+      await tok("Ikut peta tu. Peti di bawah pohon, di tepi semak."); tutupDialog();
     } else {
       if(!S.lapor){
-        await tok("Bagus. Kau sudah baca ilmunya.");
+        await tok("Kau sudah buka Jurus Pertama.");
         await tok("Ingat pesanku: betulkan niat. Rezeki yang halal itu berkat.");
+        await tok("Ilmu tanpa amal macam pedang dalam sarung. Daftar dan dapatkan Surat Cap Mohor kau di dunia sebenar.");
         S.lapor = 1; simpan(); misi();
-      }
-      await tok("Sekarang, dapatkan Surat Cap Mohor kau. Bila siap, datang jumpa aku semula.");
-      const p = await pilih(["⚔️  Buka Ujian Pertama", "Nanti dulu, Tok"]);
+      } else await tok("Dah dapat Surat Cap Mohor kau, {N}?");
+      const p = await pilih(["📝 Daftar affiliate sekarang", "📖 Buka Kitab Jurus", "Nanti dulu, Tok"]);
       tutupDialog();
-      if(p === 0){ sfx("lulus"); await hitam(true); location.href = "/hikayat/"; return; }
+      if(p === 0) bukaPanel("/affiliate/", "Daftar affiliate");
+      else if(p === 1) await bukaKitab();
     }
-  } else if(b.id === "gulungan"){
-    sfx("gulungan"); setTimeout(() => sfx("rahsia", .6), 250);
-    $("gIlmu").innerHTML = [
+  } else if(b.id === "pancing"){
+    tutupDialog();
+    const menang = await memancing();
+    if(menang){ S.pancing = 1; simpan(); misi(); tunjuk("Kembali kepada Tok Malik"); }
+  } else if(b.id === "peti"){
+    S.peti = 1; petiBuka = 0; simpan(); sfx("rahsia", .8); setTimeout(() => sfx("syiling"), 500);
+    await tidur(1300);
+    await bukaKitab(); misi(); tunjuk("Kembali kepada Tok Malik");
+  }
+  sibuk = false;
+}
+
+/* ---------- Kitab Jurus ---------- */
+const KITAB = {
+  1:{ tajuk:"JURUS 1 · SURAT CAP MOHOR",
+    ilmu:[
       "Link affiliate anda ialah Surat Cap Mohor anda. Sesiapa yang buka link ini, sistem kenal ia datang dari anda.",
       "Link ini terus membuka chatbot. Chatbot terangkan produk, harga, voucher RM20 dan cara daftar.",
       "Anda tak perlu hafal harga. Tugas anda: kongsi link dan ajak orang berbual.",
       "Komisen RM100 setiap produk. Capai 11 jualan dalam sebulan, semua jualan bulan itu jadi RM200 setiap jualan! 11 jualan = RM2,200!"
-    ].map(x => "<li>" + x + "</li>").join("");
-    $("gPesan").textContent = "“Betulkan niat. Berniaga kerana mahu menyara keluarga dengan rezeki yang halal. Niat yang baik menjadikan penat itu ibadah.” — Tok Malik";
-    $("sGulung").hidden = false;
-    await new Promise(r => $("gTutup").onclick = r);
-    sfx("syiling"); $("sGulung").hidden = true; S.gulungan = 1; simpan(); misi();
-    tunjuk("Kembali kepada Tok Malik");
-  }
-  sibuk = false;
+    ],
+    pesan:"“Betulkan niat. Berniaga kerana mahu menyara keluarga dengan rezeki yang halal. Niat yang baik menjadikan penat itu ibadah.” — Tok Malik" }
+};
+function bukaKitab(n){
+  n = n || 1; const k = KITAB[n];
+  $("gSub").textContent = k.tajuk;
+  $("gVideo").innerHTML = VIDEO[n]
+    ? `<iframe src="https://www.youtube-nocookie.com/embed/${VIDEO[n]}?rel=0&playsinline=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="Video pengajaran"></iframe>`
+    : "🎬 Video pengajaran jurus ini<br>akan datang tak lama lagi";
+  $("gIlmu").innerHTML = k.ilmu.map(x => "<li>" + x + "</li>").join("");
+  $("gPesan").textContent = k.pesan;
+  $("sGulung").hidden = false; sibuk = true; henti();
+  return new Promise(r => {
+    $("gTutup").onclick = () => { sfx("syiling"); $("sGulung").hidden = true; $("gVideo").innerHTML = ""; sibuk = false; r(); };
+  });
 }
+$("gDaftar").onclick = () => bukaPanel("/affiliate/", "Daftar affiliate");
+$("gUjian").onclick = () => bukaPanel("/hikayat/", "Misi sebenar");
+$("btnBeg").onclick = () => { if(!sibuk && !dialogBuka){ sfx("pilih"); bukaKitab(); } };
+$("btnPeta").onclick = () => { if(!sibuk && !dialogBuka){ sfx("gulungan"); bukaPeta(); } };
+$("btnUjian").onclick = () => { sfx("pilih"); bukaPanel("/hikayat/", "Misi sebenar"); };
+
+/* ---------- Panel halaman dalam game ---------- */
+function bukaPanel(url, tajuk){
+  henti(); $("panelT").textContent = tajuk; $("panelF").src = url; $("panel").hidden = false;
+  Object.keys(LAGU).forEach(k => LAGU[k].pause());
+}
+$("panelTutup").onclick = () => { $("panel").hidden = true; $("panelF").src = "about:blank"; sfx("pilih"); if(B) suasana(B.bunyi); };
+
+/* ---------- Peta ---------- */
+function bukaPeta(){
+  const c = $("petaC"), g = c.getContext("2d"), im = IMG.jeti, k = c.width / 2576;
+  g.filter = "sepia(.8) saturate(.7) brightness(1.05)"; g.drawImage(im, 0, 0, c.width, c.height); g.filter = "none";
+  g.strokeStyle = "#c0261f"; g.lineWidth = 6; g.setLineDash([10, 9]); g.lineCap = "round";
+  g.beginPath(); [[960, 1060], [900, 1200], [760, 1300], [PETI[0] + 40, PETI[1] - 20]].forEach(([x, y], i) => i ? g.lineTo(x * k, y * k) : g.moveTo(x * k, y * k)); g.stroke();
+  g.setLineDash([]); g.lineWidth = 9;
+  const [px, py] = [PETI[0] * k, (PETI[1] - 40) * k];
+  g.beginPath(); g.moveTo(px - 14, py - 14); g.lineTo(px + 14, py + 14); g.moveTo(px + 14, py - 14); g.lineTo(px - 14, py + 14); g.stroke();
+  g.fillStyle = "#2b2118"; g.font = "800 22px 'Nunito Sans',sans-serif"; g.fillText("Tok Malik", 960 * k - 40, 1040 * k - 30);
+  $("sPeta").hidden = false; sibuk = true; henti();
+  return new Promise(r => { $("pTutupPeta").onclick = () => { $("sPeta").hidden = true; sfx("pilih"); sibuk = false; r(); }; });
+}
+
+/* ---------- Mini-game: memancing ---------- */
+function memancing(){
+  return new Promise(res => {
+    const el = $("sPancing"), pel = $("pPel"), riak = $("pRiak"), seru = $("pSeru"), msg = $("pPesan");
+    let dapat = 0, keadaan = "tunggu", tm = [], selesai = false;
+    const kosong = () => { tm.forEach(clearTimeout); tm = []; };
+    const kemasKira = () => { $("pKira").textContent = `Ikan: ${dapat} / 3`; $("pIkan").textContent = "🐟".repeat(dapat); };
+    const reset = (teks) => {
+      kosong(); keadaan = "tunggu"; pel.className = "pel"; riak.className = "riak"; seru.className = "seruP";
+      if(teks) msg.textContent = teks;
+      const tunggu = 1800 + Math.random() * 3200;
+      // gigitan palsu untuk menguji kesabaran
+      for(let t = 600; t < tunggu - 400; t += 700 + Math.random() * 900)
+        tm.push(setTimeout(() => { pel.classList.add("goyang"); setTimeout(() => pel.classList.remove("goyang"), 160); }, t));
+      tm.push(setTimeout(() => {
+        keadaan = "makan"; pel.className = "pel makan"; riak.className = "riak on"; seru.className = "seruP on"; sfx("seru", .5);
+        tm.push(setTimeout(() => { if(keadaan === "makan") reset("Ikan terlepas. Tak apa, cuba lagi."); }, 850));
+      }, tunggu));
+    };
+    const tamat = menang => { selesai = true; kosong(); el.hidden = true; sibuk = false; if(B) suasana(B.bunyi); res(menang); };
+    $("pTarik").onclick = () => {
+      if(selesai) return;
+      if(keadaan === "makan"){
+        dapat++; kemasKira(); sfx("syiling");
+        const f = document.createElement("div"); f.className = "lompatI"; f.textContent = "🐟"; $("pTasik").appendChild(f); setTimeout(() => f.remove(), 900);
+        if(dapat >= 3){ kosong(); keadaan = "habis"; seru.className = "seruP"; riak.className = "riak"; pel.className = "pel"; msg.textContent = "Tiga ekor! Kau memang sabar. 🎉"; sfx("lulus"); setTimeout(() => tamat(true), 1800); }
+        else reset(["Dapat! Tunggu lagi…", "Bagus! Sabar, tunggu yang seterusnya."][dapat - 1]);
+      } else if(keadaan === "tunggu"){
+        sfx("gerak", .4); reset("Terlalu awal! Ikan lari. Tunggu pelampung tenggelam.");
+      }
+    };
+    $("pBerhenti").onclick = () => tamat(false);
+    sibuk = true; henti(); kemasKira(); el.hidden = false;
+    reset("Tunggu pelampung tenggelam, baru tarik.");
+  });
+}
+
+/* ---------- Waktu azan (JAKIM, Melaka) ---------- */
+const SOLAT = { Fajr:"Subuh", Dhuhr:"Zohor", Asr:"Asar", Maghrib:"Maghrib", Isha:"Isyak" };
+let WAKTU = null;
+fetch("https://api.aladhan.com/v1/timingsByCity?city=Melaka&country=Malaysia&method=17")
+  .then(r => r.json()).then(d => { WAKTU = d && d.data && d.data.timings; }).catch(() => {});
+function semakAzan(paksa){
+  if(!main || sibuk || dialogBuka || !$("sAzan").hidden || !$("panel").hidden) return;
+  let nama = paksa ? "Zohor" : null;
+  if(!nama && WAKTU){
+    const kini = new Date(), min = kini.getHours() * 60 + kini.getMinutes(), hari = kini.toDateString();
+    for(const k in SOLAT){
+      const [h, m] = String(WAKTU[k] || "").split(":").map(Number); if(isNaN(h)) continue;
+      const beza = min - (h * 60 + m);
+      if(beza >= 0 && beza < 15 && LS.get("hk_azan") !== hari + k){ LS.set("hk_azan", hari + k); nama = SOLAT[k]; break; }
+    }
+  }
+  if(!nama) return;
+  $("aJudul").textContent = "Sudah masuk waktu " + nama;
+  $("aPilih").hidden = false; $("aJeda").hidden = true; $("sAzan").hidden = false;
+  sibuk = true; henti(); Object.keys(LAGU).forEach(k => LAGU[k].pause());
+}
+const tutupAzan = () => { $("sAzan").hidden = true; sibuk = false; if(B) suasana(B.bunyi); };
+$("aNanti").onclick = () => { sfx("pilih"); tutupAzan(); };
+$("aSolat").onclick = () => { sfx("pilih"); $("aPilih").hidden = true; $("aJeda").hidden = false; };
+$("aSiap").onclick = () => { S.berkat = (S.berkat || 0) + 1; simpan(); sfx("syiling"); tutupAzan(); tunjuk("⭐ Berkat +1. Semoga dipermudahkan urusan."); };
+setInterval(semakAzan, 30000);
+if(/[?&]azan=1/.test(location.search)) setInterval(() => semakAzan(true), 3000);
 
 function misi(){
   let t = "";
   if(S.babak === "rumah") t = S.meja ? "Keluar ambil angin" : "Periksa meja makan";
   else if(!S.jumpaTok) t = "Cari Tok Malik di gerai rempah";
-  else if(!S.gulungan) t = "Ambil Gulungan Ilmu";
+  else if(!S.pancing) t = "Tangkap 3 ekor ikan di hujung jeti";
+  else if(!S.peta) t = "Kembali kepada Tok Malik";
+  else if(!S.peti) t = "Ikut peta, cari peti harta";
   else if(!S.lapor) t = "Kembali kepada Tok Malik";
-  else t = "Dapatkan Surat Cap Mohor (Ujian 1)";
+  else t = "Daftar affiliate & dapatkan link (Jurus 1)";
+  $("btnPeta").hidden = !(S.peta && !S.peti); $("btnBeg").hidden = !S.peti;
   $("mBab").textContent = B ? B.bab : ""; $("mTeks").textContent = t;
 }
 
@@ -558,6 +790,7 @@ let akhir = performance.now();
 function gelung(t){
   const dt = Math.min(.05, (t - akhir) / 1000); akhir = t; T += dt;
   if(main && B){ kemas(dt); kemasKamera(dt); }
+  if(S.peti && petiBuka < 2) petiBuka += dt * 1.4;
   campurBunyi(dt);
   lukis();
   requestAnimationFrame(gelung);
