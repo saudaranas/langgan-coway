@@ -109,6 +109,22 @@
   .tindakan{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
   .tindakan button{background:var(--kayu);color:var(--emas2);border:0;border-radius:12px;padding:13px 14px;font-size:16px;font-weight:800;text-align:left}
   .kertasG h3{font-size:14px;letter-spacing:1px;color:var(--kayu);margin:0 0 6px}
+  /* log masuk & papan kenyataan */
+  .lmasuk{margin-top:14px;background:none;border:1px solid rgba(246,212,143,.5);color:var(--emas2);border-radius:999px;padding:9px 16px;font-weight:700;font-size:14px}
+  .lmasuk.ok{border-color:transparent;color:#bfe3b0}
+  .borang label{display:block;text-align:left;font-weight:800;font-size:14px;margin:10px 0 4px}
+  .borang input{width:100%;font-size:17px;padding:12px;border-radius:10px;border:1.5px solid #c9b48c;background:#fffaf0}
+  .ralat{color:#b3261e;font-weight:700;min-height:20px;margin:8px 0 0;font-size:14px}
+  .bentara{position:fixed;left:50%;top:calc(76px + env(safe-area-inset-top));transform:translate(-50%,-20px);z-index:6;width:min(92vw,420px);background:#f6e7c4;color:#2b2118;border:3px solid #8a6a3e;border-radius:14px;padding:10px 14px;font-weight:700;font-size:15px;box-shadow:0 10px 30px rgba(0,0,0,.35);opacity:0;transition:opacity .4s,transform .4s;pointer-events:none}
+  .bentara.on{opacity:1;transform:translate(-50%,0)}
+  .bentara b{color:#8c2531}
+  .kmaju{background:#efe2c4;border-radius:12px;padding:12px;margin-bottom:12px;text-align:left}
+  .kmaju .kbar{height:12px;border-radius:999px;background:#d9c49b;overflow:hidden;margin:8px 0 4px}
+  .kmaju .kbar i{display:block;height:100%;background:linear-gradient(90deg,#c9993f,#e9b75a)}
+  .senarai{list-style:none;padding:0;margin:0 0 12px;text-align:left}
+  .senarai li{display:flex;justify-content:space-between;gap:8px;padding:8px 4px;border-bottom:1px dashed #c9b48c;font-size:15px}
+  .senarai li.saya{background:#fff3cf;border-radius:8px}
+  .senarai small{color:#6b5638}
   /* panel halaman dalam game */
   .panel{position:fixed;inset:0;z-index:20;background:#0c0a08;display:flex;flex-direction:column}
   .panel .atasP{display:flex;align-items:center;justify-content:space-between;padding:calc(8px + env(safe-area-inset-top)) 10px 8px;background:var(--kayu);color:var(--emas2);font-weight:800}
@@ -133,6 +149,7 @@
     <button type="button" id="bunyi" aria-label="Bunyi">🔊</button>
     <button type="button" id="btnBeg" aria-label="Kitab Jurus" hidden>📖</button>
     <button type="button" id="btnPeta" aria-label="Peta harta" hidden>🗺️</button>
+    <button type="button" id="btnPapan" aria-label="Papan kenyataan jualan">🏆</button>
     <button type="button" id="btnUjian" aria-label="Misi sebenar">📜</button>
   </div>
 </div>
@@ -161,6 +178,7 @@
     <button type="button" data-w="P" aria-pressed="false"><img src="aset/aisyah-depan.webp" alt="">Aisyah</button>
   </div>
   <button type="button" class="mula" id="mula">Mulakan kisah</button>
+  <button type="button" class="lmasuk" id="btnLogin">🔐 Log masuk affiliate untuk simpan kemajuan</button>
   <div class="kecil">🎧 Gunakan fon telinga untuk pengalaman terbaik</div>
 </section>
 
@@ -217,6 +235,37 @@
   </div>
 </section>
 
+<section class="tirai gulung" id="sLogin" hidden role="dialog" aria-modal="true" aria-labelledby="lJudul">
+  <div class="kertasG">
+    <h2 id="lJudul">Log Masuk Pahlawan</h2>
+    <div class="sub">GUNA AKAUN AFFILIATE ANDA</div>
+    <p style="margin:6px 0 4px;font-size:15px">Kemajuan disimpan dalam akaun anda, jadi anda boleh sambung main di telefon atau komputer lain.</p>
+    <form class="borang" id="fLogin">
+      <label for="lWa">Nombor WhatsApp</label>
+      <input id="lWa" type="tel" inputmode="tel" autocomplete="tel" placeholder="012-345 6789" required>
+      <label for="lPin">PIN</label>
+      <input id="lPin" type="password" inputmode="numeric" autocomplete="current-password" required>
+      <p class="ralat" id="lErr" aria-live="polite"></p>
+      <button type="submit" class="mula" id="lGo">Log masuk</button>
+    </form>
+    <div class="tindakan" style="margin-top:10px">
+      <button type="button" id="lDaftar" style="background:#e9dcc2;color:#2b2118;text-align:center">Belum ada akaun? Daftar affiliate</button>
+    </div>
+    <button type="button" class="btnK" id="lTutup" style="color:#6b5638">Main tanpa log masuk</button>
+  </div>
+</section>
+
+<section class="tirai gulung" id="sPapan" hidden role="dialog" aria-modal="true" aria-labelledby="kJudul">
+  <div class="kertasG">
+    <h2 id="kJudul">Papan Kenyataan</h2>
+    <div class="sub" id="kSub">JUALAN BULAN INI</div>
+    <div id="kIsi"><p>Memuatkan…</p></div>
+    <button type="button" class="mula" id="kTutup">Tutup</button>
+  </div>
+</section>
+
+<div class="bentara" id="bentara" role="status" aria-live="polite"></div>
+
 <div class="panel" id="panel" hidden>
   <div class="atasP"><span id="panelT">Misi</span><button type="button" id="panelTutup">✕ Kembali ke game</button></div>
   <iframe id="panelF" title="Halaman dalam game"></iframe>
@@ -233,7 +282,19 @@ const tidur = ms => new Promise(r => setTimeout(r, ms));
 
 /* ---------- Simpanan ---------- */
 const S = Object.assign({ babak:"rumah", meja:0, tiba:0, jumpaTok:0, kiah:0, cabar:0, pancing:0, peta:0, peti:0, lapor:0, berkat:0 }, JSON.parse(LS.get("hk_kisah") || "{}"));
-const simpan = () => LS.set("hk_kisah", JSON.stringify(S));
+const API = "https://script.google.com/macros/s/AKfycbzxiDAR0APLLQvlI-peaoL89dsabpLZd-PHxqAuEgeaGVqtiX3NngTdNbbnhCLyxX3kVw/exec";
+const call = (fn, ...args) => fetch(API, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body:JSON.stringify({ action:fn, args:args }) })
+  .then(r => r.json(), () => { throw "Tiada sambungan internet. Cuba lagi."; })
+  .then(r => { if(!r.ok) throw r.error || "Ralat pelayan."; return r.data; });
+let TOKEN = LS.get("hk_t") || "";
+const tamatSesi = e => { if(/Sesi tamat|tidak aktif/.test(String(e))){ TOKEN = ""; try{ localStorage.removeItem("hk_t"); }catch(x){} kemasLogin(); return true; } return false; };
+let tSync = 0;
+function segerak(){
+  if(!TOKEN) return;
+  clearTimeout(tSync);
+  tSync = setTimeout(() => { call("gameAct", TOKEN, "kisah", { watak:WATAK, s:S }).catch(tamatSesi); }, 1500);
+}
+const simpan = () => { LS.set("hk_kisah", JSON.stringify(S)); segerak(); };
 let WATAK = LS.get("hk_w") || "";
 const NAMA = () => WATAK === "P" ? "Aisyah" : "Hafiz";
 const isi = s => s.replace(/\{N\}/g, NAMA());
@@ -731,29 +792,16 @@ async function interaksi(b){
     else if(!S.kiah){
       await kiah("Oh, Tok Malik yang hantar? Kau cari Pak Leman?");
       await kiah("Makcik tahu dia di mana. Tapi jawab dulu tiga soalan makcik. Orang berniaga mesti jujur.");
-      const SOAL = [
-        { q:"Pelanggan minta secupak beras. Timbangan kau kurang sedikit, dan dia tak perasan. Apa kau buat?",
-          o:["Tambah beras sampai cukup", "Biarkan, dia bukan tahu", "Kurangkan lagi, untung lebih"], b:0,
-          s:"Pandai. Timbangan yang jujur itu berkat. Pelanggan akan datang lagi." },
-        { q:"Orang tanya: “Barang ni boleh sembuhkan penyakit aku?” Kau tak pasti. Apa jawapan kau?",
-          o:["“Mesti sembuh, percayalah!”", "“Saya tak pasti. Saya tanya yang lebih tahu dulu.”", "Diam dan tukar topik"], b:1,
-          s:"Betul. Jangan janji benda yang kau tak pasti. Kepercayaan lebih mahal daripada jualan." },
-        { q:"Kawan kau kata dia tak berminat dengan barang kau. Apa kau buat?",
-          o:["Desak sampai dia setuju", "Hormati dan kekal berkawan", "Tak nak kawan dia lagi"], b:1,
-          s:"Ya. Hari ini dia tak perlu. Esok mungkin dia sendiri yang cari kau." }
-      ];
-      for(const q of SOAL){
-        while(true){
-          await kiah(q.q);
-          const j = await pilih(q.o);
-          if(j === q.b){ sfx("syiling", .6); await kiah(q.s); break; }
-          sfx("gerak", .4); await kiah("Hmm… cuba fikir lagi, nak. Kalau kau pelanggan itu, apa yang kau mahu?");
-        }
-      }
+      await soalanKiah();
       await kiah("Kau jujur. Makcik suka. Pak Leman ada di pantai, ikut jalan ke kanan pasar.");
       await kiah("Dia cerewet sikit. Tapi dengan orang yang sabar, hatinya lembut.");
       S.kiah = 1; simpan(); sfx("lulus", .6); tutupDialog(); misi(); tunjuk("Ke Pantai ➜");
-    } else { await kiah("Pak Leman di pantai, nak. Kanan pasar."); tutupDialog(); }
+    } else {
+      await kiah("Eh, kau lagi! Nak makcik uji sekali lagi?");
+      const j = await pilih(["🧺 Uji saya lagi", "Terima kasih, makcik"]);
+      if(j === 0){ await soalanKiah(); await kiah("Masih jujur macam dulu. Bagus!"); }
+      tutupDialog();
+    }
   } else if(b.id === "leman"){
     const lem = t => cakap("leman", t);
     if(!S.kiah){ await lem("Kau cari peta Tok Malik? Aku tak kenal kau."); await lem("Pergi jumpa Makcik Kiah di pasar dulu. Kalau dia kata kau jujur, aku percaya."); tutupDialog(); }
@@ -774,7 +822,12 @@ async function interaksi(b){
       await muat("hutan", "aset/hutan.webp");
       await bukaPeta();
       tunjuk("Ke Hutan kecil ➜ cari peti bercahaya ✨");
-    } else { await lem("Hutan kecil, hujung pantai. Pergilah."); tutupDialog(); }
+    } else {
+      await lem(S.peti ? "Dah jumpa peti? Bagus. Nak memancing lagi? Asah kesabaran." : "Hutan kecil, hujung pantai. Pergilah.");
+      const j = await pilih(["🎣 Memancing lagi", "Terima kasih, Pak Leman"]);
+      tutupDialog();
+      if(j === 0) await memancing();
+    }
   } else if(b.id === "pancing"){
     tutupDialog();
     const menang = await memancing();
@@ -786,6 +839,11 @@ async function interaksi(b){
       await tidur(1300);
       await bukaKitab(); misi(); tunjuk("Kembali kepada Tok Malik di jeti");
     }
+  } else if(b.id === "pengawal" && TOKEN && BERITA && BERITA.berita.length){
+    const x = BERITA.berita[0];
+    await cakap("pengawal", `Dengar ni! ${x.saya ? "Kau sendiri" : x.nama} baru dapat ${x.n} jualan, ${lalu(x.masa)}. Pedagang Melaka makin maju!`);
+    await cakap("pengawal", "Tengok papan kenyataan 🏆 untuk senarai penuh.");
+    tutupDialog();
   } else if(KATA[b.id]){
     const L = KATA[b.id]; const i = (BUALAN[b.id] = ((BUALAN[b.id] ?? -1) + 1)) % L.length;
     for(const t of [].concat(L[i])) await cakap(b.id, t);
@@ -795,6 +853,29 @@ async function interaksi(b){
   sibuk = false;
 }
 
+/* ---------- Soalan Makcik Kiah ---------- */
+async function soalanKiah(){
+  const kiah = t => cakap("kiah", t);
+  const SOAL = [
+    { q:"Pelanggan minta secupak beras. Timbangan kau kurang sedikit, dan dia tak perasan. Apa kau buat?",
+      o:["Tambah beras sampai cukup", "Biarkan, dia bukan tahu", "Kurangkan lagi, untung lebih"], b:0,
+      s:"Pandai. Timbangan yang jujur itu berkat. Pelanggan akan datang lagi." },
+    { q:"Orang tanya: “Barang ni boleh sembuhkan penyakit aku?” Kau tak pasti. Apa jawapan kau?",
+      o:["“Mesti sembuh, percayalah!”", "“Saya tak pasti. Saya tanya yang lebih tahu dulu.”", "Diam dan tukar topik"], b:1,
+      s:"Betul. Jangan janji benda yang kau tak pasti. Kepercayaan lebih mahal daripada jualan." },
+    { q:"Kawan kau kata dia tak berminat dengan barang kau. Apa kau buat?",
+      o:["Desak sampai dia setuju", "Hormati dan kekal berkawan", "Tak nak kawan dia lagi"], b:1,
+      s:"Ya. Hari ini dia tak perlu. Esok mungkin dia sendiri yang cari kau." }
+  ];
+  for(const q of SOAL){
+    while(true){
+      await kiah(q.q);
+      const j = await pilih(q.o);
+      if(j === q.b){ sfx("syiling", .6); await kiah(q.s); break; }
+      sfx("gerak", .4); await kiah("Hmm… cuba fikir lagi, nak. Kalau kau pelanggan itu, apa yang kau mahu?");
+    }
+  }
+}
 /* ---------- Kata-kata orang kampung ---------- */
 const BUALAN = {};
 const KATA = {
@@ -970,6 +1051,7 @@ async function masukBabak(id, dariPutih, masuk){
     const sentuh = matchMedia("(pointer:coarse)").matches;
     tunjuk(sentuh ? "Seret jari di skrin untuk berjalan" : "Anak panah atau WASD untuk berjalan, Space untuk berinteraksi", 5);
   } else if(B.bab) tunjuk(B.bab.split("· ").pop(), 2.5);
+  setTimeout(bentara, 2500);
 }
 
 /* ---------- Gelung ---------- */
@@ -983,6 +1065,88 @@ function gelung(t){
   requestAnimationFrame(gelung);
 }
 
+/* ---------- Log masuk & simpan awan ---------- */
+const KUNCI_K = ["meja","tiba","jumpaTok","kiah","cabar","pancing","peta","peti","lapor"];
+function kemasLogin(){
+  const b = $("btnLogin");
+  b.textContent = TOKEN ? "✅ Log masuk. Kemajuan disimpan dalam akaun anda" : "🔐 Log masuk affiliate untuk simpan kemajuan";
+  b.classList.toggle("ok", !!TOKEN);
+}
+async function tarikAwan(){
+  if(!TOKEN) return;
+  try{
+    const d = await call("gameState", TOKEN);
+    const k = d && d.g && d.g.data && d.g.data.k;
+    if(!k) { segerak(); return; }
+    const skor = o => KUNCI_K.reduce((a, x) => a + (+o[x] || 0), 0);
+    const awanLebih = skor(k) > skor(S);
+    KUNCI_K.forEach(x => S[x] = Math.max(+S[x] || 0, +k[x] || 0));
+    S.berkat = Math.max(+S.berkat || 0, +k.berkat || 0);
+    if(awanLebih && k.babak) S.babak = k.babak;
+    if(!WATAK && d.g.watak) WATAK = d.g.watak;
+    LS.set("hk_kisah", JSON.stringify(S)); segerak();
+  }catch(e){ tamatSesi(e); }
+}
+$("btnLogin").onclick = () => { sfx("pilih"); if(TOKEN) return; $("sLogin").hidden = false; };
+$("lTutup").onclick = () => { $("sLogin").hidden = true; if(main) sibuk = false; };
+$("lDaftar").onclick = () => { $("sLogin").hidden = true; bukaPanel("/affiliate/", "Daftar affiliate"); };
+$("fLogin").onsubmit = async e => {
+  e.preventDefault(); $("lErr").textContent = "";
+  const b = $("lGo"); b.disabled = true; b.textContent = "Menyemak…";
+  try{
+    const d = await call("affLogin", $("lWa").value, $("lPin").value);
+    TOKEN = d.token; LS.set("hk_t", TOKEN);
+    await tarikAwan(); kemasLogin();
+    $("sLogin").hidden = true; sfx("lulus", .5);
+    if(main){ sibuk = false; masukBabak(S.babak); misi(); tunjuk("✅ Kemajuan disimpan dalam akaun anda"); }
+  }catch(err){ $("lErr").textContent = err; }
+  b.disabled = false; b.textContent = "Log masuk";
+};
+
+/* ---------- Papan kenyataan & Bentara ---------- */
+let BERITA = null, tBerita = 0;
+async function ambilBerita(paksa){
+  if(!TOKEN) return null;
+  if(!paksa && BERITA && Date.now() - tBerita < 120000) return BERITA;
+  try{ BERITA = await call("gameBerita", TOKEN); tBerita = Date.now(); }catch(e){ tamatSesi(e); }
+  return BERITA;
+}
+const lalu = ms => { const h = Math.floor((Date.now() - ms) / 86400000); return h <= 0 ? "hari ini" : h === 1 ? "semalam" : h + " hari lalu"; };
+const escH = t => String(t == null ? "" : t).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+async function bukaPapan(){
+  sibuk = true; henti();
+  if(!TOKEN){ $("sLogin").hidden = false; return; }
+  $("kIsi").innerHTML = "<p>Memuatkan…</p>"; $("sPapan").hidden = false;
+  const d = await ambilBerita(true);
+  if(!d){ $("kIsi").innerHTML = "<p>Tak dapat memuatkan papan. Cuba lagi.</p>"; return; }
+  const sy = d.saya, pct = Math.min(100, Math.round(sy.produk / d.sasaran * 100));
+  $("kIsi").innerHTML = `
+    <div class="kmaju"><div><b>${escH(sy.nama)}: ${sy.produk} jualan bulan ini</b></div>
+      <div class="kbar"><i style="width:${pct}%"></i></div>
+      <div><small>${sy.baki ? `Lagi <b>${sy.baki}</b> jualan untuk RM${d.tinggi} setiap jualan!` : `🎉 Anda sudah capai ${d.sasaran} jualan. Semua jualan bulan ini RM${d.tinggi} setiap satu!`}</small></div></div>
+    <h3>📣 BERITA BENTARA</h3>
+    ${d.berita.length ? `<ul class="senarai">${d.berita.map(x => `<li class="${x.saya ? "saya" : ""}"><span>${escH(x.nama)} dapat <b>${x.n}</b> jualan</span><small>${lalu(x.masa)}</small></li>`).join("")}</ul>` : `<p style="text-align:left">Belum ada jualan dalam 14 hari ini. Jadilah yang pertama!</p>`}
+    <h3>🏆 PAHLAWAN BULAN INI</h3>
+    <ul class="senarai">${d.papan.map((x, i) => `<li class="${x.saya ? "saya" : ""}"><span>${i + 1}. ${escH(x.nama)} <small>· ${escH(x.gelaran)}</small></span><b>${x.produk}</b></li>`).join("")}</ul>`;
+}
+$("btnPapan").onclick = () => { if(!sibuk && !dialogBuka){ sfx("pilih"); bukaPapan(); } };
+$("kTutup").onclick = () => { $("sPapan").hidden = true; sibuk = false; sfx("pilih"); };
+let bentaraJalan = false;
+async function bentara(){
+  if(!TOKEN || bentaraJalan || !["jeti","pasar"].includes(S.babak)) return;
+  const d = await ambilBerita(); if(!d || !d.berita.length) return;
+  const akhir = +LS.get("hk_bl") || 0;
+  const baru = d.berita.filter(x => x.masa > akhir).slice(0, 3).reverse();
+  if(!baru.length) return;
+  LS.set("hk_bl", String(d.berita[0].masa));
+  bentaraJalan = true; const el = $("bentara");
+  for(const x of baru){
+    el.innerHTML = `📣 Bentara: Dengar semua! <b>${escH(x.saya ? "Anda" : x.nama)}</b> baru dapat <b>${x.n}</b> jualan! 🎉`;
+    sfx("seru", .5); el.classList.add("on"); await tidur(4200); el.classList.remove("on"); await tidur(600);
+  }
+  bentaraJalan = false;
+}
+
 /* ---------- Skrin judul ---------- */
 document.querySelectorAll("[data-w]").forEach(b => {
   if(b.dataset.w === WATAK) b.setAttribute("aria-pressed", "true");
@@ -991,7 +1155,8 @@ document.querySelectorAll("[data-w]").forEach(b => {
 $("mula").onclick = async () => {
   if(!WATAK){ $("pilihW").animate([{transform:"translateX(-6px)"},{transform:"translateX(6px)"},{transform:"none"}], 260); return; }
   bukaAudio(); sfx("pilih"); LS.set("hk_w", WATAK);
-  $("hitam").style.opacity = 1; await tidur(700);
+  $("hitam").style.opacity = 1; await Promise.all([tidur(700), tarikAwan()]);
+  await asetBabak(S.babak);
   $("sJudul").hidden = true; main = true;
   masukBabak(S.babak);
 };
@@ -1002,7 +1167,7 @@ $("mula").onclick = async () => {
     ...["hafiz", "aisyah"].flatMap(w => ["depan", "belakang", "kanan"].map(a => muat(w + "-" + a, "aset/" + w + "-" + a + ".webp"))),
     S.babak !== "rumah" ? asetBabak(S.babak) : null
   ]);
-  setBunyi(BUNYI); suasana({ judul:.45 });
+  setBunyi(BUNYI); suasana({ judul:.45 }); kemasLogin();
   $("hitam").style.opacity = 0;
   requestAnimationFrame(gelung);
 })();
