@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Checklist Rumah Pengantin Baru</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#3A1D3B">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --plum:#3A1D3B; --plum2:#5A2F5B; --rose:#F3C9CD; --rose2:#FCEBEC;
+    --gold:#C79A3E; --green:#2F7A5B; --green2:#E3F1EA;
+    --paper:#FFFBF8; --ink:#2A1A2B; --muted:#7A6A78; --line:#EADFE3;
+    --serif:"Young Serif",Georgia,serif; --sans:"Plus Jakarta Sans",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font:16px/1.5 var(--sans);-webkit-tap-highlight-color:transparent;padding-bottom:110px}
+  button,input{font:inherit;color:inherit}
+  button{cursor:pointer}
+  :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+  header{background:var(--plum);color:#fff;padding:22px 20px 74px;position:relative;overflow:hidden}
+  header .sprig{position:absolute;right:-18px;top:-10px;width:170px;opacity:.22}
+  .kicker{font-size:13px;letter-spacing:.02em;color:var(--rose);margin:0 0 6px;font-weight:600}
+  h1{font:400 30px/1.15 var(--serif);margin:0 0 12px;max-width:16ch}
+  .names{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .names input{width:118px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:7px 14px;color:#fff;font-weight:600}
+  .names input::placeholder{color:rgba(255,255,255,.6)}
+  .names span{font-family:var(--serif);font-size:20px;color:var(--rose)}
+
+  .stats{margin:-54px 16px 0;background:#fff;border-radius:18px;box-shadow:0 10px 30px rgba(58,29,59,.12);padding:16px;display:grid;grid-template-columns:96px 1fr;gap:16px;align-items:center;position:relative}
+  .ring{width:96px;height:96px;position:relative}
+  .ring svg{width:96px;height:96px;transform:rotate(-90deg)}
+  .ring circle{fill:none;stroke-width:9}
+  .ring .bg{stroke:var(--rose2)} .ring .fg{stroke:var(--green);stroke-linecap:round;transition:stroke-dashoffset .5s ease}
+  .ring b{position:absolute;inset:0;display:grid;place-items:center;font:400 24px var(--serif)}
+  .stats h2{margin:0;font-size:15px;color:var(--muted);font-weight:600}
+  .stats .big{font:400 26px/1.2 var(--serif);margin:2px 0 4px}
+  .stats p{margin:0;font-size:14px;color:var(--muted)}
+  .stats .bajet{color:var(--plum);font-weight:800}
+
+  nav.tabs{display:flex;gap:8px;overflow-x:auto;padding:18px 16px 6px;scrollbar-width:none;position:sticky;top:0;background:var(--paper);z-index:5}
+  nav.tabs::-webkit-scrollbar{display:none}
+  nav.tabs button{flex:none;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font-weight:700;font-size:14px;display:flex;gap:6px;align-items:center}
+  nav.tabs button small{font-weight:600;color:var(--muted);font-size:12px}
+  nav.tabs button[aria-selected="true"]{background:var(--plum);border-color:var(--plum);color:#fff}
+  nav.tabs button[aria-selected="true"] small{color:var(--rose)}
+
+  main{padding:8px 16px}
+  .roomhead{display:flex;justify-content:space-between;align-items:baseline;margin:10px 2px 10px}
+  .roomhead h3{font:400 22px var(--serif);margin:0}
+  .roomhead span{font-size:13px;color:var(--muted)}
+  ul.items{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+  .item{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 12px 12px 10px}
+  .row{display:flex;align-items:center;gap:10px}
+  .tick{flex:none;width:30px;height:30px;border-radius:9px;border:2px solid #CDBFC6;background:#fff;display:grid;place-items:center}
+  .tick svg{width:18px;height:18px;opacity:0}
+  .item.ada .tick{background:var(--green);border-color:var(--green)}
+  .item.ada .tick svg{opacity:1}
+  .name{flex:1;min-width:0;font-weight:600}
+  .item.ada .name{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(122,106,120,.5)}
+  .opt{font-size:11px;font-weight:700;color:var(--muted);background:var(--rose2);border-radius:999px;padding:2px 7px;margin-left:4px;vertical-align:2px}
+  .price{flex:none;width:92px;display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;padding:0 8px;background:var(--paper)}
+  .price span{font-size:13px;color:var(--muted);font-weight:600}
+  .price input{width:100%;border:0;background:transparent;padding:7px 4px;font-weight:700;text-align:right}
+  .price input::placeholder{color:#CBBDC5;font-weight:500}
+  .item.ada .price{visibility:hidden}
+  .skip{flex:none;border:0;background:none;color:#B9AAB3;width:28px;height:28px;border-radius:8px;font-size:18px;line-height:1}
+  .tip{margin:10px 0 0 40px;padding:9px 12px;background:var(--rose2);border-radius:10px;font-size:14px;line-height:1.45}
+  .tip a{color:var(--plum);font-weight:800;text-decoration:none;white-space:nowrap}
+  .tip a:after{content:" →"}
+  .item.ada .tip{display:none}
+  .skipped{opacity:.45}
+  .skipped .price,.skipped .tip{display:none}
+  .add{display:flex;gap:8px;margin:12px 0 4px}
+  .add input{flex:1;min-width:0;border:1.5px dashed #CDBFC6;border-radius:12px;padding:11px 12px;background:#fff}
+  .add button{flex:none;border:0;border-radius:12px;background:var(--plum2);color:#fff;font-weight:700;padding:0 16px}
+  .note{font-size:13px;color:var(--muted);margin:18px 2px 0}
+  .reset{border:0;background:none;color:var(--muted);text-decoration:underline;font-size:13px;padding:6px 2px}
+
+  .share{position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--paper) 30%);z-index:9}
+  .share button{width:100%;border:0;border-radius:14px;background:var(--gold);color:#241505;font-weight:800;font-size:16px;padding:15px;display:flex;gap:8px;justify-content:center;align-items:center;box-shadow:0 6px 18px rgba(199,154,62,.35)}
+  .share small{display:block;text-align:center;font-size:12px;color:var(--muted);margin-top:6px}
+  .toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%);background:var(--plum);color:#fff;padding:10px 16px;border-radius:999px;font-size:14px;font-weight:600;opacity:0;transition:opacity .25s;pointer-events:none;z-index:10}
+  .toast.on{opacity:1}
+  @media (min-width:640px){ body{max-width:560px;margin:0 auto} .share{max-width:560px;margin:0 auto} }
+  @media (prefers-reduced-motion:reduce){ .ring .fg{transition:none} }
+</style>
+</head>
+<body>
+
+<header>
+  <svg class="sprig" viewBox="0 0 120 120" aria-hidden="true"><g fill="none" stroke="#F3C9CD" stroke-width="2.5" stroke-linecap="round"><path d="M20 110 C50 80 70 50 100 10"/><path d="M45 78 C30 70 22 56 24 44 C38 48 46 62 45 78Z" fill="#F3C9CD" fill-opacity=".35"/><path d="M62 56 C76 50 86 38 86 26 C72 28 62 40 62 56Z" fill="#F3C9CD" fill-opacity=".35"/><path d="M78 34 C70 24 70 12 76 4 C84 12 84 24 78 34Z" fill="#F3C9CD" fill-opacity=".35"/><circle cx="100" cy="10" r="6" fill="#C79A3E" stroke="none"/></g></svg>
+  <p class="kicker">Checklist Rumah Pengantin Baru</p>
+  <h1 id="judul">Rumah pertama kita</h1>
+  <div class="names">
+    <input id="n1" maxlength="14" placeholder="Nama anda" aria-label="Nama anda" autocomplete="off">
+    <span aria-hidden="true">&amp;</span>
+    <input id="n2" maxlength="14" placeholder="Pasangan" aria-label="Nama pasangan" autocomplete="off">
+  </div>
+</header>
+
+<section class="stats" aria-live="polite">
+  <div class="ring"><svg viewBox="0 0 96 96"><circle class="bg" cx="48" cy="48" r="40"/><circle class="fg" id="arc" cx="48" cy="48" r="40" stroke-dasharray="251.3" stroke-dashoffset="251.3"/></svg><b id="pct">0%</b></div>
+  <div>
+    <h2>Persiapan rumah</h2>
+    <div class="big" id="siap">0 / 0 siap</div>
+    <p>Bajet barang belum ada: <span class="bajet" id="bajet">RM0</span></p>
+  </div>
+</section>
+
+<nav class="tabs" id="tabs" role="tablist" aria-label="Ruang rumah"></nav>
+<main id="list"></main>
+
+<div class="share">
+  <button type="button" id="kongsi"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 .9c.3.1.5.2.5.3.1.2.1.8-.1 1.3z"/></svg>Kongsi dengan kawan</button>
+  <small>Ada kawan nak kahwin? Mereka dapat checklist ni percuma juga</small>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbzxiDAR0APLLQvlI-peaoL89dsabpLZd-PHxqAuEgeaGVqtiX3NngTdNbbnhCLyxX3kVw/exec";
+  const SLUG = "checklist-pengantin";
+  const $ = id => document.getElementById(id);
+
+  /* ID affiliate: ?ref= disimpan 30 hari (sama seperti seluruh laman) */
+  const REF = (() => {
+    const c = s => String(s || "").toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 30);
+    const q = c(new URLSearchParams(location.search).get("ref"));
+    try {
+      if (q) { localStorage.setItem("aff_ref", JSON.stringify({ r: q, t: Date.now() })); return q; }
+      const o = JSON.parse(localStorage.getItem("aff_ref") || "null");
+      if (o && o.r && Date.now() - o.t < 30 * 864e5) return c(o.r);
+    } catch (e) {}
+    return q;
+  })();
+  const tr = k => { try { fetch(GAS_URL, { method:"POST", mode:"no-cors", keepalive:true, headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify({ ev:"art", a:SLUG, k:k, uid: REF ? "af-" + REF : "utama" }) }).catch(() => {}); } catch (e) {} };
+  const art = slug => "/artikel/" + slug + (REF ? "?ref=" + REF : "");
+
+  /* Senarai barang. a = artikel berkaitan (tip dipaparkan bila barang belum ada) */
+  const BILIK = [
+    { id:"dapur", t:"Dapur", i:[
+      ["Dapur gas & tong gas"],["Periuk nasi"],["Kuali & periuk"],["Pinggan, mangkuk & cawan"],["Sudu, garpu & pisau"],
+      ["Peti ais", "Peti ais lama atau kecil? Makanan cepat rosak boleh jadi duit terbuang setiap bulan.", "makanan-cepat-rosak-peti-ais"],
+      ["Air minum", "Nak beli air botol atau jerang setiap hari? Kira dulu berapa kosnya sebulan.", "kos-air-botol-sebulan"],
+      ["Cerek elektrik"],["Pengisar (blender)"],["Rak pinggan"],["Bekas simpan makanan"],["Tong sampah"],["Meja makan & kerusi"],["Ketuhar / microwave", null, null, 1]
+    ]},
+    { id:"tidur", t:"Bilik tidur", i:[
+      ["Katil"],
+      ["Tilam", "Tilam ialah barang yang anda guna 8 jam setiap malam. Semak tanda tilam yang dah tak sesuai.", "bila-perlu-tukar-tilam"],
+      ["Cadar & sarung bantal (2 set)"],["Bantal & selimut"],["Almari baju"],["Penyangkut baju"],
+      ["Kipas / aircond", "Aircond lama boleh naikkan bil elektrik. Baca sebelum pilih.", "bil-elektrik-naik-aircond-lama"],
+      ["Langsir"],["Meja solek & cermin"],["Lampu tidur", null, null, 1]
+    ]},
+    { id:"air", t:"Bilik air", i:[
+      ["Paip bilas / bidet", "Lantai tandas sentiasa basah dan licin? Ada cara supaya lebih kering.", "lantai-tandas-basah"],
+      ["Pemanas air (water heater)"],["Tuala (sekurang-kurangnya 4)"],["Rak & bekas sabun"],["Tikar kaki anti-gelincir"],["Berus & pencuci tandas"],["Baldi & gayung"],["Cermin bilik air"]
+    ]},
+    { id:"tamu", t:"Ruang tamu", i:[
+      ["Sofa"],["Meja kopi"],["TV & rak TV", null, null, 1],["Kipas siling"],["Langsir"],["Karpet"],["Sejadah & rak al-Quran"],
+      ["Penapis udara", "Habuk datang balik walaupun lap setiap hari? Ini sebabnya.", "habuk-dalam-rumah", 1],
+      ["Kerusi urut", "Penat lepas kerja dan majlis? Baca tentang rehat di rumah.", "lenguh-badan-tiada-masa-urut", 1]
+    ]},
+    { id:"dobi", t:"Dobi & utiliti", i:[
+      ["Mesin basuh", "Baju berbau walaupun dah basuh? Selalunya bukan salah sabun.", "baju-berbau-lepas-basuh"],
+      ["Ampaian / penyidai"],["Seterika & papan seterika"],["Bakul baju kotor"],["Penyapu, mop & penyedut habuk"],["Peti pertolongan cemas"],["Lampu suluh"],["Kotak perkakas"],
+      ["Penapis air utama", "Air paip buat baju putih jadi kekuningan? Semak punca sebenar.", "baju-putih-jadi-kuning", 1]
+    ]},
+    { id:"urusan", t:"Urusan", i:[
+      ["Akaun elektrik atas nama sendiri"],["Akaun air"],["Internet rumah"],["Kunci pendua"],["Takaful / insurans rumah", null, null, 1],
+      ["Tukar alamat (bank, majikan)"],["Senarai nombor kecemasan"],["Simpan perjanjian sewa / SPA"],
+      ["Semak tangki air rumah", "Bila kali terakhir tangki air rumah baru anda dicuci?", "tangki-air-rumah"]
+    ]}
+  ];
+
+  /* Simpanan dalam telefon sahaja */
+  const KEY = "ckp_v1";
+  let S = { n1:"", n2:"", ada:{}, skip:{}, rm:{}, extra:{}, tab:"dapur" };
+  try { S = Object.assign(S, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
+  const key = (b, n) => b + ":" + n;
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+  const all = b => b.i.map(x => x[0]).concat(S.extra[b.id] || []);
+
+  function stats(){
+    let tot = 0, ok = 0, rm = 0;
+    BILIK.forEach(b => all(b).forEach(n => { const k = key(b.id, n); if (S.skip[k]) return; tot++; if (S.ada[k]) ok++; else rm += +S.rm[k] || 0; }));
+    const p = tot ? Math.round(ok / tot * 100) : 0;
+    $("pct").textContent = p + "%"; $("siap").textContent = ok + " / " + tot + " siap";
+    $("bajet").textContent = "RM" + Math.round(rm).toLocaleString("en-MY");
+    $("arc").style.strokeDashoffset = 251.3 * (1 - p / 100);
+  }
+  function tabs(){
+    $("tabs").innerHTML = BILIK.map(b => {
+      const n = all(b).filter(x => !S.skip[key(b.id, x)]), d = n.filter(x => S.ada[key(b.id, x)]).length;
+      return `<button type="button" role="tab" data-t="${b.id}" aria-selected="${S.tab === b.id}">${b.t} <small>${d}/${n.length}</small></button>`;
+    }).join("");
+    $("tabs").querySelectorAll("button").forEach(x => x.onclick = () => { S.tab = x.dataset.t; save(); render(); scrollTo({ top: $("tabs").offsetTop - 2, behavior: "smooth" }); });
+  }
+  const TICK = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  function list(){
+    const b = BILIK.find(x => x.id === S.tab) || BILIK[0];
+    const rows = b.i.map(x => ({ n:x[0], tip:x[1], a:x[2], opt:x[3] })).concat((S.extra[b.id] || []).map(n => ({ n, mine:1 })));
+    const n = rows.filter(r => !S.skip[key(b.id, r.n)]);
+    $("list").innerHTML = `<div class="roomhead"><h3>${b.t}</h3><span>${n.filter(r => S.ada[key(b.id, r.n)]).length} daripada ${n.length} ada</span></div>
+      <ul class="items">${rows.map(r => {
+        const k = key(b.id, r.n), ada = !!S.ada[k], sk = !!S.skip[k];
+        return `<li class="item${ada ? " ada" : ""}${sk ? " skipped" : ""}" data-k="${esc(k)}">
+          <div class="row">
+            <button type="button" class="tick" aria-pressed="${ada}" aria-label="${esc(r.n)}: tanda sudah ada">${TICK}</button>
+            <div class="name">${esc(r.n)}${r.opt ? '<span class="opt">pilihan</span>' : ""}</div>
+            <label class="price"><span>RM</span><input inputmode="numeric" pattern="[0-9]*" maxlength="6" value="${S.rm[k] || ""}" placeholder="0" aria-label="Anggaran harga ${esc(r.n)}"></label>
+            <button type="button" class="skip" aria-label="${sk ? "Kembalikan" : "Tak perlu"}: ${esc(r.n)}" title="${sk ? "Kembalikan" : "Tak perlu"}">${sk ? "↺" : "×"}</button>
+          </div>
+          ${r.tip ? `<div class="tip">💡 ${r.tip} <a href="${art(r.a)}" data-a="${r.a}" target="_blank" rel="noopener">Baca</a></div>` : ""}
+        </li>`;
+      }).join("")}</ul>
+      <form class="add" id="add"><input id="addIn" maxlength="40" placeholder="Tambah barang sendiri…" aria-label="Tambah barang sendiri"><button>Tambah</button></form>
+      <p class="note">Tanda ✓ bila barang dah ada. Tulis anggaran harga untuk barang yang belum ada, bajet dikira automatik. Tekan × untuk barang yang tak perlu. Semua disimpan dalam telefon anda sahaja.</p>
+      <button type="button" class="reset" id="reset">Mula semula senarai</button>`;
+    $("list").querySelectorAll(".item").forEach(li => {
+      const k = li.dataset.k;
+      li.querySelector(".tick").onclick = () => { S.ada[k] = !S.ada[k]; if (!S.ada[k]) delete S.ada[k]; save(); render(); };
+      li.querySelector(".skip").onclick = () => { S.skip[k] = !S.skip[k]; if (!S.skip[k]) delete S.skip[k]; save(); render(); };
+      li.querySelector(".price input").oninput = e => { const v = e.target.value.replace(/\D/g, "").slice(0, 6); e.target.value = v; if (v) S.rm[k] = v; else delete S.rm[k]; save(); stats(); };
+    });
+    $("list").querySelectorAll(".tip a").forEach(a => a.addEventListener("click", () => tr("prod")));
+    $("add").onsubmit = e => { e.preventDefault(); const v = $("addIn").value.trim().slice(0, 40); if (!v) return;
+      S.extra[b.id] = S.extra[b.id] || []; if (!all(b).includes(v)) S.extra[b.id].push(v); save(); render(); };
+    $("reset").onclick = () => { if (!confirm("Padam semua tanda, harga dan barang tambahan?")) return; S = { n1:S.n1, n2:S.n2, ada:{}, skip:{}, rm:{}, extra:{}, tab:S.tab }; save(); render(); };
+  }
+  function judul(){
+    const a = S.n1.trim(), b = S.n2.trim();
+    $("judul").textContent = a && b ? `Rumah ${a} & ${b}` : a ? `Rumah ${a}` : "Rumah pertama kita";
+  }
+  function render(){ tabs(); list(); stats(); }
+
+  $("n1").value = S.n1; $("n2").value = S.n2; judul();
+  ["n1","n2"].forEach(id => $(id).oninput = e => { S[id] = e.target.value; save(); judul(); });
+  render();
+
+  /* Kongsi: hantar link BORANG (bukan link checklist), dengan ID affiliate yang sama */
+  const toast = t => { $("toast").textContent = t; $("toast").classList.add("on"); setTimeout(() => $("toast").classList.remove("on"), 2200); };
+  $("kongsi").onclick = () => {
+    const link = location.origin + "/checklist/" + (REF ? "?ref=" + REF : "");
+    const msg = "Aku tengah guna Checklist Rumah Pengantin Baru ni. Senang gila nak susun barang rumah pertama ikut bilik, siap kira bajet sekali 😍\n\nPercuma. Daftar sini untuk dapatkan:\n" + link;
+    tr("wa");
+    if (navigator.share) navigator.share({ text: msg }).catch(() => {});
+    else window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank");
+  };
+
+  /* statistik: sekali sehari bagi setiap telefon */
+  tr("view");
+  try { const d = new Date().toDateString(); if (localStorage.getItem("ckp_hari") !== d) { localStorage.setItem("ckp_hari", d); tr("reader"); } } catch (e) {}
+})();
+</script>
+</body>
+</html>
