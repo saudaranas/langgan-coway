@@ -208,6 +208,7 @@
     <div class="pesan" id="gPesan"></div>
     <h3>TINDAKAN SEBENAR</h3>
     <div class="tindakan">
+      <button type="button" id="gLogin">🔐 Log masuk affiliate</button>
       <button type="button" id="gDaftar">📝 Daftar affiliate &amp; dapatkan link</button>
       <button type="button" id="gUmpan">🎣 Bina umpan pertama</button>
       <button type="button" id="gUjian" hidden>⚔️ Semak misi sebenar</button>
@@ -328,6 +329,8 @@ const call = (fn, ...args) => fetch(API, { method:"POST", headers:{ "Content-Typ
   .then(r => r.json(), () => { throw "Tiada sambungan internet. Cuba lagi."; })
   .then(r => { if(!r.ok) throw r.error || "Ralat pelayan."; return r.data; });
 let TOKEN = LS.get("hk_t") || "";
+let AFID = LS.get("hk_af") || "";
+function adaLink(){ return !!(TOKEN && AFID); }   // affiliate dah log masuk = ada link sendiri
 const tamatSesi = e => { if(/Sesi tamat|tidak aktif/.test(String(e))){ TOKEN = ""; try{ localStorage.removeItem("hk_t"); }catch(x){} kemasLogin(); return true; } return false; };
 let tSync = 0;
 function segerak(){
@@ -912,15 +915,23 @@ async function interaksi(b){
       if(!S.lapor){
         await tok("Kau sudah buka Hikmah Pertama. Aku nampak cahayanya dari sini.");
         await tok("Kau jujur di pasar. Kau sabar di pantai. Itulah modal sebenar seorang pedagang.");
-        await tok("Ilmu tanpa amal macam pedang dalam sarung. Daftar dan dapatkan Surat Cap Mohor kau di dunia sebenar.");
+        await tok(adaLink() ? "Ilmu tanpa amal macam pedang dalam sarung. Surat Cap Mohor kau sudah ada. Gunakan." : "Ilmu tanpa amal macam pedang dalam sarung. Dapatkan Surat Cap Mohor kau di dunia sebenar.");
         S.lapor = 1; simpan(); misi(); try{ localStorage.removeItem("hk_ulang"); }catch(x){}
-      } else await tok("Dah dapat Surat Cap Mohor kau, {N}?");
-      if(!S.umpan) await tok("Lepas dapat Surat Cap Mohor, pasang umpan pertama kau. Satu masalah, satu artikel, satu link. Itu sahaja.");
-      const p = await pilih(["📝 Daftar affiliate sekarang", "🎣 Bina umpan pertama", "📖 Buka Kitab Hikmah", "Nanti dulu, Tok"]);
-      tutupDialog();
-      if(p === 0) bukaPanel("/affiliate/", "Daftar affiliate");
-      else if(p === 1) bukaUmpan();
-      else if(p === 2) await bukaKitab();
+      } else if(!adaLink()) await tok("Dah dapat Surat Cap Mohor kau, {N}?");
+      if(adaLink()){
+        if(!S.umpan) await tok("Pasang umpan pertama kau. Fikir seorang kawan, pilih masalah yang paling dekat dengan dia. Itu sahaja.");
+        const p = await pilih(["🎣 Bina umpan", "📖 Buka Kitab Hikmah", "Nanti dulu, Tok"]);
+        tutupDialog();
+        if(p === 0) bukaUmpan();
+        else if(p === 1) await bukaKitab();
+      } else {
+        await tok("Tanpa Surat Cap Mohor, umpan kau tak bernama. Pelanggan tak dikira atas nama kau.");
+        const p = await pilih(["🔐 Log masuk affiliate", "📝 Daftar affiliate (percuma)", "📖 Buka Kitab Hikmah", "Nanti dulu, Tok"]);
+        tutupDialog();
+        if(p === 0) $("sLogin").hidden = false;
+        else if(p === 1) bukaPanel("/affiliate/", "Daftar affiliate");
+        else if(p === 2) await bukaKitab();
+      }
     }
   } else if(b.id === "kiah"){
     const kiah = t => cakap("kiah", t);
@@ -1061,6 +1072,7 @@ function bukaKitab(n){
   });
 }
 $("gDaftar").onclick = () => bukaPanel("/affiliate/", "Daftar affiliate");
+$("gLogin").onclick = () => { $("sGulung").hidden = true; $("gVideo").innerHTML = ""; redam(1); $("sLogin").hidden = false; };
 $("gUjian").onclick = () => bukaPanel("/hikayat/", "Misi sebenar");
 $("btnBeg").onclick = () => { if(!sibuk && !dialogBuka){ sfx("pilih"); bukaKitab(); } };
 $("btnPeta").onclick = () => { if(!sibuk && !dialogBuka){ sfx("gulungan"); bukaPeta(); } };
@@ -1080,7 +1092,6 @@ const UMPAN = [
   { s:"lantai-tandas-basah", i:"🚿", t:"Lantai tandas licin", p:"Lantai tandas sentiasa basah dan licin. Risau betul bila mak ayah atau anak kecil masuk 😟\n\nPunca biasa yang ramai tak sedar, dan cara semak, ada di sini 👇" },
   { s:"lenguh-badan-tiada-masa-urut", i:"💆", t:"Lenguh badan", p:"Bahu tegang, belakang lenguh setiap hari. Nak pergi urut pun tak sempat 😩\n\nKalau anda kerja duduk lama atau banyak memandu, baca ni 👇" }
 ];
-let AFID = LS.get("hk_af") || "";
 function bukaUmpan(){
   sibuk = true; henti(); $("sUmpan").hidden = false;
   if(!TOKEN || !AFID){
@@ -1221,8 +1232,10 @@ function misi(){
   else if(!S.peta) t = "Kembali kepada Pak Leman";
   else if(!S.peti) t = "Ikut peta ke hutan kecil, cari peti";
   else if(!S.lapor) t = "Kembali kepada Tok Malik di jeti";
-  else if(!S.umpan) t = "Daftar affiliate, kemudian pasang umpan pertama 🎣";
+  else if(!adaLink()) t = "Log masuk atau daftar affiliate untuk dapat link anda 🔐";
+  else if(!S.umpan) t = "Pasang umpan pertama anda 🎣";
   else t = "Umpan dipasang! Pasang satu umpan setiap hari 🎣";
+  $("gLogin").hidden = $("gDaftar").hidden = adaLink(); $("gUmpan").hidden = !adaLink();
   $("btnPeta").hidden = !(S.peta && !S.peti); $("btnBeg").hidden = !(S.peti || LS.get("hk_ulang"));
   $("mBab").textContent = B ? B.bab : ""; $("mTeks").textContent = t;
 }
