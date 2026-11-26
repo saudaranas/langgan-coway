@@ -1292,6 +1292,12 @@ async function ambilBerita(paksa){
 }
 const lalu = ms => { const h = Math.floor((Date.now() - ms) / 86400000); return h <= 0 ? "hari ini" : h === 1 ? "semalam" : h + " hari lalu"; };
 const escH = t => String(t == null ? "" : t).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+function top10Html(d){
+  const pk = ["🥇","🥈","🥉"], ada = d.papan.filter(x => x.produk > 0).slice(0, 10);
+  let h = ada.map((x, i) => `<li class="${x.saya ? "saya" : ""}"><span>${pk[i] || (i + 1) + "."} ${escH(x.nama)}${x.saya ? " (anda)" : ""} <small>· ${escH(x.gelaran)}</small></span><b>${x.produk}</b></li>`).join("");
+  if(!ada.some(x => x.saya)) h += `<li class="saya"><span>– Anda <small>· belum masuk papan</small></span><b>${d.saya.produk}</b></li>`;
+  return (ada.length ? "" : `<p style="text-align:left">Belum ada jualan bulan ini. Jadilah yang pertama naik papan! 💪</p>`) + `<ul class="senarai">${h}</ul>`;
+}
 async function bukaPapan(){
   sibuk = true; henti();
   if(!TOKEN){ $("sLogin").hidden = false; return; }
@@ -1305,8 +1311,8 @@ async function bukaPapan(){
       <div><small>${sy.baki ? `Lagi <b>${sy.baki}</b> jualan untuk RM${d.tinggi} setiap jualan!` : `🎉 Anda sudah capai ${d.sasaran} jualan. Semua jualan bulan ini RM${d.tinggi} setiap satu!`}</small></div></div>
     <h3>📣 BERITA BENTARA</h3>
     ${d.berita.length ? `<ul class="senarai">${d.berita.map(x => `<li class="${x.saya ? "saya" : ""}"><span>${escH(x.nama)} dapat <b>${x.n}</b> jualan</span><small>${lalu(x.masa)}</small></li>`).join("")}</ul>` : `<p style="text-align:left">Belum ada jualan dalam 14 hari ini. Jadilah yang pertama!</p>`}
-    <h3>🏆 PAHLAWAN BULAN INI</h3>
-    <ul class="senarai">${d.papan.map((x, i) => `<li class="${x.saya ? "saya" : ""}"><span>${i + 1}. ${escH(x.nama)} <small>· ${escH(x.gelaran)}</small></span><b>${x.produk}</b></li>`).join("")}</ul>`;
+    <h3>🏆 TOP 10 BULAN INI</h3>
+    ${top10Html(d)}`;
 }
 $("btnPapan").onclick = () => { if(!sibuk && !dialogBuka){ sfx("pilih"); bukaPapan(); } };
 $("kTutup").onclick = () => { $("sPapan").hidden = true; sibuk = false; sfx("pilih"); };
