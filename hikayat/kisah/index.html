@@ -115,6 +115,7 @@
   .borang label{display:block;text-align:left;font-weight:800;font-size:14px;margin:10px 0 4px}
   .borang input{width:100%;font-size:17px;padding:12px;border-radius:10px;border:1.5px solid #c9b48c;background:#fffaf0}
   .ralat{color:#b3261e;font-weight:700;min-height:20px;margin:8px 0 0;font-size:14px}
+  .ulangBtn{display:block;width:100%;margin:0 0 10px;padding:11px;border-radius:12px;border:2px dashed #8a6a3e;background:transparent;color:#5c4327;font:700 15px 'Nunito Sans',sans-serif;cursor:pointer}
   .bentara{position:fixed;left:50%;top:calc(76px + env(safe-area-inset-top));transform:translate(-50%,-20px);z-index:6;width:min(92vw,420px);background:#f6e7c4;color:#2b2118;border:3px solid #8a6a3e;border-radius:14px;padding:10px 14px;font-weight:700;font-size:15px;box-shadow:0 10px 30px rgba(0,0,0,.35);opacity:0;transition:opacity .4s,transform .4s;pointer-events:none}
   .bentara.on{opacity:1;transform:translate(-50%,0)}
   .bentara b{color:#8c2531}
@@ -281,6 +282,7 @@
       <input class="namaP" id="mNama" maxlength="16" style="margin:0;flex:1;width:auto;min-width:0" aria-label="Nama pahlawan">
       <button type="button" class="mula" id="mSimpanNama" style="padding:10px 16px;font-size:15px;margin:0;width:auto;flex:none">Simpan</button>
     </div>
+    <button type="button" class="ulangBtn" id="mUlang">🔄 Main semula dari awal</button>
     <button type="button" class="mula" id="mTutup">Tutup</button>
   </div>
 </section>
@@ -887,7 +889,7 @@ async function interaksi(b){
         await tok("Kau sudah buka Keilmuan Pertama. Aku nampak cahayanya dari sini.");
         await tok("Kau jujur di pasar. Kau sabar di pantai. Itulah modal sebenar seorang pedagang.");
         await tok("Ilmu tanpa amal macam pedang dalam sarung. Daftar dan dapatkan Surat Cap Mohor kau di dunia sebenar.");
-        S.lapor = 1; simpan(); misi();
+        S.lapor = 1; simpan(); misi(); try{ localStorage.removeItem("hk_ulang"); }catch(x){}
       } else await tok("Dah dapat Surat Cap Mohor kau, {N}?");
       if(!S.umpan) await tok("Lepas dapat Surat Cap Mohor, pasang umpan pertama kau. Satu masalah, satu artikel, satu link. Itu sahaja.");
       const p = await pilih(["📝 Daftar affiliate sekarang", "🎣 Bina umpan pertama (PS Path)", "📖 Buka Kitab Keilmuan", "Nanti dulu, Tok"]);
@@ -1186,7 +1188,7 @@ function misi(){
   else if(!S.lapor) t = "Kembali kepada Tok Malik di jeti";
   else if(!S.umpan) t = "Daftar affiliate, kemudian pasang umpan pertama 🎣";
   else t = "Umpan dipasang! Pasang satu umpan setiap hari 🎣";
-  $("btnPeta").hidden = !(S.peta && !S.peti); $("btnBeg").hidden = !S.peti;
+  $("btnPeta").hidden = !(S.peta && !S.peti); $("btnBeg").hidden = !(S.peti || LS.get("hk_ulang"));
   $("mBab").textContent = B ? B.bab : ""; $("mTeks").textContent = t;
 }
 
@@ -1255,6 +1257,7 @@ async function tarikAwan(){
     if(d && d.pemain && d.pemain.id){ AFID = d.pemain.id; LS.set("hk_af", AFID); }
     const k = d && d.g && d.g.data && d.g.data.k;
     if(!k) { segerak(); return; }
+    if(LS.get("hk_ulang")){ if(!WATAK && d.g.watak) WATAK = d.g.watak; return; }   // main semula: jangan pulihkan kemajuan lama
     const skor = o => KUNCI_K.reduce((a, x) => a + (+o[x] || 0), 0);
     const awanLebih = skor(k) > skor(S);
     KUNCI_K.forEach(x => S[x] = Math.max(+S[x] || 0, +k[x] || 0));
@@ -1361,6 +1364,12 @@ $("mSimpanNama").onclick = () => {
   const n = bersihNama($("mNama").value);
   tetapNama(n === NAMA_ASAL() ? "" : n); $("mNama").value = NAMA(); sfx("syiling");
   tunjuk("Nama pahlawan: " + NAMA());
+};
+$("mUlang").onclick = () => {
+  if(!confirm("Main semula kisah dari rumah?\n\nKitab yang sudah dibuka, akaun dan jualan anda tidak hilang.")) return;
+  KUNCI_K.forEach(x => S[x] = 0); S.babak = "rumah";
+  LS.set("hk_ulang", "1"); LS.set("hk_kisah", JSON.stringify(S));
+  location.reload();
 };
 $("mTempat").onclick = async e => {
   const b = e.target.closest("[data-ke]"); if(!b || b.disabled) return;
