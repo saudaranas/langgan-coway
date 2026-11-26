@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hikayat Pahlawan Rezeki</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Pengembaraan affiliate Langgan Coway: sembilan ujian pedagang di Melaka.">
+<meta property="og:title" content="Hikayat Pahlawan Rezeki">
+<meta property="og:description" content="Sembilan ujian pedagang. Satu jalan mengubah nasib.">
+<meta property="og:image" content="https://langgancoway.store/img/hikayat/og.jpg">
+<meta name="theme-color" content="#14182e">
+<link rel="icon" href="/img/coway-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--malam:#14182e;--malam2:#1f2547;--emas:#d4a83a;--emas2:#f1d27a;--kertas:#f5ead3;--kertas2:#eadbb8;--dakwat:#2a1f14;--merah:#8c2531;--sungai:#2b7a78;--kabur:#6b5d4a}
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:16px;line-height:1.6;color:var(--dakwat);background:var(--malam);min-height:100vh}
+  h1,h2,h3,.serif{font-family:"Cormorant Garamond",Georgia,serif;font-weight:700;line-height:1.15;margin:0}
+  button,input,textarea{font:inherit}
+  a{color:inherit}
+  .wrap{max-width:560px;margin:0 auto;padding:0 16px}
+  [hidden]{display:none!important}
+  :focus-visible{outline:3px solid var(--emas2);outline-offset:2px}
+
+  /* skrin judul */
+  .judul{min-height:100vh;display:flex;flex-direction:column;justify-content:center;text-align:center;color:var(--kertas);padding:40px 20px;
+    background:radial-gradient(ellipse at 50% 20%,#2c3466 0%,var(--malam) 60%)}
+  .judul .keris{font-size:46px;margin-bottom:10px}
+  .judul h1{font-size:46px;color:var(--emas2);letter-spacing:.5px}
+  .judul p{max-width:400px;margin:14px auto 30px;color:#cfc6b4}
+  .judul .alt{margin-top:18px;background:none;border:0;color:#cfc6b4;text-decoration:underline;cursor:pointer}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:14px 22px;font-weight:600;cursor:pointer;text-decoration:none;font-size:16px}
+  .btn.emas{background:var(--emas);color:var(--malam)}
+  .btn.emas:hover{background:var(--emas2)}
+  .btn.gelap{background:var(--malam2);color:var(--kertas)}
+  .btn.garis{background:transparent;border:1.5px solid var(--dakwat);color:var(--dakwat)}
+  .btn.wa{background:#1da851;color:#fff}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .btn.full{width:100%}
+
+  /* kertas (panel utama) */
+  .kertas{background:var(--kertas);border-radius:18px;padding:22px 20px;margin:16px 0;box-shadow:0 1px 0 var(--kertas2) inset}
+  .kertas h2{font-size:28px;margin-bottom:6px}
+  .kecil{font-size:14px;color:var(--kabur)}
+  .err{color:var(--merah);font-size:14px;min-height:20px;margin:6px 0 0}
+  label{display:block;font-weight:600;font-size:15px;margin:14px 0 6px}
+  input,textarea{width:100%;border:1.5px solid #cdbd98;background:#fffaf0;border-radius:10px;padding:12px;color:var(--dakwat)}
+  textarea{min-height:90px;resize:vertical}
+
+  /* pilih watak */
+  .watak{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  .watak button{background:#fffaf0;border:2px solid #cdbd98;border-radius:14px;padding:16px 10px;cursor:pointer;text-align:center;color:var(--dakwat)}
+  .watak button[aria-pressed="true"]{border-color:var(--merah);background:#fbeedd}
+  .watak .av{font-size:44px;display:block}
+  .watak b{display:block;font-family:"Cormorant Garamond",serif;font-size:24px}
+  .watak small{display:block;color:var(--kabur);font-size:13px;line-height:1.4}
+
+  /* babak cerita */
+  .babak{min-height:100vh;display:flex;flex-direction:column;color:var(--kertas)}
+  .lukisan{position:relative;aspect-ratio:4/3;border-radius:16px;overflow:hidden;margin:16px 0 0;background:linear-gradient(160deg,#2c3466,#14182e 70%)}
+  .lukisan img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .lukisan .ganti{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:84px}
+  .dialog{flex:1;padding:18px 0 10px}
+  .ln{margin:0 0 14px}
+  .ln.n{color:#e6dcc7}
+  .ln.tok,.ln.aku{background:var(--kertas);color:var(--dakwat);border-radius:14px;padding:12px 14px;position:relative}
+  .ln.tok b,.ln.aku b{display:block;font-size:13px;color:var(--merah);letter-spacing:.3px}
+  .ln.aku{background:#e4efe9}
+  .ln.aku b{color:var(--sungai)}
+  .bawah{padding:10px 0 26px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .titik{color:#8f8aa6;font-size:14px}
+
+  /* peta */
+  .kepala{color:var(--kertas);padding:22px 0 6px;display:flex;gap:14px;align-items:center}
+  .kepala .av{width:58px;height:58px;border-radius:50%;background:var(--kertas);display:flex;align-items:center;justify-content:center;font-size:32px;flex:none}
+  .kepala h1{font-size:28px;color:var(--emas2)}
+  .gel{display:inline-block;background:var(--merah);color:#fff;border-radius:999px;padding:2px 12px;font-size:13px;font-weight:600;margin-top:4px}
+  .kemajuan{height:8px;background:#2c3466;border-radius:99px;overflow:hidden;margin:10px 0 4px}
+  .kemajuan i{display:block;height:100%;background:var(--emas)}
+  .tab{display:flex;gap:8px;margin:14px 0 4px}
+  .tab button{flex:1;background:var(--malam2);color:#cfc6b4;border:0;border-radius:10px;padding:10px;cursor:pointer;font-weight:600}
+  .tab button[aria-selected="true"]{background:var(--emas);color:var(--malam)}
+  .jalan{list-style:none;margin:12px 0 30px;padding:0;position:relative}
+  .jalan:before{content:"";position:absolute;left:27px;top:20px;bottom:20px;border-left:2px dashed #4a4f78}
+  .jalan li{position:relative;margin:0 0 12px}
+  .jalan button{display:flex;gap:14px;align-items:center;width:100%;text-align:left;background:var(--malam2);color:#cfc6b4;border:1.5px solid transparent;border-radius:14px;padding:12px;cursor:pointer}
+  .jalan .no{width:32px;height:32px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-weight:700;background:#2c3466;color:#cfc6b4;position:relative;z-index:1}
+  .jalan b{display:block;color:var(--kertas);font-family:"Cormorant Garamond",serif;font-size:21px}
+  .jalan small{display:block;font-size:13px}
+  .jalan .siap .no{background:var(--sungai);color:#fff}
+  .jalan .kini button{border-color:var(--emas);background:#2a2f5a}
+  .jalan .kini .no{background:var(--emas);color:var(--malam)}
+  .jalan .kunci button{opacity:.5;cursor:not-allowed}
+  .papan{list-style:none;padding:0;margin:12px 0 30px}
+  .papan li{display:flex;gap:12px;align-items:center;background:var(--malam2);color:var(--kertas);border-radius:12px;padding:10px 14px;margin-bottom:8px}
+  .papan li.saya{border:1.5px solid var(--emas)}
+  .papan .r{width:28px;font-weight:700;color:var(--emas2)}
+  .papan .nm{flex:1}
+  .papan small{color:#cfc6b4}
+
+  /* bab */
+  .balik{background:none;border:0;color:#cfc6b4;padding:18px 0 0;cursor:pointer}
+  .babjudul{color:var(--kertas);margin-top:6px}
+  .babjudul small{color:var(--emas2);font-weight:600;font-size:14px}
+  .babjudul h1{font-size:34px}
+  .ilmu h2:before{content:"📜 "}
+  .ilmu ul{padding-left:20px;margin:10px 0 14px}
+  .ilmu li{margin-bottom:6px}
+  .vid{position:relative;aspect-ratio:9/16;max-height:70vh;margin:10px auto 14px;border-radius:12px;overflow:hidden;background:#000}
+  .vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .misi{border:2px solid var(--emas)}
+  .misi h2:before{content:"⚔️ "}
+  .misi.selesai{border-color:var(--sungai)}
+  .q{margin:16px 0}
+  .q p{font-weight:600;margin:0 0 6px}
+  .q label{font-weight:400;margin:4px 0;display:flex;gap:8px;align-items:flex-start;cursor:pointer}
+  .q input{width:auto;margin-top:5px}
+  .ayat{white-space:pre-wrap;background:#fffaf0;border:1px dashed #cdbd98;border-radius:10px;padding:12px;font-size:14.5px;margin:10px 0}
+  .baris{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+  .angka{font-family:"Cormorant Garamond",serif;font-size:44px;font-weight:700;line-height:1;color:var(--merah)}
+  .hari{display:flex;gap:8px;margin:10px 0}
+  .hari span{flex:1;text-align:center;border-radius:10px;padding:8px 4px;background:#fffaf0;border:1px solid #cdbd98;font-size:13px}
+  .hari span.ok{background:var(--sungai);color:#fff;border-color:var(--sungai)}
+  .pesan{background:linear-gradient(180deg,#fbf4e2,var(--kertas));border-left:5px solid var(--merah)}
+  .pesan h2:before{content:"📿 "}
+  .pesan p{font-family:"Cormorant Garamond",serif;font-size:21px;line-height:1.45;margin:8px 0 0}
+
+  /* raikan */
+  .raikan{position:fixed;inset:0;background:rgba(10,12,28,.85);display:flex;align-items:center;justify-content:center;padding:20px;z-index:20}
+  .raikan .kertas{max-width:420px;text-align:center}
+  .raikan .bintang{font-size:56px}
+  .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--kertas);color:var(--dakwat);padding:10px 16px;border-radius:10px;font-size:14px;z-index:30;box-shadow:0 4px 18px rgba(0,0,0,.3)}
+  .muat{color:#cfc6b4;text-align:center;padding:60px 0}
+  @media (prefers-reduced-motion:no-preference){
+    .babak .dialog .ln{animation:muncul .45s ease both}
+    @keyframes muncul{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  }
+  .balik{position:fixed;top:max(10px,env(safe-area-inset-top));left:10px;z-index:50;display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:999px;background:var(--emas);color:var(--malam);font-weight:700;font-size:14px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+  .balik:hover{background:var(--emas2)}
+  body{padding-top:52px}
+</style>
+</head>
+<body>
+<a class="balik" href="/hikayat/kisah/">🎮 Kembali ke dunia</a>
+<script>if(window.top!==window){document.write("<style>.balik{display:none!important}body{padding-top:0!important}</style>")}</script>
+
+<!-- 1. Judul -->
+<section id="sJudul" class="judul">
+  <div class="keris" aria-hidden="true">🗡️</div>
+  <h1>Hikayat Pahlawan Rezeki</h1>
+  <p>Sebilah keris lama membawa anda ke Melaka kurun ke-15. Lulus sembilan ujian pedagang, dan pulang dengan ilmu untuk mengubah nasib.</p>
+  <div><button class="btn emas" id="goMula" type="button">Mulakan hikayat</button></div>
+  <div><button class="alt" id="goLogin" type="button">Sudah bermain? Log masuk</button></div>
+</section>
+
+<!-- 2. Pilih watak -->
+<section id="sWatak" hidden>
+  <div class="wrap">
+    <div class="kertas" style="margin-top:24px">
+      <h2>Pilih watak anda</h2>
+      <p class="kecil">Watak ini akan menemani anda sepanjang hikayat.</p>
+      <div class="watak" role="group" aria-label="Pilih watak">
+        <button type="button" data-w="L" aria-pressed="false"><span class="av" aria-hidden="true">🧔🏻</span><b>Hafiz</b><small>Pekerja kilang. Gaji habis setiap bulan.</small></button>
+        <button type="button" data-w="P" aria-pressed="false"><span class="av" aria-hidden="true">🧕🏻</span><b>Aisyah</b><small>Suri rumah. Mahu income tanpa tinggalkan anak.</small></button>
+      </div>
+      <label for="masalah">Apa masalah yang anda mahu selesaikan? <span class="kecil">(pilihan)</span></label>
+      <textarea id="masalah" maxlength="300" placeholder="Contoh: Gaji tak cukup, nak simpan duit untuk anak sekolah"></textarea>
+      <p class="kecil">🔒 Hanya anda dan Tok Guru program (admin) boleh baca. Ia akan muncul semula di penghujung hikayat.</p>
+      <p class="err" id="wErr"></p>
+      <button class="btn emas full" id="goProlog" type="button">Teruskan</button>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Babak cerita (prolog, bab, penutup) -->
+<section id="sBabak" class="babak" hidden>
+  <div class="wrap" style="display:flex;flex-direction:column;min-height:100vh;width:100%">
+    <div class="lukisan" id="bkImg"></div>
+    <div class="dialog" id="bkDialog" aria-live="polite"></div>
+    <div class="bawah"><span class="titik" id="bkTitik"></span><button class="btn emas" id="bkNext" type="button">Seterusnya</button></div>
+  </div>
+</section>
+
+<!-- 4. Misi pertama: daftar / log masuk -->
+<section id="sDaftar" hidden>
+  <div class="wrap">
+    <div class="kertas" style="margin-top:24px">
+      <h2>Ujian pertama</h2>
+      <p>Dapatkan <b>Surat Cap Mohor</b>: daftar sebagai affiliate Langgan Coway dan dapatkan link anda sendiri.</p>
+      <a class="btn emas full" href="/affiliate/#daftar" id="keDaftar">Daftar affiliate</a>
+      <p class="kecil" style="margin-top:10px">Selepas daftar, admin akan semak dan luluskan akaun anda. Kemudian kembali ke sini dan log masuk untuk teruskan hikayat.</p>
+    </div>
+    <div class="kertas">
+      <h2>Log masuk</h2>
+      <p class="kecil">Guna nombor WhatsApp dan PIN affiliate anda.</p>
+      <form id="fLogin">
+        <label for="lWa">Nombor WhatsApp</label>
+        <input id="lWa" type="tel" inputmode="tel" autocomplete="tel" placeholder="012-345 6789" required>
+        <label for="lPin">PIN</label>
+        <input id="lPin" type="password" inputmode="numeric" autocomplete="current-password" placeholder="4 hingga 6 digit" required>
+        <p class="err" id="lErr"></p>
+        <button class="btn gelap full" id="lGo" type="submit">Log masuk dan teruskan</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Peta perjalanan -->
+<section id="sPeta" hidden>
+  <div class="wrap">
+    <div class="kepala">
+      <div class="av" id="pAv" aria-hidden="true">🧔🏻</div>
+      <div>
+        <h1 id="pNama"></h1>
+        <span class="gel" id="pGel"></span>
+      </div>
+    </div>
+    <div class="kemajuan" aria-hidden="true"><i id="pBar"></i></div>
+    <div class="kecil" style="color:#cfc6b4" id="pKira"></div>
+    <div class="tab" role="tablist">
+      <button type="button" role="tab" aria-selected="true" id="tPeta">Peta ujian</button>
+      <button type="button" role="tab" aria-selected="false" id="tPapan">Papan Pahlawan</button>
+    </div>
+    <ol class="jalan" id="jalan"></ol>
+    <div id="papanBox" hidden>
+      <ol class="papan" id="papan"></ol>
+    </div>
+    <p style="text-align:center;margin:0 0 30px"><a href="/affiliate/" style="color:#cfc6b4;font-size:14px">Dashboard affiliate</a> · <button type="button" id="keluar" style="background:none;border:0;color:#cfc6b4;font-size:14px;text-decoration:underline;cursor:pointer">Log keluar</button></p>
+  </div>
+</section>
+
+<!-- 6. Bab -->
+<section id="sBab" hidden>
+  <div class="wrap">
+    <button class="balik" id="kePeta" type="button">← Peta ujian</button>
+    <div class="babjudul"><small id="bNo"></small><h1 id="bJudul"></h1></div>
+    <button class="btn garis" id="bCerita" type="button" style="margin-top:12px;border-color:#cfc6b4;color:#cfc6b4">▶ Main semula cerita</button>
+    <div class="kertas ilmu" id="bIlmu"></div>
+    <div class="kertas misi" id="bMisi" hidden></div>
+    <div class="kertas pesan" id="bPesan" hidden></div>
+    <div id="bSeterusnya" style="margin:0 0 30px"></div>
+  </div>
+</section>
+
+<div class="muat" id="muat" hidden>Memuatkan…</div>
+<div class="raikan" id="raikan" hidden role="dialog" aria-modal="true" aria-labelledby="rJudul">
+  <div class="kertas">
+    <div class="bintang" aria-hidden="true">🏅</div>
+    <h2 id="rJudul"></h2>
+    <p id="rTeks"></p>
+    <button class="btn emas" type="button" id="rTutup">Teruskan</button>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+  const API = "https://script.google.com/macros/s/AKfycbzxiDAR0APLLQvlI-peaoL89dsabpLZd-PHxqAuEgeaGVqtiX3NngTdNbbnhCLyxX3kVw/exec";
+  const $ = id => document.getElementById(id);
+  const esc = t => String(t == null ? "" : t).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const LS = {
+    get: k => { try{ return localStorage.getItem(k); }catch(e){ return null; } },
+    set: (k, v) => { try{ localStorage.setItem(k, v); }catch(e){} },
+    del: k => { try{ localStorage.removeItem(k); }catch(e){} }
+  };
+  const call = (fn, ...args) => fetch(API, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: fn, args: args }) })
+    .then(r => r.json(), () => { throw "Tiada sambungan internet. Cuba lagi."; })
+    .then(r => { if(!r.ok) throw r.error || "Ralat pelayan."; return r.data; });
+  const toast = m => { const t = $("toast"); t.textContent = m; t.hidden = false; clearTimeout(t._h); t._h = setTimeout(() => t.hidden = true, 2800); };
+  const SKRIN = ["sJudul","sWatak","sBabak","sDaftar","sPeta","sBab","muat"];
+  const show = id => { SKRIN.forEach(x => $(x).hidden = x !== id); window.scrollTo(0, 0); };
+  function cp(t, m){
+    if(navigator.clipboard) navigator.clipboard.writeText(t).then(() => toast(m || "Disalin."), () => prompt("Salin:", t));
+    else prompt("Salin:", t);
+  }
+
+  /* ---------- Kandungan hikayat ---------- */
+  const TOK = "Tok Malik";
+  // Isi YouTube ID (video Unlisted) untuk setiap bab bila video siap, contoh: yt:"dQw4w9WgXcQ"
+  const BAB = [
+    { t:"Surat Cap Mohor", img:"bab1", yt:"",
+      cerita:[["tok","Surat Cap Mohor kau sudah siap."],["n","Tok Malik menghulurkan segulung kertas bercop merah."],["tok","Dengan surat ini, setiap orang yang datang melalui namamu, aku kenal. Simpan baik-baik. Inilah senjata pertamamu."]],
+      ilmu:["Link affiliate anda ialah Surat Cap Mohor anda. Sesiapa yang buka link ini, sistem kenal ia datang dari anda.","Link ini terus membuka chatbot. Chatbot terangkan produk, harga, voucher RM20 dan cara daftar.","Anda tak perlu hafal harga. Tugas anda: kongsi link dan ajak orang berbual.","Komisen RM100 untuk setiap produk yang berjaya didaftarkan melalui link anda. Capai 11 jualan dalam sebulan, semua jualan bulan itu jadi RM200. Dibayar pada 10hb setiap bulan."],
+      misi:{type:"link"},
+      pesan:"Betulkan niat. Berniaga kerana mahu menyara keluarga dengan rezeki yang halal. Niat yang baik menjadikan penat itu ibadah." },
+    { t:"Ilmu Dagangan", img:"bab2", yt:"",
+      cerita:[["n","Di gudang rempah, Tok Malik membuka sebuah peti kayu."],["tok","Pedagang yang tak kenal barangnya akan kalah pada soalan pertama pelanggan."],["tok","Pelajari ilmu ini. Kemudian aku uji kau."]],
+      ilmu:["Voucher RM20/bulan, Home Appliance (penapis air, penapis udara, mesin basuh dan lain-lain): 7 bulan untuk kontrak 7+0, 5 bulan untuk kontrak 5+0.","Home Care (tilam, aircond, kerusi dan katil urut): 5 bulan untuk kontrak 7+0, 3 bulan untuk kontrak 5+0.","Daftar bulan ini, bulan depan PERCUMA.","Bulan daftar: pelanggan perlu ada RM20 dalam akaun untuk pengaktifan kad.","Penghantaran dan pemasangan percuma.","Maklumat kad: hanya 6 digit pertama dan 4 digit terakhir. Jangan sesekali minta nombor penuh, CVV atau OTP."],
+      misi:{type:"kuiz"},
+      pesan:"Jangan tokok tambah kelebihan barang, dan jangan sorok kekurangannya. Pedagang yang jujur, orang datang semula kepadanya." },
+    { t:"Peta Kampung", img:"bab3", yt:"",
+      cerita:[["n","Tok Malik membentangkan sehelai kertas kosong di atas tikar mengkuang."],["tok","Sebelum ke pasar besar, lukis dulu peta kampungmu."],["tok","Siapa yang kau kenal? Siapa perlukan air yang bersih, tidur yang lena, udara yang segar?"]],
+      ilmu:["Hot market ialah orang yang sudah kenal dan percaya anda.","Mulakan dengan 5 kumpulan: keluarga, kawan sekolah, jiran, rakan kerja, dan kawan dari masjid, surau atau media sosial.","Tulis nama dahulu. Jangan fikir lagi dia nak beli atau tidak.","Tandakan yang baru pindah rumah, baru berkahwin, ada anak kecil, atau ada warga emas di rumah."],
+      misi:{type:"hot"},
+      pesan:"Kawan bukan sekadar pelanggan. Tanya khabar dahulu, jaga hubungan. Jangan biar silaturahim putus kerana urusan jual beli." },
+    { t:"Gendang Pasar", img:"bab4", yt:"",
+      cerita:[["n","Di tengah pasar, seorang budak memukul gendang setiap pagi."],["tok","Orang tak beli daripada pedagang yang diam."],["tok","Pukul gendangmu setiap hari, walau seorang pun belum datang."]],
+      ilmu:["Status WhatsApp ialah gendang anda. Orang yang menonton status anda ialah orang yang sudah kenal anda.","Formula: masalah, penyelesaian, link. Contoh: air rumah berbau klorin, ada penapis dengan bayaran RM20 sebulan, semak di link.","Post sekali sehari, pada waktu orang lapang: pagi sebelum kerja atau malam selepas Isyak.","Selang-seli: tip, gambar produk, kisah pelanggan (dengan izin). Jangan spam group orang lain."],
+      misi:{type:"status"},
+      pesan:"Usaha yang sedikit tapi berterusan lebih baik daripada banyak tapi sekali sahaja. Istiqamah itu kunci." },
+    { t:"Tawaran di Jeti", img:"bab5", yt:"",
+      cerita:[["n","Sebuah kapal dari Gujerat berlabuh di jeti."],["tok","Pergi sapa nakhoda itu. Tapi ingat, jangan terus tunjuk barang."],["tok","Tanya dahulu apa keperluannya. Orang membeli bila dia rasa difahami."]],
+      ilmu:["Hantar mesej personal satu demi satu, bukan broadcast.","Langkah: sapa dan tanya khabar, kaitkan dengan keperluan dia, tawarkan bantuan, beri link chatbot.","Tiada paksaan. Bagi ruang untuk dia fikir.","Kalau dia kata tidak, terima dengan baik. Dia mungkin kenalkan anda kepada orang lain kemudian."],
+      misi:{type:"tawaran"},
+      pesan:"Kalau orang kata tidak, senyum dan terima dengan baik. Jangan memaksa, jangan berkecil hati. Hubungan lebih mahal daripada satu jualan." },
+    { t:"Pelanggan Pertama", img:"bab6", yt:"",
+      cerita:[["n","Seorang wanita singgah di gerai, bertanya tentang tempayan air. Kemudian dia pergi tanpa membeli."],["tok","Jangan kecewa. Orang yang bertanya, separuh hatinya sudah mahu."],["tok","Ikuti dia dengan baik, dan tunggu waktunya."]],
+      ilmu:["Lead ialah orang yang mengisi chatbot melalui link anda. Consultant akan menghubungi dia.","Kalau dia kawan anda, tanya: dah sempat berbual dengan consultant?","Susulan yang baik: hari ke-1, ke-3 dan ke-7. Ringkas dan mesra.","Soalan lazim: mahal, jawapannya bayar RM20 sebulan dahulu. Nak fikir dulu, hantar kisah atau gambar produk."],
+      misi:{type:"auto", k:"lead", n:1, label:"lead"},
+      pesan:"Sesibuk mana pun urusan dagang, bila azan berkumandang, tinggalkan dahulu. Solat itu wajib, tak kira kita orang baik atau jahat. Jangan sampai dunia buat kita lupa kepada Yang memberi rezeki." },
+    { t:"Emas Pertama", img:"bab7", yt:"",
+      cerita:[["n","Petang itu, Tok Malik meletakkan seuncang kecil emas di tapak tangan {N}."],["tok","Inilah emas pertamamu. Rasa penatnya? Itulah harganya."],["tok","Tapi pedagang sebenar tak berhenti di emas pertama."]],
+      ilmu:["Selepas jualan pertama, ucap terima kasih kepada pelanggan.","Minta testimoni ringkas, dengan izin dia.","Tanya: ada kawan atau keluarga yang perlukan juga?","Kongsi kisah di status, tanpa maklumat peribadi pelanggan."],
+      misi:{type:"auto", k:"produk", n:1, label:"jualan"},
+      pesan:"Rezeki pertama, sisihkan sedikit untuk orang lain. Bersyukurlah, kerana syukur membuka pintu rezeki seterusnya." },
+    { t:"Panglima Dagang", img:"bab8", yt:"",
+      cerita:[["n","Berita tentang pedagang dari masa hadapan mula tersebar."],["n","Saudagar-saudagar lain datang bertanya rahsia {N}."],["tok","Tiba masanya kau dilantik Panglima Dagang. Tapi panglima mesti memimpin dengan contoh."]],
+      ilmu:["Ulang apa yang berkesan. Lihat dashboard: status mana yang membawa pelawat?","Buat jadual mingguan: hari tip, hari produk, hari kisah pelanggan.","Kemas kini senarai hot market setiap bulan.","Pelanggan lama ialah sumber rujukan terbaik. Jaga hubungan."],
+      misi:{type:"auto", k:"produk", n:10, label:"jualan"},
+      pesan:"Pelanggan yang sudah membeli tetap amanah kita. Layan dia dengan baik selepas jualan, sama seperti sebelum jualan." },
+    { t:"Pulang ke Masa Kini", img:"bab9", yt:"",
+      cerita:[["n","Di jeti, Tok Malik memulangkan keris berhulu emas itu."],["tok","Satu ujian terakhir. Buktikan ilmumu sudah sempurna."],["tok","Bila tiba masanya, pulanglah. Bawa ilmu ini kepada keluargamu."]],
+      ilmu:["Anda sudah ada semua ilmu: link, produk, hot market, status, tawaran, susulan dan rujukan.","Capai 11 jualan dalam SEBULAN untuk menjadi Laksamana Rezeki.","Ganjaran: bila capai 11 jualan dalam sebulan, semua jualan bulan itu jadi RM200 setiap jualan! Maksudnya 11 jualan = RM2,200! Kiraan bermula semula setiap bulan.","Teruskan. Ajarkan juga ilmu ini kepada keluarga anda."],
+      misi:{type:"auto", k:"maxBulan", n:11, label:"jualan dalam sebulan"},
+      pesan:"Kita berusaha sebaik-baiknya, Allah yang menentukan rezeki. Bila dapat, bersyukur. Bila belum, bersabar dan terus berusaha." }
+  ];
+  const KUIZ = [
+    { s:"Penapis air, kontrak 7+0. Voucher RM20/bulan untuk berapa bulan?", p:["3 bulan","5 bulan","7 bulan"] },
+    { s:"Tilam, kontrak 5+0. Voucher RM20/bulan untuk berapa bulan?", p:["3 bulan","5 bulan","7 bulan"] },
+    { s:"Pelanggan daftar bulan ini. Bulan depan dia bayar berapa?", p:["RM20","PERCUMA","Harga penuh"] },
+    { s:"Apa yang perlu ada dalam akaun pelanggan pada bulan daftar?", p:["RM20 untuk pengaktifan kad","Deposit RM100","Tiada apa-apa"] },
+    { s:"Maklumat kad yang boleh diminta daripada pelanggan?", p:["Nombor kad penuh dan CVV","6 digit pertama dan 4 digit terakhir sahaja","Kod OTP"] }
+  ];
+  const PROLOG = [
+    { img:"p1", g:1, l:[["n","Malam itu, {N} duduk seorang diri di meja dapur. Bil elektrik, ansuran kereta, yuran sekolah. Kertas bertimbun, duit tak pernah cukup."],["aku","{M}"]] },
+    { img:"p2", g:1, l:[["n","Untuk menenangkan fikiran, {N} berjalan ke tebing Sungai Melaka. Di celah akar pokok, sesuatu berkilau: sebilah keris lama, hulunya berukir emas."],["n","Sebaik dipegang, angin bertiup kencang. Cahaya menyilaukan. Dunia berputar…"]] },
+    { img:"p3", l:[["n","Bila {N} membuka mata, bunyi kereta sudah hilang. Yang ada hanya kapal layar, jeti kayu, dan pedagang dari Gujerat, China dan Jawa."],["n","Bandar Melaka. Kurun ke-15."]] },
+    { img:"tok", l:[["tok","Hah, kau rupanya. Keris itu hanya memilih orang yang sedang mencari jalan."],["tok","Aku Tok Malik, saudagar tua di pelabuhan ini. Kalau kau mahu pulang ke zamanmu, kau mesti lulus sembilan ujian pedagang."],["tok","Setiap ujian ada ilmunya. Lulus semuanya, dan kau pulang membawa ilmu untuk mengubah nasib."]] }
+  ];
+  const TAMAT = [
+    { img:"tamat", g:1, l:[["n","Cahaya itu datang sekali lagi. {N} membuka mata di tebing Sungai Melaka. Bunyi kereta. Lampu jalan. Zaman sekarang."],["n","Keris itu sudah tiada. Yang tinggal hanyalah ilmu, dan gelaran yang tak akan hilang: Laksamana Rezeki."]] },
+    { img:"tok", l:[["n","Ingat lagi apa yang kau tulis dahulu?"],["aku","{M}"],["tok","Kini kau ada jalannya. Pergilah, dan ajarkan ilmu ini kepada orang lain."]] }
+  ];
+  const EMO = { L:"🧔🏻", P:"🧕🏻" };
+  const SCENE_EMO = { p1:"🌙", p2:"🗡️", p3:"⛵", tok:"👳🏽‍♂️", tamat:"🌅", bab1:"📜", bab2:"🌶️", bab3:"🗺️", bab4:"🥁", bab5:"⚓", bab6:"🏺", bab7:"🪙", bab8:"🛡️", bab9:"👑" };
+
+  /* ---------- Keadaan ---------- */
+  let TOKEN = LS.get("hk_t") || (function(){ try{ return sessionStorage.getItem("aft"); }catch(e){ return null; } })() || "";
+  let S = null;          // keadaan dari pelayan
+  let watakPilih = LS.get("hk_w") || "";
+  const namaW = w => w === "P" ? "Aisyah" : "Hafiz";
+
+  /* ---------- Pemain babak ---------- */
+  function mainBabak(senarai, w, masalah, selesai){
+    let i = 0;
+    const N = namaW(w);
+    const isi = s => s.replace(/\{N\}/g, N);
+    function lukis(){
+      const sc = senarai[i];
+      const key = sc.img + (sc.g ? "-" + (w === "P" ? "p" : "l") : "");
+      $("bkImg").innerHTML = `<div class="ganti" aria-hidden="true">${SCENE_EMO[sc.img] || "📜"}</div><img src="/img/hikayat/${key}.webp" alt="" onerror="this.remove()">`;
+      $("bkDialog").innerHTML = sc.l.filter(l => !(l[1] === "{M}" && !masalah)).map(l => {
+        const t = l[1] === "{M}" ? "“" + masalah + "”" : isi(l[1]);
+        if(l[0] === "tok") return `<p class="ln tok"><b>${TOK}</b>${esc(t)}</p>`;
+        if(l[0] === "aku") return `<p class="ln aku"><b>${esc(N)}</b>${esc(t)}</p>`;
+        return `<p class="ln n">${esc(t)}</p>`;
+      }).join("");
+      $("bkTitik").textContent = (i + 1) + " / " + senarai.length;
+      $("bkNext").textContent = i === senarai.length - 1 ? "Teruskan" : "Seterusnya";
+      window.scrollTo(0, 0);
+    }
+    $("bkNext").onclick = () => { if(++i < senarai.length) lukis(); else selesai(); };
+    show("sBabak"); lukis();
+  }
+
+  /* ---------- Skrin judul & watak ---------- */
+  $("goMula").onclick = () => show("sWatak");
+  $("goLogin").onclick = () => show("sDaftar");
+  document.querySelectorAll("[data-w]").forEach(b => b.onclick = () => {
+    watakPilih = b.dataset.w;
+    document.querySelectorAll("[data-w]").forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+  });
+  $("masalah").value = LS.get("hk_m") || "";
+  $("goProlog").onclick = () => {
+    if(!watakPilih){ $("wErr").textContent = "Sila pilih watak dahulu."; return; }
+    $("wErr").textContent = "";
+    const m = $("masalah").value.trim().slice(0, 300);
+    LS.set("hk_w", watakPilih); LS.set("hk_m", m);
+    mainBabak(PROLOG, watakPilih, m, async () => {
+      LS.set("hk_prolog", "1");
+      if(TOKEN){ await mulaDiPelayan(); }
+      else show("sDaftar");
+    });
+  };
+
+  /* ---------- Log masuk ---------- */
+  $("fLogin").onsubmit = async e => {
+    e.preventDefault(); $("lErr").textContent = "";
+    const b = $("lGo"); b.disabled = true; b.textContent = "Menyemak…";
+    try{
+      const d = await call("affLogin", $("lWa").value, $("lPin").value);
+      TOKEN = d.token; LS.set("hk_t", TOKEN);
+      try{ sessionStorage.setItem("aft", TOKEN); }catch(x){}
+      await muat();
+    }catch(err){ $("lErr").textContent = err; }
+    b.disabled = false; b.textContent = "Log masuk dan teruskan";
+  };
+  $("keluar").onclick = () => { LS.del("hk_t"); try{ sessionStorage.removeItem("aft"); }catch(x){} TOKEN = ""; S = null; show("sJudul"); };
+
+  async function mulaDiPelayan(){
+    show("muat");
+    try{
+      S = await call("gameAct", TOKEN, "mula", { watak: LS.get("hk_w") || "L", masalah: LS.get("hk_m") || "" });
+      LS.del("hk_m");
+      peta(); bukaBab(Math.min(S.g.siap + 1, 9));
+    }catch(err){ gagal(err); }
+  }
+
+  function gagal(err){
+    if(String(err).indexOf("Sesi tamat") !== -1 || String(err).indexOf("tidak aktif") !== -1){
+      LS.del("hk_t"); TOKEN = ""; show("sDaftar"); $("lErr").textContent = err; return;
+    }
+    toast(err); if(S) peta(); else show("sJudul");
+  }
+
+  async function muat(){
+    show("muat");
+    try{
+      S = await call("gameState", TOKEN);
+      if(!S.g){
+        if(LS.get("hk_w") && LS.get("hk_prolog")) return mulaDiPelayan();
+        show("sWatak"); return;
+      }
+      peta();
+    }catch(err){ gagal(err); }
+  }
+
+  /* ---------- Peta ---------- */
+  function peta(){
+    const g = S.g;
+    $("pAv").textContent = EMO[g.watak] || "🧔🏻";
+    $("pNama").textContent = g.namaWatak + " · " + S.pemain.nama.split(" ")[0];
+    $("pGel").textContent = "🏅 " + g.gelaran;
+    $("pBar").style.width = Math.round(g.siap / 9 * 100) + "%";
+    $("pKira").textContent = g.siap >= 9 ? "Hikayat tamat. Anda Laksamana Rezeki 👑" : `${g.siap} daripada 9 ujian lulus`;
+    $("jalan").innerHTML = BAB.map((b, i) => {
+      const n = i + 1, kls = n <= g.siap ? "siap" : n === g.siap + 1 ? "kini" : "kunci";
+      const sub = kls === "siap" ? "✅ Lulus" : kls === "kini" ? "⚔️ Ujian semasa" : "🔒 Terkunci";
+      return `<li class="${kls}"><button type="button" data-bab="${n}" ${kls === "kunci" ? 'aria-disabled="true"' : ""}><span class="no">${kls === "siap" ? "✓" : n}</span><span><b>${esc(b.t)}</b><small>Bab ${n} · ${sub}</small></span></button></li>`;
+    }).join("") + (g.siap >= 9 ? `<li class="siap"><button type="button" data-tamat="1"><span class="no">👑</span><span><b>Penutup hikayat</b><small>Main semula pengakhiran</small></span></button></li>` : "");
+    show("sPeta");
+  }
+  $("jalan").onclick = e => {
+    const b = e.target.closest("button"); if(!b) return;
+    if(b.dataset.tamat) return mainBabak(TAMAT, S.g.watak, S.g.masalah, peta);
+    const n = +b.dataset.bab;
+    if(n > S.g.siap + 1){ toast("Lulus ujian sebelumnya dahulu."); return; }
+    bukaBab(n);
+  };
+  $("tPeta").onclick = () => { $("tPeta").setAttribute("aria-selected","true"); $("tPapan").setAttribute("aria-selected","false"); $("jalan").hidden = false; $("papanBox").hidden = true; };
+  $("tPapan").onclick = async () => {
+    $("tPapan").setAttribute("aria-selected","true"); $("tPeta").setAttribute("aria-selected","false"); $("jalan").hidden = true; $("papanBox").hidden = false;
+    $("papan").innerHTML = `<li><span class="nm">Memuatkan…</span></li>`;
+    try{
+      const L = await call("gamePapan", TOKEN);
+      $("papan").innerHTML = L.length ? L.map((x, i) => `<li class="${x.saya ? "saya" : ""}"><span class="r">${i < 3 ? ["🥇","🥈","🥉"][i] : i + 1}</span><span class="nm">${esc(x.nama)}${x.saya ? " (anda)" : ""}<br><small>${esc(x.gelaran)}</small></span><span>${x.siap}/9</span></li>`).join("") : `<li><span class="nm">Belum ada pahlawan.</span></li>`;
+    }catch(err){ $("papan").innerHTML = `<li><span class="nm">${esc(err)}</span></li>`; }
+  };
+  $("kePeta").onclick = () => peta();
+
+  /* ---------- Bab ---------- */
+  let BAB_KINI = 0, timer = null;
+  function bukaBab(n, tanpaCerita){
+    BAB_KINI = n;
+    const b = BAB[n - 1], g = S.g;
+    const tonton = (g.data.v || []).indexOf(n) !== -1;
+    if(!tonton && !tanpaCerita){
+      return mainBabak([{ img: b.img, l: b.cerita }], g.watak, g.masalah, () => bukaBab(n, true));
+    }
+    $("bNo").textContent = "Bab " + n + " · " + (n <= g.siap ? "✅ Lulus" : "⚔️ Ujian semasa");
+    $("bJudul").textContent = b.t;
+    $("bCerita").onclick = () => mainBabak([{ img: b.img, l: b.cerita }], g.watak, g.masalah, () => bukaBab(n, true));
+    const vid = b.yt ? `<div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/${esc(b.yt)}?rel=0&playsinline=1" title="Ilmu ${esc(TOK)}: ${esc(b.t)}" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>` : "";
+    $("bIlmu").innerHTML = `<h2>Ilmu ${TOK}</h2>${vid}<ul>${b.ilmu.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` +
+      (tonton ? `<p class="kecil">✅ Ilmu ini sudah dipelajari.</p>` : `<button class="btn emas full" type="button" id="faham">Saya faham, Tok</button>`);
+    clearInterval(timer);
+    if(!tonton){
+      const f = $("faham");
+      if(b.yt){
+        let s = 45; f.disabled = true; f.textContent = `Tonton video dahulu (${s})`;
+        timer = setInterval(() => { s--; if(s <= 0){ clearInterval(timer); f.disabled = false; f.textContent = "Saya faham, Tok"; } else f.textContent = `Tonton video dahulu (${s})`; }, 1000);
+      }
+      f.onclick = () => buat("video", { bab: n });
+    }
+    lukisMisi(n, tonton);
+    window.scrollTo(0, 0);
+    show("sBab");
+  }
+
+  function lukisMisi(n, tonton){
+    const b = BAB[n - 1], g = S.g, m = S.m, d = g.data || {}, lulus = n <= g.siap, link = S.pemain.link;
+    const M = $("bMisi"), P = $("bPesan"), X = $("bSeterusnya");
+    M.hidden = !tonton; P.hidden = !lulus; X.innerHTML = "";
+    M.className = "kertas misi" + (lulus ? " selesai" : "");
+    P.innerHTML = `<h2>Pesanan Tok Guru</h2><p>${esc(b.pesan)}</p>`;
+    if(lulus){
+      X.innerHTML = n < 9 ? `<button class="btn emas full" type="button" id="keNext">Teruskan ke Bab ${n + 1}</button>` : `<button class="btn emas full" type="button" id="keTamat">👑 Lihat pengakhiran hikayat</button>`;
+      if(n < 9) $("keNext").onclick = () => bukaBab(n + 1);
+      else $("keTamat").onclick = () => mainBabak(TAMAT, g.watak, g.masalah, peta);
+    }
+    if(!tonton) return;
+    const t = b.misi.type;
+    let h = "";
+    if(t === "link"){
+      h = `<h2>Misi: Simpan Surat Cap Mohor</h2><p>Ini link affiliate anda. Salin dan simpan.</p><div class="ayat">${esc(link)}</div>
+        <div class="baris"><button class="btn gelap" type="button" data-cp="${esc(link)}">Salin link</button><a class="btn garis" href="/affiliate/">Buka dashboard</a></div>`;
+    } else if(t === "kuiz"){
+      h = `<h2>Misi: Ujian ilmu dagangan</h2>` + (d.kuiz ? `<p>✅ Anda lulus ujian ini.</p>` :
+        `<p>Jawab 5 soalan. Lulus jika 4 betul.</p><form id="fKuiz">${KUIZ.map((q, i) => `<fieldset class="q" style="border:0;padding:0"><legend style="font-weight:600;padding:0">${i + 1}. ${esc(q.s)}</legend>${q.p.map((o, j) => `<label><input type="radio" name="q${i}" value="${j}" required> ${esc(o)}</label>`).join("")}</fieldset>`).join("")}
+        <p class="err" id="kErr"></p><button class="btn emas full" type="submit">Hantar jawapan</button></form>`);
+    } else if(t === "hot"){
+      const senarai = LS.get("hk_hot") || "";
+      h = `<h2>Misi: Lukis peta kampung</h2><p>Tulis <b>20 nama</b> orang yang anda kenal, satu nama setiap baris.</p>
+        <textarea id="hotList" style="min-height:200px" placeholder="Mak Ngah&#10;Kak Long&#10;Faiz (kawan sekolah)&#10;…">${esc(senarai)}</textarea>
+        <p class="kecil">🔒 Senarai ini disimpan dalam telefon anda sahaja. Sistem hanya menerima jumlahnya.</p>
+        <p><span class="angka" id="hotN">0</span> / 20 nama</p>
+        <button class="btn emas full" type="button" id="hotSimpan">Simpan peta</button>`;
+    } else if(t === "status"){
+      const st = d.st || [], hari = [];
+      for(let k = 2; k >= 0; k--){ const x = new Date(Date.parse(m.hariIni + "T00:00:00Z") - k * 86400000).toISOString().slice(0, 10); hari.push(x); }
+      const sudah = st.indexOf(m.hariIni) !== -1;
+      const ay = ayatStatus(link);
+      h = `<h2>Misi: Pukul gendang 3 hari berturut-turut</h2><p>Post status WhatsApp dengan link anda, 3 hari berturut-turut. Tekan butang setiap kali selepas post.</p>
+        <div class="hari">${hari.map((x, k) => `<span class="${st.indexOf(x) !== -1 ? "ok" : ""}">${["2 hari lepas","Semalam","Hari ini"][k]}<br>${st.indexOf(x) !== -1 ? "✓" : "–"}</span>`).join("")}</div>
+        <p class="kecil">Pelawat dari link anda setakat ini: <b>${m.pelawat}</b> ${m.pelawat ? "✅" : "(perlu sekurang-kurangnya 1)"}</p>
+        ${ay.map((a, k) => `<div class="ayat">${esc(a)}</div><div class="baris"><button class="btn gelap" type="button" data-cp="${esc(a)}">Salin ayat ${k + 1}</button></div>`).join("")}
+        <button class="btn emas full" type="button" id="stGo" style="margin-top:16px" ${sudah ? "disabled" : ""}>${sudah ? "✅ Gendang hari ini sudah dipukul" : "Saya dah post status hari ini"}</button>`;
+    } else if(t === "tawaran"){
+      const tw = Number(d.tw) || 0, ay = ayatTawaran(link);
+      h = `<h2>Misi: Tawaran pertama</h2><p>Hantar mesej personal kepada <b>5 orang</b> dalam peta kampung anda. Tukar bahagian dalam kurungan supaya sesuai dengan orang itu.</p>
+        <div class="ayat">${esc(ay)}</div><div class="baris"><button class="btn gelap" type="button" data-cp="${esc(ay)}">Salin ayat</button></div>
+        <p style="margin-top:14px"><span class="angka">${Math.min(tw, 5)}</span> / 5 orang</p>
+        <button class="btn emas full" type="button" id="twGo" ${tw >= 5 ? "disabled" : ""}>${tw >= 5 ? "✅ Lima tawaran sudah dihantar" : "+1 Saya dah hantar kepada seorang"}</button>`;
+    } else if(t === "auto"){
+      const nilai = m[b.misi.k] || 0;
+      h = `<h2>Misi: ${b.misi.n} ${b.misi.label}</h2><p>Misi ini disemak automatik oleh sistem.${b.misi.k !== "lead" ? " Jualan dikira selepas admin mengesahkan pendaftaran dengan Coway." : ""}${b.misi.k === "maxBulan" ? " Dikira ikut bulan terbaik anda." : ""}</p>
+        <p><span class="angka">${Math.min(nilai, b.misi.n)}</span> / ${b.misi.n} ${b.misi.label}</p>
+        <div class="baris"><button class="btn emas" type="button" id="semak">🔄 Semak semula</button><a class="btn garis" href="/affiliate/">Lihat lead saya</a></div>`;
+    }
+    M.innerHTML = h;
+    M.querySelectorAll("[data-cp]").forEach(x => x.onclick = () => cp(x.dataset.cp, "Disalin."));
+    if(t === "kuiz" && $("fKuiz")) $("fKuiz").onsubmit = async e => {
+      e.preventDefault();
+      const j = KUIZ.map((q, i) => +((e.target.querySelector(`input[name=q${i}]:checked`) || {}).value));
+      const r = await buat("kuiz", { jawapan: j }, true);
+      if(r && !r.g.data.kuiz) $("kErr").textContent = `Anda betul ${r.skor} daripada 5. Baca semula ilmu di atas dan cuba lagi.`;
+    };
+    if(t === "hot"){
+      const ta = $("hotList"), kira = () => ta.value.split("\n").map(x => x.trim()).filter(Boolean).length;
+      const upd = () => { $("hotN").textContent = kira(); LS.set("hk_hot", ta.value); };
+      ta.oninput = upd; upd();
+      $("hotSimpan").onclick = () => { if(kira() < 20){ toast("Perlu 20 nama. Sekarang " + kira() + "."); } buat("hot", { n: kira() }); };
+    }
+    if(t === "status" && $("stGo")) $("stGo").onclick = () => buat("status", {});
+    if(t === "tawaran" && $("twGo")) $("twGo").onclick = () => buat("tawaran", { n: (Number(d.tw) || 0) + 1 });
+    if(t === "auto") $("semak").onclick = async () => { show("muat"); try{ const sebelum = S.g.siap; S = await call("gameState", TOKEN); selepas(sebelum); }catch(err){ gagal(err); } };
+  }
+
+  async function buat(act, p, pulang){
+    const sebelum = S.g.siap;
+    try{
+      const r = await call("gameAct", TOKEN, act, Object.assign({ bab: BAB_KINI }, p));
+      S = r; selepas(sebelum);
+      if(act === "hot" && !(S.g.siap >= 3)) toast("Peta disimpan.");
+      return r;
+    }catch(err){ gagal(err); }
+  }
+
+  function selepas(sebelum){
+    bukaBab(BAB_KINI, true);
+    if(S.g.siap > sebelum){
+      const n = S.g.siap;
+      $("rJudul").textContent = n >= 9 ? "Hikayat tamat!" : `Bab ${n} lulus!`;
+      $("rTeks").textContent = `Gelaran anda: ${S.g.gelaran}. Baca Pesanan Tok Guru di bawah sebelum meneruskan perjalanan.`;
+      $("raikan").hidden = false; $("rTutup").focus();
+    }
+  }
+  $("rTutup").onclick = () => { $("raikan").hidden = true; const p = $("bPesan"); if(!p.hidden) p.scrollIntoView({ behavior: "smooth", block: "center" }); };
+
+  function ayatStatus(link){
+    return [
+      `Ramai tak tahu, sekarang boleh langgan produk Coway dengan bayaran RM20 sebulan sahaja untuk beberapa bulan pertama 💧\n\nBulan kedua pula PERCUMA. Penghantaran dan pemasangan pun percuma.\n\nNak tahu produk mana sesuai untuk rumah anda? Semak di sini, 2 minit je 👇\n${link}`,
+      `Air rumah bau klorin? Tidur tak lena? Habuk banyak dalam rumah? 🤔\n\nSaya boleh bantu cari produk Coway yang sesuai. Ada voucher RM20/bulan bulan ini.\n\nSemak pakej dan harga di sini 👇\n${link}`
+    ];
+  }
+  function ayatTawaran(link){
+    return `Assalamualaikum (nama) 😊 Lama tak berbual. Sihat?\n\nSaya sekarang bantu kawan-kawan dapatkan produk Coway dengan voucher RM20 sebulan. Teringat (nama) pernah cerita pasal (air rumah / tidur tak lena / habuk).\n\nKalau berminat, boleh semak pakej dan harga di sini. Tak ada paksaan ya 👇\n${link}`;
+  }
+
+  /* ---------- Mula ---------- */
+  if(TOKEN) muat();
+  else if(LS.get("hk_prolog") && LS.get("hk_w")) show("sDaftar");
+  else show("sJudul");
+})();
+</script>
+</body>
+</html>

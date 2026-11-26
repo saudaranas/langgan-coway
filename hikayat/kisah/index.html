@@ -139,7 +139,7 @@
   /* panel halaman dalam game */
   .panel{position:fixed;inset:0;z-index:20;background:#0c0a08;display:flex;flex-direction:column}
   .panel .atasP{display:flex;align-items:center;justify-content:space-between;padding:calc(8px + env(safe-area-inset-top)) 10px 8px;background:var(--kayu);color:var(--emas2);font-weight:800}
-  .panel .atasP button{background:var(--emas);color:#1c140b;border:0;border-radius:999px;padding:8px 14px;font-weight:800}
+  .panel .atasP button{background:var(--emas);color:#1c140b;border:0;border-radius:999px;padding:10px 18px;font-weight:800;font-size:16px;box-shadow:0 0 0 3px rgba(233,183,90,.35)}
   .panel iframe{flex:1;border:0;width:100%;background:#fff}
   /* azan */
   .azan{background:rgba(8,6,4,.85);z-index:15}
@@ -162,7 +162,7 @@
     <button type="button" id="btnPeta" aria-label="Peta harta" hidden>🗺️</button>
     <button type="button" id="btnKembara" aria-label="Peta dunia dan tetapan">🧭</button>
     <button type="button" id="btnPapan" aria-label="Papan kenyataan jualan">🏆</button>
-    <button type="button" id="btnUjian" aria-label="Misi sebenar">📜</button>
+    <button type="button" id="btnUjian" aria-label="Misi sebenar" hidden>📜</button>
   </div>
 </div>
 <div class="kayu" id="kayu" hidden><i id="kayuI"></i></div>
@@ -210,7 +210,7 @@
     <div class="tindakan">
       <button type="button" id="gDaftar">📝 Daftar affiliate &amp; dapatkan link</button>
       <button type="button" id="gUmpan">🎣 Bina umpan pertama (post PS Path)</button>
-      <button type="button" id="gUjian">⚔️ Semak misi sebenar</button>
+      <button type="button" id="gUjian" hidden>⚔️ Semak misi sebenar</button>
     </div>
     <button type="button" class="mula" id="gTutup">Simpan dalam beg</button>
   </div>
@@ -1093,8 +1093,14 @@ $("gUmpan").onclick = () => { $("sGulung").hidden = true; $("gVideo").innerHTML 
 function bukaPanel(url, tajuk){
   henti(); $("panelT").textContent = tajuk; $("panelF").src = url; $("panel").hidden = false;
   Object.keys(LAGU).forEach(k => LAGU[k].pause());
+  try{ history.pushState({ panel:1 }, ""); }catch(e){}   // butang Back telefon = kembali ke game
 }
-$("panelTutup").onclick = () => { $("panel").hidden = true; $("panelF").src = "about:blank"; sfx("pilih"); if(B) suasana(B.bunyi); };
+function tutupPanel(){
+  if($("panel").hidden) return;
+  $("panel").hidden = true; $("panelF").src = "about:blank"; sibuk = false; sfx("pilih"); if(B) suasana(B.bunyi);
+}
+$("panelTutup").onclick = tutupPanel;
+addEventListener("popstate", tutupPanel);
 
 /* ---------- Peta ---------- */
 function bukaPeta(){
