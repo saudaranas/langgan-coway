@@ -158,7 +158,7 @@
   <div class="misi" aria-live="polite"><small id="mBab">PROLOG</small><b id="mTeks"></b></div>
   <div class="ikon">
     <button type="button" id="bunyi" aria-label="Bunyi">🔊</button>
-    <button type="button" id="btnBeg" aria-label="Kitab Keilmuan Saudagar" hidden>📖</button>
+    <button type="button" id="btnBeg" aria-label="Kitab Hikmah Pedagang" hidden>📖</button>
     <button type="button" id="btnPeta" aria-label="Peta harta" hidden>🗺️</button>
     <button type="button" id="btnKembara" aria-label="Peta dunia dan tetapan">🧭</button>
     <button type="button" id="btnPapan" aria-label="Papan kenyataan jualan">🏆</button>
@@ -198,8 +198,8 @@
 
 <section class="tirai gulung" id="sGulung" hidden role="dialog" aria-modal="true" aria-labelledby="gJudul">
   <div class="kertasG">
-    <h2 id="gJudul">Kitab Keilmuan Saudagar</h2>
-    <div class="sub" id="gSub">KEILMUAN 1 · UMPAN</div>
+    <h2 id="gJudul">Kitab Hikmah Pedagang</h2>
+    <div class="sub" id="gSub">HIKMAH 1 · UMPAN</div>
     <div class="video" id="gVideo"></div>
     <h3>⏳ ZAMAN SILAM</h3>
     <p id="gSilam" style="text-align:left;margin:0 0 12px;font-style:italic"></p>
@@ -389,7 +389,7 @@ $("bunyi").onclick = () => { bukaAudio(); setBunyi(!BUNYI); sfx("pilih"); };
 
 /* ---------- Babak ---------- */
 const PETI = [960, 900];
-const VIDEO = { 1:"P9M3I1veVlU" };   // ID video YouTube (unlisted) untuk setiap keilmuan
+const VIDEO = { 1:"P9M3I1veVlU" };   // ID video YouTube (unlisted) untuk setiap hikmah
 const BABAK = {
   rumah: {
     bg:"rumah", bab:"PROLOG · MALAM ITU",
@@ -873,8 +873,8 @@ async function interaksi(b){
       await aku("Tok… saya di mana ni? Tadi saya di tebing sungai…");
       await tok("Kau di Melaka. Keris berhulu emas itu hanya memilih orang yang sedang mencari jalan.");
       await tok("Aku Tok Malik. Empat puluh tahun aku berdagang di pelabuhan ini.");
-      await tok("Kalau mahu pulang ke zamanmu, kau mesti kuasai sembilan keilmuan saudagar.");
-      await tok("Keilmuan pertama bermula dengan Surat Cap Mohor, tanda kau pedagang yang sah. Di zamanmu, orang panggil ia link affiliate.");
+      await tok("Kalau mahu pulang ke zamanmu, kau mesti kuasai hikmah-hikmah pedagang.");
+      await tok("Hikmah pertama bermula dengan Surat Cap Mohor, tanda kau pedagang yang sah. Di zamanmu, orang panggil ia link affiliate.");
       await tok("Surat itu tersimpan dalam peti di hutan kecil. Petanya ada pada Pak Leman, nelayan di pantai.");
       await tok("Tapi sebelum itu, ke pasar dulu. Jumpa Makcik Kiah. Dia tahu di mana Pak Leman.");
       await aku("Kenapa tak terus ke pantai, Tok?");
@@ -886,13 +886,13 @@ async function interaksi(b){
       await tok(!S.kiah ? "Ke pasar dulu. Cari Makcik Kiah." : !S.peta ? "Pak Leman di pantai. Ikut jalan ke kanan pasar." : "Peti itu di hutan kecil, hujung pantai."); tutupDialog();
     } else {
       if(!S.lapor){
-        await tok("Kau sudah buka Keilmuan Pertama. Aku nampak cahayanya dari sini.");
+        await tok("Kau sudah buka Hikmah Pertama. Aku nampak cahayanya dari sini.");
         await tok("Kau jujur di pasar. Kau sabar di pantai. Itulah modal sebenar seorang pedagang.");
         await tok("Ilmu tanpa amal macam pedang dalam sarung. Daftar dan dapatkan Surat Cap Mohor kau di dunia sebenar.");
         S.lapor = 1; simpan(); misi(); try{ localStorage.removeItem("hk_ulang"); }catch(x){}
       } else await tok("Dah dapat Surat Cap Mohor kau, {N}?");
       if(!S.umpan) await tok("Lepas dapat Surat Cap Mohor, pasang umpan pertama kau. Satu masalah, satu artikel, satu link. Itu sahaja.");
-      const p = await pilih(["📝 Daftar affiliate sekarang", "🎣 Bina umpan pertama (PS Path)", "📖 Buka Kitab Keilmuan", "Nanti dulu, Tok"]);
+      const p = await pilih(["📝 Daftar affiliate sekarang", "🎣 Bina umpan pertama (PS Path)", "📖 Buka Kitab Hikmah", "Nanti dulu, Tok"]);
       tutupDialog();
       if(p === 0) bukaPanel("/affiliate/", "Daftar affiliate");
       else if(p === 1) bukaUmpan();
@@ -1006,9 +1006,9 @@ const KATA = {
   budak:[ "Wau saya terbang paling tinggi! Sebab saya tak putus asa bila jatuh.", "Pak Leman? Dia selalu di pantai. Ikut jalan kanan pasar!" ],
   imam:[ ["Assalamualaikum, nak. Singgahlah.", "Kerja macam mana pun, bila azan, berhenti dulu. Rezeki itu Allah yang beri, kita cuma berusaha."], "Doa ibu, nak. Jangan lupa minta ibu doakan usaha kau." ]
 };
-/* ---------- Kitab Keilmuan Saudagar ---------- */
+/* ---------- Kitab Hikmah Pedagang ---------- */
 const KITAB = {
-  1:{ tajuk:"KEILMUAN 1 · UMPAN",
+  1:{ tajuk:"HIKMAH 1 · UMPAN",
     silam:"Di pelabuhan Melaka, Pak Leman tak pernah memaksa ikan. Dia pasang umpan yang betul, sabar menunggu, dan tak kecewa bila ada yang terlepas. Ikan datang kerana lapar, bukan kerana mata kail.",
     ilmu:[
       "Senjata anda: link affiliate, iaitu Surat Cap Mohor anda. Sesiapa yang buka link ini, sistem kenal ia datang dari anda.",
@@ -1024,7 +1024,7 @@ function bukaKitab(n){
   $("gSub").textContent = k.tajuk;
   $("gVideo").innerHTML = VIDEO[n]
     ? `<iframe src="https://www.youtube-nocookie.com/embed/${VIDEO[n]}?rel=0&playsinline=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="Video pengajaran"></iframe>`
-    : "🎬 Video pengajaran keilmuan ini<br>akan datang tak lama lagi";
+    : "🎬 Video pengajaran hikmah ini<br>akan datang tak lama lagi";
   $("gSilam").textContent = k.silam || "";
   $("gIlmu").innerHTML = k.ilmu.map(x => "<li>" + x + "</li>").join("");
   $("gPesan").textContent = k.pesan;
