@@ -528,7 +528,7 @@ let B = null;   // babak semasa
 const npc = id => (B.npc || []).find(n => n.id === id);
 const seruDi = b => { if(b.seruNpc){ const n = npc(b.seruNpc); return [n.x, n.y - tinggi(n.y) - 50]; } return b.seru; };
 const pemain = { x:0, y:0, arah:"depan", jalan:0, cermin:false };
-window.__hk = { pemain };
+window.__hk = { pemain, BABAK, bolehJalan: (x, y) => bolehJalan(x, y) };
 
 const dalam = (p, x, y) => { let c = false; for(let i = 0, j = p.length - 1; i < p.length; j = i++){ const [xi, yi] = p[i], [xj, yj] = p[j]; if(((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) c = !c; } return c; };
 const bolehJalan = (x, y) => B.jalan.some(p => dalam(p, x, y)) && !(B.halang || []).some(p => dalam(p, x, y));
@@ -582,6 +582,10 @@ function lukis(){
   // watak ikut kedalaman
   (B.npc || []).map(n => ({ y:n.y, f:() => lukisWatak(n.img, n) })).concat([{ y:pemain.y, f:() => lukisWatak(WATAK === "P" ? "aisyah" : "hafiz", pemain) }])
     .sort((a, b) => a.y - b.y).forEach(o => o.f());
+  // lencana jualan atas kepala
+  (B.npc || []).forEach(n => { if(n.ph) lencana(n.x, n.y, `🏅${n.ph.produk}  ${n.ph.nama}`, false); });
+  const nSaya = BERITA && BERITA.saya ? +BERITA.saya.produk || 0 : 0;
+  if(nSaya > 0) lencana(pemain.x, pemain.y, `🏅${nSaya}`, true);
   // tona warna & cahaya
   ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
   if(B.tona){ ctx.globalCompositeOperation = "multiply"; ctx.fillStyle = B.tona; ctx.fillRect(0, 0, cv.width, cv.height); }
@@ -653,6 +657,34 @@ function cahayaPeti(x, y){
   }
   ctx.restore();
 }
+function lencana(x, y, t, saya){
+  const k = 1 / kam.z, bob = Math.sin(T * 2.4 + x) * 4;
+  ctx.save(); ctx.translate(x, y - tinggi(y) * 1.02 + bob); ctx.scale(k, k);
+  ctx.font = "800 28px 'Nunito Sans',sans-serif"; const w = ctx.measureText(t).width + 30;
+  ctx.fillStyle = "rgba(0,0,0,.25)"; ctx.beginPath(); ctx.roundRect(-w / 2 + 2, -20, w, 46, 23); ctx.fill();
+  ctx.fillStyle = saya ? "#e9b75a" : "rgba(43,33,24,.88)"; ctx.beginPath(); ctx.roundRect(-w / 2, -24, w, 46, 23); ctx.fill();
+  ctx.strokeStyle = "#e9b75a"; ctx.lineWidth = 3; ctx.stroke();
+  ctx.fillStyle = saya ? "#1c140b" : "#f6d48f"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(t, 0, 0);
+  ctx.restore();
+}
+/* Pahlawan bulan ini: 5 affiliate teratas muncul di pasar */
+const SPOT_PH = [[1000,860],[1560,960],[2060,1260],[900,1360],[2400,860]];
+function pasangPahlawan(d){
+  const P = BABAK.pasar;
+  P.npc = P.npc.filter(n => !n.ph); P.benda = P.benda.filter(b => !b.ph);
+  if(!d || !d.papan) return;
+  d.papan.filter(x => !x.saya && x.produk > 0).slice(0, SPOT_PH.length).forEach((x, i) => {
+    const [px, py] = SPOT_PH[i], id = "ph" + i;
+    P.npc.push({ id, img: x.w === "P" ? "aisyah" : "hafiz", x:px, y:py, arah:"depan", ph:x });
+    P.benda.push({ id, x:px, y:py, r:190, label:"BUAL", ada:()=>true, ph:true });
+  });
+}
+const KATA_PH = [
+  "Alhamdulillah, bulan ni dah {n} jualan. Rahsianya? Pasang umpan setiap hari, jangan skip.",
+  "Dulu saya pun mula dengan kosong. Satu masalah, satu link, ulang. Sekarang {n} jualan bulan ni!",
+  "Saya tak jual, saya cuma tunjuk masalah dan kongsi link. Selebihnya consultant uruskan. Dah {n} jualan bulan ni.",
+  "Kau dah pasang umpan hari ni? Saya baru dapat jualan ke-{n}. Jom sama-sama naik papan!"
+];
 function lukisWatak(w, o){
   const im = IMG[w + "-" + o.arah] || IMG[w + "-depan"]; if(!im) return;
   if(!IMG[w + "-" + o.arah]) o = Object.assign({}, o, { cermin:false });
@@ -924,6 +956,12 @@ async function interaksi(b){
     await cakap("pengawal", `Dengar ni! ${x.saya ? "Kau sendiri" : x.nama} baru dapat ${x.n} jualan, ${lalu(x.masa)}. Pedagang Melaka makin maju!`);
     await cakap("pengawal", "Tengok papan kenyataan 🏆 untuk senarai penuh.");
     tutupDialog();
+  } else if(b.ph && n && n.ph){
+    const x = n.ph;
+    WATAK_D.ph = { nama: x.nama + " · " + x.gelaran, potret: "aset/" + n.img + "-potret.webp", nada: n.img === "aisyah" ? 420 : 260 };
+    const i = (BUALAN.ph = ((BUALAN.ph ?? -1) + 1)) % KATA_PH.length;
+    await cakap("ph", KATA_PH[(i + +b.id.slice(2)) % KATA_PH.length].replace("{n}", x.produk));
+    tutupDialog();
   } else if(KATA[b.id]){
     const L = KATA[b.id]; const i = (BUALAN[b.id] = ((BUALAN[b.id] ?? -1) + 1)) % L.length;
     for(const t of [].concat(L[i])) await cakap(b.id, t);
@@ -1170,6 +1208,7 @@ async function pindah(p){
 async function masukBabak(id, dariPutih, masuk){
   if(!IMG[BABAK[id].bg]){ $("hitam").style.opacity = 1; await asetBabak(id); }
   else asetBabak(id);
+  if(TOKEN) await Promise.race([ambilBerita().then(pasangPahlawan), tidur(2500)]);
   B = BABAK[id];
   [pemain.x, pemain.y] = masuk || (id === "jeti" && S.jumpaTok ? [960, 1200] : B.mula);
   if(!bolehJalan(pemain.x, pemain.y)) [pemain.x, pemain.y] = B.mula;   // jaminan: jangan muncul di kawasan tak boleh jalan

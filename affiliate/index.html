@@ -61,6 +61,16 @@
   .stat.kom small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
   .kbar{height:10px;background:var(--panel);border:1px solid var(--line);border-radius:99px;overflow:hidden;margin:10px 0 4px}
   .kbar i{display:block;height:100%;background:var(--green)}
+  .t10{list-style:none;margin:0;padding:0}
+  .t10 li{display:flex;align-items:center;gap:10px;padding:9px 10px;border-top:1px solid var(--line);font-size:15px}
+  .t10 li:first-child{border-top:0}
+  .t10 .no{width:28px;text-align:center;font-weight:700;color:var(--muted)}
+  .t10 .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .t10 .nm small{color:var(--muted);font-weight:400}
+  .t10 b{font-size:16px}
+  .t10 li.saya{background:#fff6dc;border-radius:8px;border-top-color:transparent}
+  .t10 li.saya + li{border-top-color:transparent}
+  .t10 .sep{justify-content:center;color:var(--muted);padding:4px}
   .kmon{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px}
   .kmon td{padding:6px 0;border-top:1px solid var(--line)}
   .kmon td:last-child{text-align:right;font-weight:600}
@@ -170,6 +180,11 @@
     <div class="stats" id="stats"></div>
     <div class="stat hi kom" id="komisen"></div>
     <div class="box">
+      <h2>🏆 Top 10 bulan ini</h2>
+      <div id="top10"><p class="empty">Memuatkan…</p></div>
+      <p class="hint" style="margin-top:8px">Dikira ikut produk yang closed bulan ini. Nama disingkatkan untuk privasi.</p>
+    </div>
+    <div class="box">
       <h2>Lead anda</h2>
       <div id="leads"></div>
       <p class="hint" style="margin-top:8px">Nama pelanggan disingkatkan untuk privasi. Status dikemas kini oleh consultant.</p>
@@ -269,6 +284,19 @@
       <tbody>${d.leads.map(l => `<tr><td>${esc(l.tarikh)}</td><td>${esc(l.nama)}${l.lengkap ? " ✅" : ""}</td><td>${esc(l.produk)}</td><td><span class="pill ${esc(l.status.split(" ")[0])}">${esc(l.status)}${l.bil > 1 ? " · " + l.bil + " produk" : ""}</span></td></tr>`).join("")}</tbody>
     </table>` : `<p class="empty">Belum ada lead. Kongsi link anda untuk mula 💪</p>`;
     show("vDash");
+    top10();
+  }
+  async function top10(){
+    const el = $("top10");
+    try{
+      const d = await call("gameBerita", TOKEN);
+      const pk = ["🥇","🥈","🥉"];
+      const ada = d.papan.filter(x => x.produk > 0).slice(0, 10);
+      const row = (x, i) => `<li class="${x.saya ? "saya" : ""}"><span class="no">${i < 3 && x.produk > 0 ? pk[i] : (i + 1)}</span><span class="nm">${esc(x.nama)}${x.saya ? " (anda)" : ""} <small>· ${esc(x.gelaran)}</small></span><b>${x.produk}</b></li>`;
+      let h = ada.map(row).join("");
+      if(!ada.some(x => x.saya)) h += `${ada.length ? `<li class="sep">⋯</li>` : ""}<li class="saya"><span class="no">–</span><span class="nm">Anda <small>· belum ada jualan bulan ini</small></span><b>${d.saya.produk}</b></li>`;
+      el.innerHTML = (ada.length ? "" : `<p class="empty" style="margin-bottom:8px">Belum ada jualan bulan ini. Jadilah yang pertama naik papan! 💪</p>`) + `<ul class="t10">${h}</ul>`;
+    }catch(e){ el.innerHTML = `<p class="empty">Tak dapat memuatkan senarai. Cuba muat semula.</p>`; }
   }
   function cp(t, m){
     if(navigator.clipboard) navigator.clipboard.writeText(t).then(() => toast(m), () => prompt("Salin:", t));
