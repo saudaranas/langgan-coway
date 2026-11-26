@@ -277,9 +277,20 @@ footer nav{display:flex;flex-wrap:wrap;gap:8px 18px}
   const WA_TEXT = "Hai, saya baca artikel pasal tandas basah. Nak tanya pasal bidet Coway.";
   const SLUG = "lantai-tandas-basah";
   const UID = (new URLSearchParams(location.search).get("id")||"").toLowerCase().replace(/[^a-z0-9-]/g,"").slice(0,30);
-  const Q = UID ? "id=" + UID : "";
+  /* affiliate: ?ref=ID disimpan 30 hari (sama seperti laman utama), lead pergi ke consultant utama */
+  const REF = (() => {
+    const c = s => String(s || "").toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 30);
+    const q = c(new URLSearchParams(location.search).get("ref"));
+    try {
+      if (q) { localStorage.setItem("aff_ref", JSON.stringify({ r: q, t: Date.now() })); return q; }
+      const o = JSON.parse(localStorage.getItem("aff_ref") || "null");
+      if (o && o.r && Date.now() - o.t < 30 * 864e5) return c(o.r);
+    } catch (e) {}
+    return q;
+  })();
+  const Q = UID ? "id=" + UID : (REF ? "ref=" + REF : "");
   document.querySelectorAll("a[data-keep]").forEach(a => { const u = a.getAttribute("href"); a.href = u + (Q ? (u.includes("?") ? "&" : "?") + Q : ""); });
-  const setWa = n => document.querySelectorAll("a.wa").forEach(b => b.href = "https://wa.me/" + n + "?text=" + encodeURIComponent(WA_TEXT));
+  const setWa = n => document.querySelectorAll("a.wa").forEach(b => b.href = "https://wa.me/" + n + "?text=" + encodeURIComponent(WA_TEXT + (REF && !UID ? "\n\n(Rujukan: " + REF + ")" : "")));
   setWa(DEFAULT_WA);
   /* gambar profil: ejen guna gambar sendiri (atau huruf awal nama), utama guna img/me.jpg */
   const initials = n => { const w = String(n || "C C").trim().split(/\s+/); const t = ((w[0] || "C")[0] + (w[1] ? w[1][0] : "")).toUpperCase();
@@ -321,7 +332,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:8px 18px}
 
   /* statistik artikel */
   function tr(k) {
-    try { fetch(GAS_URL, { method: "POST", mode: "no-cors", keepalive: true, headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ ev: "art", a: SLUG, k: k, uid: UID || "utama" }) }).catch(() => {}); } catch (e) {}
+    try { fetch(GAS_URL, { method: "POST", mode: "no-cors", keepalive: true, headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ ev: "art", a: SLUG, k: k, uid: UID || (REF ? "af-" + REF : "utama") }) }).catch(() => {}); } catch (e) {}
   }
   tr("view");
   try { const key = "r_" + SLUG + "_" + new Date().toISOString().slice(0, 10); if (!localStorage.getItem(key)) { localStorage.setItem(key, "1"); tr("reader"); } } catch (e) {}
@@ -374,7 +385,8 @@ footer nav{display:flex;flex-wrap:wrap;gap:8px 18px}
 </script>
 <script id="share-js">(function(){
   var id=(new URLSearchParams(location.search).get("id")||"").toLowerCase().replace(/[^a-z0-9-]/g,"").slice(0,30);
-  var link=location.origin+location.pathname.replace(/\.html$/,"")+(id?"?id="+id:"");
+  var ref=(new URLSearchParams(location.search).get("ref")||"").toLowerCase().replace(/[^a-z0-9-]/g,"").slice(0,30);
+  var link=location.origin+location.pathname.replace(/\.html$/,"")+(id?"?id="+id:(ref?"?ref="+ref:""));
   var t=(document.querySelector("h1")||{}).textContent||document.title;
   var e=encodeURIComponent, box=document.getElementById("kongsi"); if(!box) return;
   box.querySelector(".sh-wa").href="https://wa.me/?text="+e("*"+t.trim()+"*\n\n"+link);

@@ -131,6 +131,10 @@
   .tempat button{background:var(--kayu);color:var(--emas2);border:0;border-radius:12px;padding:12px 8px;font-size:15px;font-weight:800}
   .tempat button[disabled]{background:#cdbd9c;color:#7a6a50}
   .tempat button.sini{outline:3px solid var(--emas);outline-offset:-3px}
+  .umpanSen{display:grid;gap:8px;margin-bottom:12px}
+  .umpanSen button{display:flex;gap:10px;align-items:center;text-align:left;background:#efe2c4;color:#2b2118;border:1.5px solid #c9b48c;border-radius:12px;padding:11px 12px;font-size:15px;font-weight:700}
+  .umpanSen button span{font-size:24px}
+  .postU{white-space:pre-wrap;text-align:left;background:#fffaf0;border:1.5px dashed #8a6a3e;border-radius:12px;padding:12px;font-size:15px;line-height:1.5;margin-bottom:10px;max-height:38vh;overflow:auto}
   /* panel halaman dalam game */
   .panel{position:fixed;inset:0;z-index:20;background:#0c0a08;display:flex;flex-direction:column}
   .panel .atasP{display:flex;align-items:center;justify-content:space-between;padding:calc(8px + env(safe-area-inset-top)) 10px 8px;background:var(--kayu);color:var(--emas2);font-weight:800}
@@ -202,6 +206,7 @@
     <h3>TINDAKAN SEBENAR</h3>
     <div class="tindakan">
       <button type="button" id="gDaftar">📝 Daftar affiliate &amp; dapatkan link</button>
+      <button type="button" id="gUmpan">🎣 Bina umpan pertama (post PS Path)</button>
       <button type="button" id="gUjian">⚔️ Semak misi sebenar</button>
     </div>
     <button type="button" class="mula" id="gTutup">Simpan dalam beg</button>
@@ -275,6 +280,15 @@
       <button type="button" class="mula" id="mSimpanNama" style="padding:10px 16px;font-size:15px;margin:0;width:auto;flex:none">Simpan</button>
     </div>
     <button type="button" class="mula" id="mTutup">Tutup</button>
+  </div>
+</section>
+
+<section class="tirai gulung" id="sUmpan" hidden role="dialog" aria-modal="true" aria-labelledby="uJudul">
+  <div class="kertasG">
+    <h2 id="uJudul">Bina Umpan</h2>
+    <div class="sub">PS PATH · MASALAH → ARTIKEL SOLUSI → LINK ANDA</div>
+    <div id="uIsi"></div>
+    <button type="button" class="mula" id="uTutup">Tutup</button>
   </div>
 </section>
 
@@ -841,10 +855,12 @@ async function interaksi(b){
         await tok("Ilmu tanpa amal macam pedang dalam sarung. Daftar dan dapatkan Surat Cap Mohor kau di dunia sebenar.");
         S.lapor = 1; simpan(); misi();
       } else await tok("Dah dapat Surat Cap Mohor kau, {N}?");
-      const p = await pilih(["📝 Daftar affiliate sekarang", "📖 Buka Kitab Jurus", "Nanti dulu, Tok"]);
+      if(!S.umpan) await tok("Lepas dapat Surat Cap Mohor, pasang umpan pertama kau. Satu masalah, satu artikel, satu link. Itu sahaja.");
+      const p = await pilih(["📝 Daftar affiliate sekarang", "🎣 Bina umpan pertama (PS Path)", "📖 Buka Kitab Jurus", "Nanti dulu, Tok"]);
       tutupDialog();
       if(p === 0) bukaPanel("/affiliate/", "Daftar affiliate");
-      else if(p === 1) await bukaKitab();
+      else if(p === 1) bukaUmpan();
+      else if(p === 2) await bukaKitab();
     }
   } else if(b.id === "kiah"){
     const kiah = t => cakap("kiah", t);
@@ -872,6 +888,7 @@ async function interaksi(b){
       await aku("Memancing? Apa kaitannya dengan berniaga, Pak Leman?");
       await lem("Berniaga itu macam memancing. Umpan yang betul, tunggu masa yang tepat. Tarik terlalu awal, ikan lari.");
       await lem("Dan bukan semua ikan akan makan umpan kau. Itu biasa. Yang penting, kau tak berhenti.");
+      await lem("Ingat satu lagi: ikan tak makan mata kail. Ikan makan umpan. Orang pun begitu. Mereka tak cari barang, mereka cari jalan keluar dari masalah.");
       S.cabar = 1; simpan(); tutupDialog(); misi(); tunjuk("Pergi ke hujung jeti kayu 🎣");
     } else if(!S.pancing){ await lem("Hujung jeti, tiga ekor. Sabar."); tutupDialog(); }
     else if(!S.peta){
@@ -949,11 +966,12 @@ const KATA = {
 };
 /* ---------- Kitab Jurus ---------- */
 const KITAB = {
-  1:{ tajuk:"JURUS 1 · SURAT CAP MOHOR",
+  1:{ tajuk:"JURUS 1 · SURAT CAP MOHOR & UMPAN MASALAH",
     ilmu:[
       "Link affiliate anda ialah Surat Cap Mohor anda. Sesiapa yang buka link ini, sistem kenal ia datang dari anda.",
-      "Link ini terus membuka chatbot. Chatbot terangkan produk, harga, voucher RM20 dan cara daftar.",
-      "Anda tak perlu hafal harga. Tugas anda: kongsi link dan ajak orang berbual.",
+      "Jangan jaja barang. Orang tak cari penapis air; orang cari jalan keluar dari air paip yang keruh. Itulah umpan: masalah yang mereka rasa.",
+      "PS Path (Problem → Solution): 1) Post satu masalah di status WhatsApp. 2) Beri link artikel solusi percuma. 3) Link anda tersimpan dalam artikel itu, dan pembaca boleh tanya chatbot bila bersedia.",
+      "Satu umpan sehari sudah cukup. Bukan semua ikan makan hari ini, dan itu biasa.",
       "Komisen RM100 setiap produk. Capai 11 jualan dalam sebulan, semua jualan bulan itu jadi RM200 setiap jualan! 11 jualan = RM2,200!"
     ],
     pesan:"“Betulkan niat. Berniaga kerana mahu menyara keluarga dengan rezeki yang halal. Niat yang baik menjadikan penat itu ibadah.” — Tok Malik" }
@@ -976,6 +994,56 @@ $("gUjian").onclick = () => bukaPanel("/hikayat/", "Misi sebenar");
 $("btnBeg").onclick = () => { if(!sibuk && !dialogBuka){ sfx("pilih"); bukaKitab(); } };
 $("btnPeta").onclick = () => { if(!sibuk && !dialogBuka){ sfx("gulungan"); bukaPeta(); } };
 $("btnUjian").onclick = () => { sfx("pilih"); bukaPanel("/hikayat/", "Misi sebenar"); };
+
+/* ---------- Bina Umpan (PS Path) ---------- */
+const UMPAN = [
+  { s:"tangki-air-rumah", i:"🚰", t:"Air paip & tangki air", p:"Baru perasan… bila kali terakhir tangki air rumah kita dicuci? 😳\n\nAir yang sama tu kita masak, buat air kopi, mandikan anak setiap hari.\n\nSaya jumpa 6 tanda mudah untuk semak air di rumah sendiri. Ada satu tanda yang ramai tak sedar 👇" },
+  { s:"baju-putih-jadi-kuning", i:"👕", t:"Baju putih jadi kuning", p:"Dah tukar sabun 3 jenama, baju putih tetap kekuningan 😩\n\nRupanya puncanya mungkin bukan sabun langsung.\n\nBaca ni, terus faham kenapa 👇" },
+  { s:"habuk-dalam-rumah", i:"🤧", t:"Habuk datang balik", p:"Pagi lap meja, petang dah berhabuk balik. Anak pula selalu bersin bila bangun tidur 🤧\n\nHabuk tu datang dari mana sebenarnya?\n\nArtikel ni terangkan dengan jelas, dan ada 6 tanda udara rumah perlu perhatian 👇" },
+  { s:"bil-elektrik-naik-aircond-lama", i:"💡", t:"Bil elektrik naik", p:"Bil elektrik bulan ni naik lagi, padahal guna macam biasa je 😤\n\nKalau aircond rumah dah lebih 5 tahun, cuba semak ni dulu 👇" },
+  { s:"makanan-cepat-rosak-peti-ais", i:"🥬", t:"Makanan cepat rosak", p:"Sayur beli semalam, hari ni dah layu dalam peti ais 🥲\n\nCuba kira berapa banyak makanan terbuang sebulan… terkejut saya.\n\n6 tanda peti ais dah lemah, ada di sini 👇" },
+  { s:"baju-berbau-lepas-basuh", i:"🧺", t:"Baju berbau lepas basuh", p:"Baju dah basuh, dah jemur, tapi masih ada bau hapak 😣\n\nRupanya selalu bukan salah sabun.\n\nSemak 6 tanda ni, mungkin mesin basuh puncanya 👇" },
+  { s:"bila-perlu-tukar-tilam", i:"🛏️", t:"Tilam dah mendap", p:"Bangun pagi rasa sakit belakang, padahal tidur cukup 8 jam 😮‍💨\n\nMungkin tilam dah mendap sikit demi sikit tanpa kita perasan.\n\nSemak 6 tandanya di sini 👇" },
+  { s:"lantai-tandas-basah", i:"🚿", t:"Lantai tandas licin", p:"Lantai tandas sentiasa basah dan licin. Risau betul bila mak ayah atau anak kecil masuk 😟\n\nPunca biasa yang ramai tak sedar, dan cara semak, ada di sini 👇" },
+  { s:"lenguh-badan-tiada-masa-urut", i:"💆", t:"Lenguh badan", p:"Bahu tegang, belakang lenguh setiap hari. Nak pergi urut pun tak sempat 😩\n\nKalau anda kerja duduk lama atau banyak memandu, baca ni 👇" }
+];
+let AFID = LS.get("hk_af") || "";
+function bukaUmpan(){
+  sibuk = true; henti(); $("sUmpan").hidden = false;
+  if(!TOKEN || !AFID){
+    $("uIsi").innerHTML = `<p style="text-align:left">Umpan anda perlu ada <b>link affiliate anda sendiri</b>, supaya setiap pelanggan dikira atas nama anda.</p>
+      <div class="tindakan"><button type="button" id="uLogin">🔐 Log masuk affiliate</button><button type="button" id="uDaftar" style="background:#e9dcc2;color:#2b2118">Belum ada akaun? Daftar affiliate</button></div>`;
+    $("uLogin").onclick = () => { $("sUmpan").hidden = true; $("sLogin").hidden = false; };
+    $("uDaftar").onclick = () => { $("sUmpan").hidden = true; bukaPanel("/affiliate/", "Daftar affiliate"); };
+    return;
+  }
+  $("uIsi").innerHTML = `<p style="text-align:left;margin:0 0 10px">Pilih satu masalah yang anda atau kawan-kawan anda pernah rasa. Masalah yang benar-benar dirasa jadi umpan paling kuat.</p>
+    <div class="umpanSen">${UMPAN.map((u, i) => `<button type="button" data-u="${i}"><span aria-hidden="true">${u.i}</span>${u.t}</button>`).join("")}</div>`;
+  $("uIsi").querySelectorAll("[data-u]").forEach(b => b.onclick = () => tunjukUmpan(UMPAN[+b.dataset.u]));
+}
+function tunjukUmpan(u){
+  sfx("pilih");
+  const link = "https://langgancoway.store/artikel/" + u.s + "?ref=" + encodeURIComponent(AFID);
+  const teks = u.p + "\n\n" + link;
+  $("uIsi").innerHTML = `<div class="postU" id="uPost"></div>
+    <div class="tindakan">
+      <button type="button" id="uWa">📲 Kongsi ke WhatsApp / status</button>
+      <button type="button" id="uSalin">📋 Salin post</button>
+      <button type="button" id="uLihat" style="background:#e9dcc2;color:#2b2118">👁 Lihat artikel solusi</button>
+      <button type="button" id="uBalik" style="background:#e9dcc2;color:#2b2118">← Pilih masalah lain</button>
+    </div>
+    <p style="font-size:13px;text-align:left;margin:0 0 8px;color:#6b5638">Tip: ubah ayat ikut gaya anda sendiri, dan tambah gambar sebenar dari rumah anda. Post yang jujur dan peribadi lebih dipercayai.</p>`;
+  $("uPost").textContent = teks;
+  $("uWa").onclick = () => { window.open("https://wa.me/?text=" + encodeURIComponent(teks), "_blank"); S.umpan = 1; simpan(); misi(); };
+  $("uSalin").onclick = () => {
+    const ok = () => { $("uSalin").textContent = "✅ Disalin!"; S.umpan = 1; simpan(); misi(); };
+    if(navigator.clipboard) navigator.clipboard.writeText(teks).then(ok, () => prompt("Salin post ini:", teks)); else prompt("Salin post ini:", teks);
+  };
+  $("uLihat").onclick = () => { $("sUmpan").hidden = true; sibuk = false; bukaPanel("/artikel/" + u.s + "?ref=" + encodeURIComponent(AFID), u.t); };
+  $("uBalik").onclick = bukaUmpan;
+}
+$("uTutup").onclick = () => { $("sUmpan").hidden = true; sibuk = false; sfx("pilih"); };
+$("gUmpan").onclick = () => { $("sGulung").hidden = true; $("gVideo").innerHTML = ""; sibuk = false; bukaUmpan(); };
 
 /* ---------- Panel halaman dalam game ---------- */
 function bukaPanel(url, tajuk){
@@ -1074,7 +1142,8 @@ function misi(){
   else if(!S.peta) t = "Kembali kepada Pak Leman";
   else if(!S.peti) t = "Ikut peta ke hutan kecil, cari peti";
   else if(!S.lapor) t = "Kembali kepada Tok Malik di jeti";
-  else t = "Daftar affiliate & dapatkan link (Jurus 1)";
+  else if(!S.umpan) t = "Daftar affiliate, kemudian pasang umpan pertama 🎣";
+  else t = "Umpan dipasang! Pasang satu umpan setiap hari 🎣";
   $("btnPeta").hidden = !(S.peta && !S.peti); $("btnBeg").hidden = !S.peti;
   $("mBab").textContent = B ? B.bab : ""; $("mTeks").textContent = t;
 }
@@ -1140,6 +1209,7 @@ async function tarikAwan(){
   if(!TOKEN) return;
   try{
     const d = await call("gameState", TOKEN);
+    if(d && d.pemain && d.pemain.id){ AFID = d.pemain.id; LS.set("hk_af", AFID); }
     const k = d && d.g && d.g.data && d.g.data.k;
     if(!k) { segerak(); return; }
     const skor = o => KUNCI_K.reduce((a, x) => a + (+o[x] || 0), 0);
@@ -1161,6 +1231,7 @@ $("fLogin").onsubmit = async e => {
   try{
     const d = await call("affLogin", $("lWa").value, $("lPin").value);
     TOKEN = d.token; LS.set("hk_t", TOKEN);
+    if(d.profil && d.profil.id){ AFID = d.profil.id; LS.set("hk_af", AFID); }
     await tarikAwan(); kemasLogin();
     $("sLogin").hidden = true; sfx("lulus", .5);
     if(main){ sibuk = false; masukBabak(S.babak); misi(); tunjuk("✅ Kemajuan disimpan dalam akaun anda"); }
@@ -1199,7 +1270,7 @@ $("kTutup").onclick = () => { $("sPapan").hidden = true; sibuk = false; sfx("pil
 let bentaraJalan = false;
 async function bentara(){
   if(!TOKEN || bentaraJalan || !["jeti","pasar"].includes(S.babak)) return;
-  const d = await ambilBerita(); if(!d || !d.berita.length) return;
+  const d = await ambilBerita(); if(!d || !d.berita || !d.berita.length) return;
   const akhir = +LS.get("hk_bl") || 0;
   const baru = d.berita.filter(x => x.masa > akhir).slice(0, 3).reverse();
   if(!baru.length) return;
