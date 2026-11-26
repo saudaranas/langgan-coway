@@ -377,11 +377,35 @@ function blip(p){
   o.connect(g).connect(AC.destination); o.start(t); o.stop(t + .06);
 }
 function suasana(o){ Object.keys(SASAR).forEach(k => SASAR[k] = o[k] || 0); Object.keys(LAGU).forEach(k => { if(SASAR[k] && BUNYI) LAGU[k].play().catch(() => {}); }); }
+let REDAM = 1;   // 1 = biasa, 0.25 = Kitab dibuka, 0 = video sedang dimainkan
+function redam(v){ REDAM = v; if(v > 0) suasana(SASAR); }
+window.__hkRedam = () => REDAM;
+/* Video YouTube dalam Kitab: muzik berhenti bila video main, kembali perlahan bila dijeda atau tamat */
+let ytSedia = null;
+function muatYT(){
+  if(ytSedia) return ytSedia;
+  ytSedia = new Promise(r => {
+    if(window.YT && YT.Player) return r();
+    const lama = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => { if(lama) lama(); r(); };
+    const sc = document.createElement("script"); sc.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(sc);
+  });
+  return ytSedia;
+}
+function pasangYT(iframe){
+  muatYT().then(() => {
+    if(!iframe.isConnected) return;
+    new YT.Player(iframe, { events:{ onStateChange: e => {
+      if($("sGulung").hidden) return;
+      redam(e.data === 1 || e.data === 3 ? 0 : .25);   // 1 main, 3 memuat
+    } } });
+  }).catch(() => {});
+}
 function campurBunyi(dt){
   Object.keys(LAGU).forEach(k => {
-    const a = LAGU[k], t = BUNYI ? SASAR[k] : 0;
+    const a = LAGU[k], t = BUNYI ? SASAR[k] * REDAM : 0;
     a.volume = Math.max(0, Math.min(1, a.volume + (t - a.volume) * Math.min(1, dt * 1.5)));
-    if(a.volume < .005 && !t && !a.paused) a.pause();
+    if(a.volume < .005 && !(BUNYI && SASAR[k]) && !a.paused) a.pause();
   });
 }
 function setBunyi(on){ BUNYI = on; LS.set("hk_bunyi", on ? "1" : "0"); $("bunyi").textContent = on ? "🔊" : "🔇"; if(on) suasana(SASAR); }
@@ -1025,14 +1049,15 @@ function bukaKitab(n){
   n = n || 1; const k = KITAB[n];
   $("gSub").textContent = k.tajuk;
   $("gVideo").innerHTML = VIDEO[n]
-    ? `<iframe src="https://www.youtube-nocookie.com/embed/${VIDEO[n]}?rel=0&playsinline=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="Video pengajaran"></iframe>`
+    ? `<iframe id="ytKitab" src="https://www.youtube-nocookie.com/embed/${VIDEO[n]}?rel=0&playsinline=1&enablejsapi=1&origin=${encodeURIComponent(location.origin)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="Video pengajaran"></iframe>`
     : "🎬 Video pengajaran hikmah ini<br>akan datang tak lama lagi";
   $("gSilam").textContent = k.silam || "";
   $("gIlmu").innerHTML = k.ilmu.map(x => "<li>" + x + "</li>").join("");
   $("gPesan").textContent = k.pesan;
-  $("sGulung").hidden = false; sibuk = true; henti();
+  $("sGulung").hidden = false; sibuk = true; henti(); redam(.25);
+  if($("ytKitab")) pasangYT($("ytKitab"));
   return new Promise(r => {
-    $("gTutup").onclick = () => { sfx("syiling"); $("sGulung").hidden = true; $("gVideo").innerHTML = ""; sibuk = false; r(); };
+    $("gTutup").onclick = () => { sfx("syiling"); $("sGulung").hidden = true; $("gVideo").innerHTML = ""; sibuk = false; redam(1); r(); };
   });
 }
 $("gDaftar").onclick = () => bukaPanel("/affiliate/", "Daftar affiliate");
@@ -1091,7 +1116,7 @@ function tunjukUmpan(u){
   $("uBalik").onclick = bukaUmpan;
 }
 $("uTutup").onclick = () => { $("sUmpan").hidden = true; sibuk = false; sfx("pilih"); };
-$("gUmpan").onclick = () => { $("sGulung").hidden = true; $("gVideo").innerHTML = ""; sibuk = false; bukaUmpan(); };
+$("gUmpan").onclick = () => { $("sGulung").hidden = true; $("gVideo").innerHTML = ""; sibuk = false; redam(1); bukaUmpan(); };
 
 /* ---------- Panel halaman dalam game ---------- */
 function bukaPanel(url, tajuk){
