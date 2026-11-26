@@ -209,7 +209,7 @@
     <h3>TINDAKAN SEBENAR</h3>
     <div class="tindakan">
       <button type="button" id="gDaftar">📝 Daftar affiliate &amp; dapatkan link</button>
-      <button type="button" id="gUmpan">🎣 Bina umpan pertama (post PS Path)</button>
+      <button type="button" id="gUmpan">🎣 Bina umpan pertama</button>
       <button type="button" id="gUjian" hidden>⚔️ Semak misi sebenar</button>
     </div>
     <button type="button" class="mula" id="gTutup">Simpan dalam beg</button>
@@ -290,7 +290,7 @@
 <section class="tirai gulung" id="sUmpan" hidden role="dialog" aria-modal="true" aria-labelledby="uJudul">
   <div class="kertasG">
     <h2 id="uJudul">Bina Umpan</h2>
-    <div class="sub">PS PATH · MASALAH → ARTIKEL SOLUSI → LINK ANDA</div>
+    <div class="sub">NAMPAKKAN MASALAH · KENAL MASALAH KAWAN</div>
     <div id="uIsi"></div>
     <button type="button" class="mula" id="uTutup">Tutup</button>
   </div>
@@ -892,7 +892,7 @@ async function interaksi(b){
         S.lapor = 1; simpan(); misi(); try{ localStorage.removeItem("hk_ulang"); }catch(x){}
       } else await tok("Dah dapat Surat Cap Mohor kau, {N}?");
       if(!S.umpan) await tok("Lepas dapat Surat Cap Mohor, pasang umpan pertama kau. Satu masalah, satu artikel, satu link. Itu sahaja.");
-      const p = await pilih(["📝 Daftar affiliate sekarang", "🎣 Bina umpan pertama (PS Path)", "📖 Buka Kitab Hikmah", "Nanti dulu, Tok"]);
+      const p = await pilih(["📝 Daftar affiliate sekarang", "🎣 Bina umpan pertama", "📖 Buka Kitab Hikmah", "Nanti dulu, Tok"]);
       tutupDialog();
       if(p === 0) bukaPanel("/affiliate/", "Daftar affiliate");
       else if(p === 1) bukaUmpan();
@@ -1012,8 +1012,9 @@ const KITAB = {
     silam:"Di pelabuhan Melaka, Pak Leman tak pernah memaksa ikan. Dia pasang umpan yang betul, sabar menunggu, dan tak kecewa bila ada yang terlepas. Ikan datang kerana lapar, bukan kerana mata kail.",
     ilmu:[
       "<b>Senjata anda: link affiliate</b> (Surat Cap Mohor). Sesiapa yang buka link anda, sistem kenal dia datang dari anda.",
-      "<b>Umpan = masalah yang orang rasa.</b> Orang tak cari penapis air; orang cari jalan keluar dari air paip yang keruh.",
-      "<b>PS Path:</b><br><b>P · Masalah</b> = post yang anda kongsi (WhatsApp, Threads, FB).<br><b>S · Solusi</b> = artikel dalam link post itu. <b>Link affiliate anda sudah ada dalam artikel</b>, jadi bila pembaca klik produk atau chat, jualan dikira untuk anda.",
+      "<b>Nampakkan masalah dulu.</b> Ramai orang tak sedar pun mereka ada masalah. Bila mereka sedar, barulah mereka cari solusi, dan di situlah link anda berperanan.",
+      "<b>Kenal masalah kawan anda.</b> Satu produk ada banyak sudut masalah. Contoh air minum: ada yang penat beli air botol, ada yang tak sempat jerang air, ada yang risau tangki air. <b>Beri artikel yang paling dekat dengan masalah kawan itu.</b>",
+      "<b>Cara kongsi:</b><br>1) Kongsi <b>artikel masalah</b>, bersama ayat ringkas.<br>2) Pembaca yang rasa <i>“eh, ni macam aku”</i> akan klik <b>artikel solusi</b> di hujungnya.<br>3) <b>Link affiliate anda ikut sampai ke solusi dan chat</b>, jadi jualan dikira untuk anda.",
       "<b>Tugas anda hanya kongsi.</b> Soalan harga, produk dan jualan diuruskan oleh consultant melalui chat.",
       "<b>Satu umpan sehari</b> sudah cukup. Bukan semua ikan makan hari ini, dan itu biasa.",
       "Komisen <b>RM100</b> setiap produk. Capai <b>11 jualan sebulan</b>, semua jualan bulan itu jadi <b>RM200</b> setiap satu. 11 jualan = <b>RM2,200!</b>"
@@ -1040,9 +1041,11 @@ $("btnBeg").onclick = () => { if(!sibuk && !dialogBuka){ sfx("pilih"); bukaKitab
 $("btnPeta").onclick = () => { if(!sibuk && !dialogBuka){ sfx("gulungan"); bukaPeta(); } };
 $("btnUjian").onclick = () => { sfx("pilih"); bukaPanel("/hikayat/", "Misi sebenar"); };
 
-/* ---------- Bina Umpan (PS Path) ---------- */
+/* ---------- Bina Umpan (nampakkan masalah) ---------- */
 const UMPAN = [
-  { s:"tangki-air-rumah", i:"🚰", t:"Air paip & tangki air", p:"Baru perasan… bila kali terakhir tangki air rumah kita dicuci? 😳\n\nAir yang sama tu kita masak, buat air kopi, mandikan anak setiap hari.\n\nSaya jumpa 6 tanda mudah untuk semak air di rumah sendiri. Ada satu tanda yang ramai tak sedar 👇" },
+  { s:"tangki-air-rumah", i:"🚰", t:"Risau tangki air", p:"Baru perasan… bila kali terakhir tangki air rumah kita dicuci? 😳\n\nAir yang sama tu kita masak, buat air kopi, mandikan anak setiap hari.\n\nSaya jumpa 6 tanda mudah untuk semak air di rumah sendiri. Ada satu tanda yang ramai tak sedar 👇" },
+  { s:"kos-air-botol-sebulan", i:"💸", t:"Asyik beli air botol", p:"Tiap hari singgah kedai beli air botol. RM7 sehari je kan? 🤷‍♀️\n\nTapi bila kira sebulan… terkejut saya. Setahun lagi la.\n\nCuba kira untuk rumah sendiri, ada kalkulator dalam ni 👇" },
+  { s:"tak-sempat-jerang-air", i:"⏳", t:"Tak sempat jerang air", p:"Balik kerja penat, anak minta air sejuk. Cerek baru mendidih 😮‍💨\n\nRupanya rutin jerang air ni makan masa hampir seminggu penuh setahun.\n\nSemak rutin rumah anda di sini 👇" },
   { s:"baju-putih-jadi-kuning", i:"👕", t:"Baju putih jadi kuning", p:"Dah tukar sabun 3 jenama, baju putih tetap kekuningan 😩\n\nRupanya puncanya mungkin bukan sabun langsung.\n\nBaca ni, terus faham kenapa 👇" },
   { s:"habuk-dalam-rumah", i:"🤧", t:"Habuk datang balik", p:"Pagi lap meja, petang dah berhabuk balik. Anak pula selalu bersin bila bangun tidur 🤧\n\nHabuk tu datang dari mana sebenarnya?\n\nArtikel ni terangkan dengan jelas, dan ada 6 tanda udara rumah perlu perhatian 👇" },
   { s:"bil-elektrik-naik-aircond-lama", i:"💡", t:"Bil elektrik naik", p:"Bil elektrik bulan ni naik lagi, padahal guna macam biasa je 😤\n\nKalau aircond rumah dah lebih 5 tahun, cuba semak ni dulu 👇" },
@@ -1062,7 +1065,7 @@ function bukaUmpan(){
     $("uDaftar").onclick = () => { $("sUmpan").hidden = true; bukaPanel("/affiliate/", "Daftar affiliate"); };
     return;
   }
-  $("uIsi").innerHTML = `<p style="text-align:left;margin:0 0 10px">Pilih satu masalah yang anda atau kawan-kawan anda pernah rasa. Masalah yang benar-benar dirasa jadi umpan paling kuat.</p>
+  $("uIsi").innerHTML = `<p style="text-align:left;margin:0 0 10px">Fikir seorang kawan. <b>Apa yang dia selalu keluhkan?</b> Pilih masalah yang paling dekat dengan dia. Masalah yang benar-benar dirasa jadi umpan paling kuat.</p>
     <div class="umpanSen">${UMPAN.map((u, i) => `<button type="button" data-u="${i}"><span aria-hidden="true">${u.i}</span>${u.t}</button>`).join("")}</div>`;
   $("uIsi").querySelectorAll("[data-u]").forEach(b => b.onclick = () => tunjukUmpan(UMPAN[+b.dataset.u]));
 }
@@ -1074,7 +1077,7 @@ function tunjukUmpan(u){
     <div class="tindakan">
       <button type="button" id="uWa">📲 Kongsi ke WhatsApp / status</button>
       <button type="button" id="uSalin">📋 Salin post</button>
-      <button type="button" id="uLihat" style="background:#e9dcc2;color:#2b2118">👁 Lihat artikel solusi</button>
+      <button type="button" id="uLihat" style="background:#e9dcc2;color:#2b2118">👁 Lihat artikel</button>
       <button type="button" id="uBalik" style="background:#e9dcc2;color:#2b2118">← Pilih masalah lain</button>
     </div>
     <p style="font-size:13px;text-align:left;margin:0 0 8px;color:#6b5638">Tip: ubah ayat ikut gaya anda sendiri, dan tambah gambar sebenar dari rumah anda. Post yang jujur dan peribadi lebih dipercayai.</p>`;
