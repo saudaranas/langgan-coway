@@ -123,6 +123,7 @@
   .prize{margin:16px auto 0;display:inline-block;padding:12px 20px;border-radius:16px;
     background:var(--navy);color:var(--gold2);font:800 clamp(20px,6vw,26px) var(--display);line-height:1.2;
     box-shadow:0 0 0 4px var(--gold)}
+  .prize.num{font-size:clamp(56px,18vw,84px);padding:6px 34px;line-height:1.1}
   .msg{margin-top:16px;font-size:15.5px;line-height:1.6;color:#33434f;white-space:pre-line}
   .actions{display:flex;gap:10px;margin-top:20px}
   .actions button{flex:1;padding:14px;border-radius:14px;font:700 15px var(--sans);cursor:pointer;border:none}
@@ -283,7 +284,7 @@
     kicker: "Capai Target · Ganjaran Menanti",
     subtitle: "Tahniah kerana capai target! Pusing roda dan raikan kejayaan anda.",
     spinSec: 6,
-    message: "Tahniah {nama}! 🎉\nAnda menang {hadiah} kerana berjaya capai target bulan ini.\nTeruskan momentum, rezeki menanti! 💪",
+    message: "Tahniah {nama}! 🎉\nNombor anda: {hadiah}",
     prizes: Array.from({ length: 25 }, function(_, i){ return { name: String(i + 1), w: 1 }; })
   };
   var COLORS = ["#163a5c","#f2b632","#1e6fa8","#e2574c","#2f9e6e","#7b4bb7","#0f2a44","#f08a24","#2a9fb0","#c2416b","#5c8a1e","#3d4fb8"];
@@ -453,12 +454,12 @@
     spinning = false;
     clearInterval(bulbTimer); bulbTimer = setInterval(blink, 500);
     var prize = cfg.prizes[i].name || "—";
-    if(/^\d+$/.test(prize)) prize = "Hadiah No. " + prize;
     var nama = ($("nama").value || "").trim();
     var msg = fill(cfg.message || "", nama || "juara", prize).replace(/\s+!/g, "!");
     $("wName").textContent = nama ? nama : "";
     $("wName").style.display = nama ? "block" : "none";
     $("wPrize").textContent = prize;
+    $("wPrize").classList.toggle("num", /^\d+$/.test(prize));
     $("wMsg").textContent = msg;
     $("copied").textContent = "";
     lastText = msg;
