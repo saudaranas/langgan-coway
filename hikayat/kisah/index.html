@@ -1090,7 +1090,15 @@ const UMPAN = [
   { s:"baju-berbau-lepas-basuh", i:"🧺", t:"Baju berbau lepas basuh", p:"Baju dah basuh, dah jemur, tapi masih ada bau hapak 😣\n\nRupanya selalu bukan salah sabun.\n\nSemak 6 tanda ni, mungkin mesin basuh puncanya 👇" },
   { s:"bila-perlu-tukar-tilam", i:"🛏️", t:"Tilam dah mendap", p:"Bangun pagi rasa sakit belakang, padahal tidur cukup 8 jam 😮‍💨\n\nMungkin tilam dah mendap sikit demi sikit tanpa kita perasan.\n\nSemak 6 tandanya di sini 👇" },
   { s:"lantai-tandas-basah", i:"🚿", t:"Lantai tandas licin", p:"Lantai tandas sentiasa basah dan licin. Risau betul bila mak ayah atau anak kecil masuk 😟\n\nPunca biasa yang ramai tak sedar, dan cara semak, ada di sini 👇" },
-  { s:"lenguh-badan-tiada-masa-urut", i:"💆", t:"Lenguh badan", p:"Bahu tegang, belakang lenguh setiap hari. Nak pergi urut pun tak sempat 😩\n\nKalau anda kerja duduk lama atau banyak memandu, baca ni 👇" }
+  { s:"lenguh-badan-tiada-masa-urut", i:"💆", t:"Lenguh badan", p:"Bahu tegang, belakang lenguh setiap hari. Nak pergi urut pun tak sempat 😩\n\nKalau anda kerja duduk lama atau banyak memandu, baca ni 👇" },
+  { s:"anak-bersin-setiap-pagi", i:"🤧", t:"Anak bersin setiap pagi", p:"Setiap pagi anak bangun terus bersin, hidung tersumbat. Siang elok pula 🤔\n\nRupanya kena tengok balik apa yang ada dalam bilik tidur dia.\n\nSemak 6 tanda ni 👇" },
+  { s:"bau-asap-masakan-dalam-rumah", i:"🍳", t:"Rumah bau masakan", p:"Goreng ikan pagi tadi, petang tetamu datang… bau masih ada 😅\n\nTingkap dah buka, pewangi dah sembur. Kenapa bau tak hilang?\n\nBaca ni 👇" },
+  { s:"tidur-terganggu-pasangan-bergerak", i:"😴", t:"Terjaga bila pasangan bergerak", p:"Dia berpusing pukul 3 pagi, bangun pukul 5 nak kerja. Saya pun terjaga dua kali 😮‍💨\n\nRupanya mungkin bukan salah dia.\n\nSemak ni 👇" },
+  { s:"bangun-pagi-masih-penat", i:"🥱", t:"Bangun pagi masih penat", p:"Tidur 8 jam, tapi bangun rasa macam baru tidur 2 jam 😩\n\nAda satu punca yang jarang kita syak, sebab kita baring atasnya setiap malam.\n\nBaca ni 👇" },
+  { s:"kos-tisu-tandas-sebulan", i:"🧻", t:"Tisu tandas cepat habis", p:"Baru beli tisu tandas minggu lepas, dah tinggal 2 gulung 😳\n\nCuba kira untuk setahun… banyak juga rupanya.\n\nKira di sini 👇" },
+  { s:"tandas-licin-warga-emas", i:"👴", t:"Risau mak ayah tergelincir", p:"Lantai tandas sentiasa basah. Setiap kali mak masuk, hati rasa tak sedap 😟\n\nPunca lantai tak pernah kering selalunya bukan mandi.\n\nBaca ni 👇" },
+  { s:"kos-urut-luar-sebulan", i:"💸", t:"Belanja urut setiap minggu", p:"Sabtu pergi urut, Rabu bahu dah keras balik 😩\n\nCuba kira belanja urut setahun, termasuk masa redah jem. Terkejut saya.\n\nKira di sini 👇" },
+  { s:"ibu-bapa-selalu-sengal", i:"🤲", t:"Mak ayah selalu sengal", p:"Mak ayah jarang mengadu. Tapi malam-malam, terdengar juga keluhan pinggang dan lutut 🥺\n\nUntuk anak yang sibuk tapi nak jaga mereka 👇" },
 ];
 function bukaUmpan(){
   sibuk = true; henti(); $("sUmpan").hidden = false;
@@ -1113,6 +1121,7 @@ function tunjukUmpan(u){
     <div class="tindakan">
       <button type="button" id="uWa">📲 Kongsi ke WhatsApp / status</button>
       <button type="button" id="uSalin">📋 Salin post</button>
+      <button type="button" id="uLink">🔗 Salin link artikel sahaja</button>
       <button type="button" id="uLihat" style="background:#e9dcc2;color:#2b2118">👁 Lihat artikel</button>
       <button type="button" id="uBalik" style="background:#e9dcc2;color:#2b2118">← Pilih masalah lain</button>
     </div>
@@ -1122,6 +1131,10 @@ function tunjukUmpan(u){
   $("uSalin").onclick = () => {
     const ok = () => { $("uSalin").textContent = "✅ Disalin!"; S.umpan = 1; simpan(); misi(); };
     if(navigator.clipboard) navigator.clipboard.writeText(teks).then(ok, () => prompt("Salin post ini:", teks)); else prompt("Salin post ini:", teks);
+  };
+  $("uLink").onclick = () => {
+    const ok = () => { $("uLink").textContent = "✅ Link disalin!"; S.umpan = 1; simpan(); misi(); };
+    if(navigator.clipboard) navigator.clipboard.writeText(link).then(ok, () => prompt("Salin link ini:", link)); else prompt("Salin link ini:", link);
   };
   $("uLihat").onclick = () => { $("sUmpan").hidden = true; sibuk = false; bukaPanel("/artikel/" + u.s + "?ref=" + encodeURIComponent(AFID), u.t); };
   $("uBalik").onclick = bukaUmpan;
