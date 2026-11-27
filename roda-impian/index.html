@@ -284,23 +284,16 @@
     subtitle: "Tahniah kerana capai target! Pusing roda dan raikan kejayaan anda.",
     spinSec: 6,
     message: "Tahniah {nama}! 🎉\nAnda menang {hadiah} kerana berjaya capai target bulan ini.\nTeruskan momentum, rezeki menanti! 💪",
-    prizes: [
-      { name: "Hadiah 1", w: 1 },
-      { name: "Hadiah 2", w: 1 },
-      { name: "Hadiah 3", w: 1 },
-      { name: "Hadiah 4", w: 1 },
-      { name: "Hadiah 5", w: 1 },
-      { name: "Hadiah 6", w: 1 }
-    ]
+    prizes: Array.from({ length: 25 }, function(_, i){ return { name: String(i + 1), w: 1 }; })
   };
   var COLORS = ["#163a5c","#f2b632","#1e6fa8","#e2574c","#2f9e6e","#7b4bb7","#0f2a44","#f08a24","#2a9fb0","#c2416b","#5c8a1e","#3d4fb8"];
-  var KEY = "rodaImpian.v1";
+  var KEY = "rodaImpian.v1", CFG_KEY = "rodaImpian.v2";
 
   var $ = function(id){ return document.getElementById(id); };
   function store(k, v){ try{ if(v === undefined) return JSON.parse(localStorage.getItem(k)); localStorage.setItem(k, JSON.stringify(v)); }catch(e){ return null; } }
   function clone(o){ return JSON.parse(JSON.stringify(o)); }
 
-  var cfg = Object.assign(clone(DEFAULTS), store(KEY) || {});
+  var cfg = Object.assign(clone(DEFAULTS), store(CFG_KEY) || {});
   if(!Array.isArray(cfg.prizes) || cfg.prizes.length < 2) cfg.prizes = clone(DEFAULTS.prizes);
   var hist = store(KEY + ".hist") || [];
   var soundOn = store(KEY + ".sound"); if(soundOn === null) soundOn = true;
@@ -460,6 +453,7 @@
     spinning = false;
     clearInterval(bulbTimer); bulbTimer = setInterval(blink, 500);
     var prize = cfg.prizes[i].name || "—";
+    if(/^\d+$/.test(prize)) prize = "Hadiah No. " + prize;
     var nama = ($("nama").value || "").trim();
     var msg = fill(cfg.message || "", nama || "juara", prize).replace(/\s+!/g, "!");
     $("wName").textContent = nama ? nama : "";
@@ -571,7 +565,7 @@
     cfg.kicker = $("fKicker").value.trim();
     cfg.subtitle = $("fSub").value.trim();
     cfg.spinSec = Math.max(3, Math.min(15, parseInt($("fSpin").value, 10) || 6));
-    store(KEY, cfg); applyText(); rot = 0; draw(); closeSet();
+    store(CFG_KEY, cfg); applyText(); rot = 0; draw(); closeSet();
   }
 
   /* ===== EVENT ===== */
@@ -591,10 +585,10 @@
   $("saveSet").onclick = saveSet;
   $("resetSet").onclick = function(){
     if(!confirm("Set semula semua hadiah & mesej kepada asal?")) return;
-    cfg = clone(DEFAULTS); store(KEY, cfg); applyText(); rot = 0; draw(); openSet();
+    cfg = clone(DEFAULTS); store(CFG_KEY, cfg); applyText(); rot = 0; draw(); openSet();
   };
   $("addPrize").onclick = function(){
-    if($("plist").children.length >= 12){ alert("Maksimum 12 hadiah supaya teks masih jelas."); return; }
+    if($("plist").children.length >= 30){ alert("Maksimum 30 hadiah supaya teks masih jelas."); return; }
     var r = prizeRow({ name: "", w: 1 }); $("plist").appendChild(r); recolor(); r.querySelector(".n").focus();
   };
   $("clearHist").onclick = function(){ if(hist.length && confirm("Kosongkan senarai pemenang?")){ hist = []; store(KEY + ".hist", hist); renderHist(); } };
