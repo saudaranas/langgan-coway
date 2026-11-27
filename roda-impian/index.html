@@ -241,14 +241,18 @@
   <div class="panel">
     <h2>Tetapan Roda <button id="closeSet" aria-label="Tutup">✕</button></h2>
 
+    <div class="field" style="background:#f3f6f8;border-radius:14px;padding:14px">
+      <label class="toggle" style="margin-top:0"><span>Setiap nombor keluar sekali sahaja<small>Nombor yang dah keluar dibuang dari roda, jadi tiada orang dapat nombor sama.</small></span><input type="checkbox" id="fUnique"></label>
+      <button class="resetTaken" id="resetTaken" type="button">↺ Reset nombor yang dah keluar</button>
+      <p class="hint" style="margin:8px 0 0">Tekan <b>Simpan</b> di bawah selepas tukar.</p>
+    </div>
+
     <div class="field">
       <label>Hadiah</label>
       <p class="hint">Isi hadiah satu per baris. <b>Peluang</b> = berat peluang menang (lebih besar, lebih kerap kena). Letak 0 jika hadiah cuma untuk hiasan dan tak boleh dimenangi.</p>
       <div class="colhead"><span></span><span>Nama hadiah</span><span>Peluang</span><span></span></div>
       <div class="plist" id="plist"></div>
       <button class="addp" id="addPrize">+ Tambah hadiah</button>
-      <label class="toggle"><span>Setiap nombor keluar sekali sahaja<small>Nombor yang dah keluar dibuang dari roda, jadi tiada orang dapat nombor sama.</small></span><input type="checkbox" id="fUnique"></label>
-      <button class="resetTaken" id="resetTaken" type="button">↺ Reset nombor yang dah keluar</button>
     </div>
 
     <div class="field">
