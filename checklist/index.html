@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Checklist Rumah Pengantin Baru (Percuma)</title>
+<meta name="description" content="Web app percuma untuk bakal dan baru berkahwin: senarai barang rumah ikut ruang, dan kira bajet yang tinggal secara automatik.">
+<meta property="og:title" content="Checklist Rumah Pengantin Baru (Percuma)">
+<meta property="og:description" content="Senarai barang rumah pertama ikut ruang, siap kira bajet. Percuma untuk bakal dan baru berkahwin.">
+<meta property="og:image" content="https://langgancoway.store/img/og.jpg">
+<meta name="theme-color" content="#3A1D3B">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --plum:#3A1D3B; --plum2:#5A2F5B; --rose:#F3C9CD; --rose2:#FCEBEC;
+    --gold:#C79A3E; --green:#2F7A5B; --green2:#E3F1EA; --wa:#1fa855;
+    --paper:#FFFBF8; --ink:#2A1A2B; --muted:#7A6A78; --line:#EADFE3; --red:#B3261E;
+    --serif:"Young Serif",Georgia,serif; --sans:"Plus Jakarta Sans",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font:16px/1.55 var(--sans);-webkit-tap-highlight-color:transparent}
+  button,input{font:inherit;color:inherit}
+  :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+  header{background:var(--plum);color:#fff;padding:28px 22px 88px;position:relative;overflow:hidden}
+  header .sprig{position:absolute;right:-26px;top:-14px;width:180px;opacity:.2}
+  .kicker{display:inline-block;font-size:13px;font-weight:700;color:var(--plum);background:var(--rose);border-radius:999px;padding:3px 12px;margin:0 0 12px}
+  h1{font:400 32px/1.12 var(--serif);margin:0 0 10px;max-width:15ch}
+  .lede{margin:0;color:#ecdcea;max-width:34ch}
+
+  main{max-width:480px;margin:0 auto;padding:0 16px 40px}
+  .card{margin-top:-62px;background:#fff;border-radius:20px;box-shadow:0 12px 34px rgba(58,29,59,.14);padding:20px;position:relative}
+  .gets{list-style:none;margin:0 0 6px;padding:0;display:grid;gap:10px}
+  .gets li{display:flex;gap:12px;align-items:flex-start;font-size:15px}
+  .gets .ic{flex:none;width:34px;height:34px;border-radius:10px;background:var(--rose2);display:grid;place-items:center;font-size:18px}
+  .gets b{display:block}
+  .gets span{color:var(--muted);font-size:14px}
+  hr{border:0;border-top:1px solid var(--line);margin:18px 0 4px}
+
+  label.f{display:block;font-weight:700;font-size:14.5px;margin:14px 0 6px}
+  input[type=text],input[type=tel]{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff}
+  input[type=text]:focus,input[type=tel]:focus{border-color:var(--plum2)}
+  fieldset{border:0;margin:14px 0 0;padding:0}
+  legend{font-weight:700;font-size:14.5px;margin-bottom:6px;padding:0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chips label{cursor:pointer}
+  .chips input{position:absolute;opacity:0;pointer-events:none}
+  .chips span{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-size:14.5px;background:#fff}
+  .chips input:checked + span{background:var(--plum);border-color:var(--plum);color:#fff}
+  .chips input:focus-visible + span{outline:3px solid var(--gold);outline-offset:2px}
+  .opts{display:grid;gap:8px}
+  .opts label{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer}
+  .opts input{margin-top:4px;accent-color:var(--plum)}
+  .opts b{display:block;font-size:15px}
+  .opts span{color:var(--muted);font-size:13.5px}
+  .opts label:has(input:checked){border-color:var(--plum);background:var(--rose2)}
+
+  .btn{width:100%;margin-top:18px;border:0;border-radius:14px;padding:15px;font-weight:800;font-size:16.5px;background:var(--plum);color:#fff;cursor:pointer;display:flex;justify-content:center;align-items:center;gap:8px;text-decoration:none}
+  .btn:disabled{opacity:.55;cursor:default}
+  .btn.wa{background:var(--wa)}
+  .small{font-size:13px;color:var(--muted);margin:10px 0 0}
+  .err{color:var(--red);font-size:14px;margin:10px 0 0;min-height:20px}
+
+  .done h2{font:400 24px/1.2 var(--serif);margin:0 0 6px}
+  .step{display:flex;gap:10px;align-items:center;font-size:13.5px;font-weight:700;color:var(--green);margin-bottom:10px}
+  .step i{flex:1;height:6px;border-radius:9px;background:var(--green2);overflow:hidden}
+  .step i::after{content:"";display:block;height:100%;width:66%;background:var(--green);border-radius:9px}
+  .why{background:var(--rose2);border-radius:14px;padding:12px 14px;font-size:14.5px;margin-top:14px}
+
+  footer{text-align:center;font-size:12.5px;color:var(--muted);padding:0 20px 30px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <svg class="sprig" viewBox="0 0 100 100" aria-hidden="true"><g fill="none" stroke="#F3C9CD" stroke-width="2.2" stroke-linecap="round"><path d="M20 90 C40 60 55 40 85 12"/><path d="M38 66 c-10-4-14-14-12-22 c8 2 14 10 12 22z"/><path d="M52 48 c-9-6-11-16-8-23 c8 3 12 12 8 23z"/><path d="M48 62 c10 0 18-6 20-14 c-9-1-17 5-20 14z"/><path d="M64 36 c9-1 16-8 17-15 c-8 0-15 6-17 15z"/></g></svg>
+  <p class="kicker">PERCUMA · untuk bakal &amp; baru berkahwin</p>
+  <h1>Checklist Rumah Pengantin Baru</h1>
+  <p class="lede">Senarai barang rumah pertama ikut ruang. Tandakan yang dah ada, dan bajet yang tinggal dikira terus.</p>
+</header>
+
+<main>
+  <section class="card" id="vForm">
+    <ul class="gets">
+      <li><span class="ic" aria-hidden="true">🗂️</span><div><b>59 barang, ikut 6 ruang</b><span>Dapur, bilik tidur, air, ruang tamu, dobi dan urusan rumah.</span></div></li>
+      <li><span class="ic" aria-hidden="true">💰</span><div><b>Bajet dikira sendiri</b><span>Masukkan harga anggaran, terus nampak berapa lagi perlu disimpan.</span></div></li>
+      <li><span class="ic" aria-hidden="true">💍</span><div><b>Rancang berdua</b><span>Letak nama anda berdua, dan semua tersimpan di telefon.</span></div></li>
+    </ul>
+    <hr>
+    <form id="f" novalidate>
+      <label class="f" for="nama">Nama anda</label>
+      <input type="text" id="nama" autocomplete="given-name" maxlength="60" placeholder="contoh: Aisyah">
+
+      <label class="f" for="wa">Nombor WhatsApp</label>
+      <input type="tel" id="wa" autocomplete="tel" inputmode="tel" placeholder="012-345 6789">
+
+      <fieldset>
+        <legend>Anda sekarang</legend>
+        <div class="chips">
+          <label><input type="radio" name="pk" value="Bakal berkahwin" checked><span>Bakal berkahwin</span></label>
+          <label><input type="radio" name="pk" value="Baru berkahwin"><span>Baru berkahwin</span></label>
+          <label><input type="radio" name="pk" value="Pindah rumah baru"><span>Pindah rumah baru</span></label>
+          <label><input type="radio" name="pk" value="Lain-lain"><span>Lain-lain</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Apa yang anda mahu?</legend>
+        <div class="opts">
+          <label><input type="radio" name="niat" value="app" checked><div><b>Web app checklist sahaja</b><span>Saya nak rancang barang dan bajet rumah.</span></div></label>
+          <label><input type="radio" name="niat" value="produk"><div><b>Web app + info peralatan rumah</b><span>Saya juga nak tahu pilihan penapis air, tilam dan lain-lain dengan bayaran bulanan.</span></div></label>
+        </div>
+      </fieldset>
+
+      <button class="btn" type="submit" id="go">Dapatkan web app percuma</button>
+      <p class="err" id="err" role="alert"></p>
+      <p class="small">Web app dikongsi dalam group WhatsApp, bersama tips rumah tangga. Kami tak minta maklumat bank atau IC, dan anda boleh keluar group bila-bila masa.</p>
+    </form>
+  </section>
+
+  <section class="card done" id="vDone" hidden>
+    <div class="step"><span>Langkah 2 daripada 3</span><i></i></div>
+    <h2 id="dTitle">Terima kasih!</h2>
+    <p id="dText">Satu langkah lagi. Masuk group WhatsApp untuk dapatkan link web app.</p>
+    <a class="btn wa" id="grp" href="#" target="_blank" rel="noopener">💬 Masuk group WhatsApp</a>
+    <div class="why" id="why">Dalam group nanti: link web app checklist, tips menyediakan rumah pertama, dan jawapan kepada soalan anda.</div>
+  </section>
+</main>
+<footer>Checklist Rumah Pengantin Baru · dikongsi oleh komuniti langgancoway.store</footer>
+
+<script>
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbzxiDAR0APLLQvlI-peaoL89dsabpLZd-PHxqAuEgeaGVqtiX3NngTdNbbnhCLyxX3kVw/exec";
+  const SLUG = "checklist-optin";
+  const $ = id => document.getElementById(id);
+
+  /* ID affiliate: ?ref= disimpan 30 hari (sama seperti seluruh laman) */
+  const REF = (() => {
+    const c = s => String(s || "").toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 30);
+    const q = c(new URLSearchParams(location.search).get("ref"));
+    try {
+      if (q) { localStorage.setItem("aff_ref", JSON.stringify({ r: q, t: Date.now() })); return q; }
+      const o = JSON.parse(localStorage.getItem("aff_ref") || "null");
+      if (o && o.r && Date.now() - o.t < 30 * 864e5) return c(o.r);
+    } catch (e) {}
+    return q;
+  })();
+  const tr = k => { try { fetch(GAS_URL, { method:"POST", mode:"no-cors", keepalive:true, headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify({ ev:"art", a:SLUG, k:k, uid: REF ? "af-" + REF : "utama" }) }).catch(() => {}); } catch (e) {} };
+  tr("view");
+
+  const waOk = s => { let d = String(s).replace(/\D/g, ""); if (d[0] === "0") d = "6" + d; else if (d[0] === "1") d = "60" + d; return /^601\d{8,9}$/.test(d); };
+
+  $("f").onsubmit = async e => {
+    e.preventDefault();
+    const err = $("err"); err.textContent = "";
+    const nama = $("nama").value.trim(), wa = $("wa").value.trim();
+    if (nama.length < 2) { err.textContent = "Sila isi nama anda."; $("nama").focus(); return; }
+    if (!waOk(wa)) { err.textContent = "Nombor WhatsApp tidak sah. Contoh: 012-345 6789"; $("wa").focus(); return; }
+    const b = $("go"); b.disabled = true; b.textContent = "Menghantar…";
+    try {
+      const f = { nama, wa, peringkat: document.querySelector("[name=pk]:checked").value,
+        niat: document.querySelector("[name=niat]:checked").value, ref: REF, sumber: "checklist" };
+      const r = await fetch(GAS_URL, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify({ action:"optinDaftar", args:[f] }) })
+        .then(x => x.json(), () => { throw "Tiada sambungan internet. Cuba lagi."; });
+      if (!r.ok) throw r.error || "Ralat pelayan. Cuba lagi.";
+      if (!r.data || !r.data.ok) throw (r.data && r.data.error) || "Ralat pelayan. Cuba lagi.";
+      tr("done");
+      selesai(nama.split(" ")[0], r.data);
+    } catch (x) {
+      err.textContent = typeof x === "string" ? x : "Ralat. Cuba lagi.";
+      b.disabled = false; b.textContent = "Dapatkan web app percuma";
+    }
+  };
+
+  function selesai(nama, d) {
+    $("vForm").hidden = true; $("vDone").hidden = false;
+    $("dTitle").textContent = "Terima kasih, " + nama + "!";
+    if (d.grup) {
+      $("dText").textContent = "Satu langkah lagi. Masuk group WhatsApp" + (d.af ? " yang diurus oleh " + d.af : "") + " untuk dapatkan link web app.";
+      $("grp").href = d.grup;
+      $("grp").onclick = () => tr("wa");
+    } else {
+      $("grp").hidden = true;
+      $("dText").textContent = "Pendaftaran anda diterima. Kami akan hantar link web app ke WhatsApp anda tidak lama lagi.";
+      $("why").hidden = true;
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+</script>
+</body>
+</html>

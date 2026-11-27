@@ -165,13 +165,29 @@
   </div></div>
   <div class="dash">
     <div class="box">
-      <h2>Link affiliate anda</h2>
+      <h2>1. Kumpul lead: borang Checklist Rumah Pengantin</h2>
+      <p class="hint" style="margin:-4px 0 10px">Kongsi link ini di bio, status dan group. Prospek isi borang, kemudian masuk <b>group WhatsApp anda</b> untuk dapatkan web app percuma.</p>
+      <div class="linkrow">
+        <code id="optLink"></code>
+        <button class="btn ghost" type="button" id="copyOpt">Salin</button>
+        <a class="btn wa" id="shareOpt" href="#" target="_blank" rel="noopener">Kongsi di WhatsApp</a>
+      </div>
+      <label for="grpIn" style="margin-top:16px">Link group WhatsApp anda</label>
+      <div class="linkrow">
+        <input type="text" id="grpIn" placeholder="https://chat.whatsapp.com/..." style="flex:1 1 240px;border:1px solid var(--line);border-radius:8px;padding:11px 12px">
+        <button class="btn" type="button" id="grpSave" style="width:auto;margin-top:0;padding:11px 16px">Simpan</button>
+      </div>
+      <p class="hint" id="grpHint">Dalam group WhatsApp: Tetapan group → Jemput melalui link → Salin link.</p>
+      <div id="optin" style="margin-top:14px"></div>
+    </div>
+    <div class="box">
+      <h2>2. Link chatbot (untuk yang dah bersedia)</h2>
       <div class="linkrow">
         <code id="myLink"></code>
         <button class="btn ghost" type="button" id="copyLink">Salin</button>
         <a class="btn wa" id="shareWa" href="#" target="_blank" rel="noopener">Kongsi di WhatsApp</a>
       </div>
-      <p class="hint" style="margin-top:8px">Link ini terus buka chat dengan consultant Coway. Lead dikira untuk anda selama 30 hari selepas pelanggan buka link.</p>
+      <p class="hint" style="margin-top:8px">Beri link ini bila prospek sendiri tanya harga atau nak ambil produk. Ia terus buka chat dengan consultant Coway, dan lead dikira untuk anda selama 30 hari.</p>
     </div>
     <a class="box" href="/hikayat/kisah/" style="display:flex;gap:14px;align-items:center;text-decoration:none;background:#14182e;color:#f5ead3">
       <span style="font-size:34px" aria-hidden="true">🗡️</span>
@@ -261,6 +277,14 @@
     const p = d.profil, sum = k => d.hari.reduce((a, x) => a + (x[k] || 0), 0);
     $("dName").innerHTML = esc(p.nama) + "<small>Affiliate · ID " + esc(p.id) + "</small>";
     $("myLink").textContent = p.link;
+    const optLink = p.linkOptin || (location.origin + "/checklist/?ref=" + p.id);
+    $("optLink").textContent = optLink;
+    $("shareOpt").href = "https://wa.me/?text=" + encodeURIComponent(`Bakal atau baru berkahwin? 💍\n\nSaya kongsi web app PERCUMA: Checklist Rumah Pengantin Baru. Senarai barang rumah pertama ikut ruang, siap kira bajet.\n\nDaftar di sini 👇\n${optLink}`);
+    $("grpIn").value = p.grup || "";
+    $("grpHint").innerHTML = p.grup ? "✅ Prospek akan masuk group ini selepas isi borang." : "⚠️ Belum ada link group. Prospek akan dihantar ke group utama dahulu.<br>Dalam group WhatsApp: Tetapan group → Jemput melalui link → Salin link.";
+    const O = d.optin || { jumlah: 0, produk: 0, senarai: [] };
+    $("optin").innerHTML = `<p style="font-size:15px"><b>${O.jumlah}</b> orang dah isi borang · <b>${O.produk}</b> mahu info peralatan rumah</p>` +
+      (O.senarai.length ? `<table style="margin-top:6px"><thead><tr><th>Tarikh</th><th>Nama</th></tr></thead><tbody>${O.senarai.slice(0, 15).map(o => `<tr><td>${esc(o.tarikh)}</td><td>${esc(o.nama)}${o.minat ? " 🏠" : ""}<br><small style="color:var(--muted)">${esc(o.peringkat)}</small></td></tr>`).join("")}</tbody></table><p class="hint" style="margin-top:6px">🏠 = mahu info peralatan rumah. Consultant akan follow-up dengan lembut.</p>` : "");
     const A = ayat(p.link);
     $("shareWa").href = "https://wa.me/?text=" + encodeURIComponent(A[0].t);
     $("ayat").innerHTML = A.map((x, i) => `<div class="ay"><h3>${esc(x.h)}</h3><pre>${esc(x.t)}</pre><div class="row"><button class="btn ghost" type="button" data-cp="${i}">Salin</button><a class="btn wa" href="https://wa.me/?text=${encodeURIComponent(x.t)}" target="_blank" rel="noopener">Kongsi di WhatsApp</a></div></div>`).join("");
@@ -303,6 +327,16 @@
     else prompt("Salin:", t);
   }
   $("copyLink").onclick = () => cp($("myLink").textContent, "Link disalin.");
+  $("copyOpt").onclick = () => cp($("optLink").textContent, "Link borang disalin.");
+  $("grpSave").onclick = async () => {
+    const b = $("grpSave"); b.disabled = true; b.textContent = "Menyimpan…";
+    try{
+      const r = await call("affSetGrup", TOKEN, $("grpIn").value.trim());
+      $("grpHint").innerHTML = r.grup ? "✅ Disimpan. Prospek akan masuk group ini selepas isi borang." : "Link group dibuang. Prospek akan dihantar ke group utama.";
+      toast("Link group disimpan.");
+    }catch(err){ $("grpHint").textContent = "⚠️ " + err; }
+    b.disabled = false; b.textContent = "Simpan";
+  };
   /* ayat promosi siap dengan link affiliate */
   function ayat(link){
     return [
