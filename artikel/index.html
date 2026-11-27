@@ -130,6 +130,13 @@ footer nav{display:flex;flex-wrap:wrap;gap:8px 18px}
 .fb{display:flex;align-items:center;gap:12px}
 .logo-box{background:#fff;border-radius:8px;padding:7px 11px;display:grid;place-items:center}
 .logo-box img{height:38px;width:auto;display:block}
+.jump{display:flex;gap:8px;overflow-x:auto;margin:20px -20px 4px;padding:2px 20px 8px;scrollbar-width:none}.jump::-webkit-scrollbar{display:none}
+.jump a{flex:none;padding:7px 14px;border:1px solid #cfe2ef;border-radius:999px;background:#fff;color:var(--navy);font-size:15px;font-weight:600;text-decoration:none;white-space:nowrap}
+.jump a:hover{background:#eaf4fb}
+.grp{margin:30px 0 0;scroll-margin-top:12px}.grp h2{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 6px}
+.grp .eye{display:inline-block;padding:4px 12px;border-radius:999px;background:#0079c2;color:#fff;font-size:14px;font-weight:600}
+.grp .cnt{font-size:14px;color:var(--muted)}
+.grp small{display:inline-block!important;margin-top:4px!important;padding:1px 8px;border-radius:999px;background:var(--panel);font-size:12.5px!important;font-weight:600!important}
 </style>
 </head>
 <body>
@@ -139,25 +146,53 @@ footer nav{display:flex;flex-wrap:wrap;gap:8px 18px}
 <div class="ahero"><div class="in"><div>
   <nav class="crumb" aria-label="Lokasi halaman"><ol><li><a data-keep href="/">Laman utama</a></li><li>Artikel</li></ol></nav>
   <h1>Masalah di rumah yang ramai tak sedar</h1>
-  <p class="lede">Bacaan pendek, 3 minit setiap satu. Pilih yang paling dekat dengan rumah anda.</p>
+  <p class="lede">Bacaan pendek, 3 minit setiap satu. Pilih kategori yang paling dekat dengan rumah anda.</p>
 </div></div></div>
 <div class="layout">
 <main>
-  <nav class="more" aria-label="Senarai artikel" style="margin-top:20px">
-    <a data-keep href="/artikel/tangki-air-rumah"><span class="th" style="background-image:url(/img/tangki-air-rumah-1.jpg),url(/artikel/img/tangki-air-rumah-1.jpg)"></span><span>Bila kali terakhir tangki air rumah anda dicuci?<small>Air di rumah</small></span></a>
-    <a data-keep href="/artikel/tunai-atau-bulanan"><span class="th" style="background-image:url(/img/tangki-air-rumah-2.jpg),url(/artikel/img/tangki-air-rumah-2.jpg)"></span><span>Beli tunai atau langgan bulanan? Kira dulu sebelum pilih<small>Panduan</small></span></a>
-    <a data-keep href="/artikel/kos-air-botol-sebulan"><span class="th" style="background-image:url(/img/tangki-air-rumah-2.jpg),url(/artikel/img/tangki-air-rumah-2.jpg)"></span><span>Berapa sebenarnya anda belanja untuk air botol sebulan?<small>Air di rumah</small></span></a>
-    <a data-keep href="/artikel/tak-sempat-jerang-air"><span class="th" style="background-image:url(/img/tangki-air-rumah-1.jpg),url(/artikel/img/tangki-air-rumah-1.jpg)"></span><span>Balik kerja penat, air masak pun belum sejuk?<small>Air di rumah</small></span></a>
-    <a data-keep href="/artikel/habuk-dalam-rumah"><span class="th" style="background-image:url(/img/habuk-dalam-rumah-1.jpg),url(/artikel/img/habuk-dalam-rumah-1.jpg)"></span><span>Habuk yang anda lap pagi tadi, dari mana datangnya?<small>Udara di rumah</small></span></a>
-    <a data-keep href="/artikel/bila-perlu-tukar-tilam"><span class="th" style="background-image:url(/img/bila-perlu-tukar-tilam-1.jpg),url(/artikel/img/bila-perlu-tukar-tilam-1.jpg)"></span><span>Tilam anda dah berapa tahun?<small>Tidur</small></span></a>
-    <a data-keep href="/artikel/lenguh-badan-tiada-masa-urut"><span class="th" style="background-image:url(/img/lenguh-badan-tiada-masa-urut-1.jpg),url(/artikel/img/lenguh-badan-tiada-masa-urut-1.jpg)"></span><span>Bila kali terakhir anda betul-betul rehat?<small>Rehat</small></span></a>
-    <a data-keep href="/artikel/lantai-tandas-basah"><span class="th" style="background-image:url(/img/lantai-tandas-basah-1.jpg),url(/artikel/img/lantai-tandas-basah-1.jpg)"></span><span>Kenapa lantai tandas rumah anda selalu basah?<small>Bilik air</small></span></a>
-    <a data-keep href="/artikel/baju-putih-jadi-kuning"><span class="th" style="background-image:url(/img/baju-putih-jadi-kuning-1.jpg),url(/artikel/img/baju-putih-jadi-kuning-1.jpg)"></span><span>Kenapa baju putih anda makin kekuningan?<small>Air di rumah</small></span></a>
-    <a data-keep href="/artikel/bil-elektrik-naik-aircond-lama"><span class="th" style="background-image:url(/img/bil-elektrik-naik-aircond-lama-1.jpg),url(/artikel/img/bil-elektrik-naik-aircond-lama-1.jpg)"></span><span>Kenapa bil elektrik naik walaupun guna aircond yang sama?<small>Bil elektrik</small></span></a>
-    <a data-keep href="/artikel/baju-berbau-lepas-basuh"><span class="th" style="background-image:url(/img/baju-berbau-lepas-basuh-1.jpg),url(/artikel/img/baju-berbau-lepas-basuh-1.jpg)"></span><span>Baju dah basuh, tapi kenapa masih berbau?<small>Dobi di rumah</small></span></a>
-    <a data-keep href="/artikel/makanan-cepat-rosak-peti-ais"><span class="th" style="background-image:url(/img/makanan-cepat-rosak-peti-ais-1.jpg),url(/artikel/img/makanan-cepat-rosak-peti-ais-1.jpg)"></span><span>Berapa banyak makanan yang anda buang setiap bulan?<small>Dapur</small></span></a>
-  </nav>
-  <nav class="more" data-utama aria-labelledby="t-kerja" style="margin-top:28px"><h2 id="t-kerja">Kerjaya & pendapatan</h2>
+  <nav class="jump" aria-label="Kategori artikel"><a href="#air">Penapis air</a><a href="#outdoor">Penapis seluruh rumah</a><a href="#udara">Penapis udara</a><a href="#tilam">Tilam</a><a href="#urut">Kerusi urut</a><a href="#bidet">Bidet</a><a href="#aircond">Aircond</a><a href="#basuh">Mesin basuh</a><a href="#peti">Peti ais</a><a href="#panduan">Panduan membeli</a><a href="#kerjaya" data-utama>Kerjaya</a></nav>
+  <section class="more grp" id="air" aria-labelledby="t-air"><h2 id="t-air"><span class="eye">Penapis air</span><span class="cnt">4 artikel</span></h2>
+    <a data-keep href="/artikel/tangki-air-rumah"><span class="th" style="background-image:url(/img/tangki-air-rumah-1.jpg),url(/artikel/img/tangki-air-rumah-1.jpg)"></span><span>Bila kali terakhir tangki air rumah anda dicuci?<small>Masalah</small></span></a>
+    <a data-keep href="/artikel/kos-air-botol-sebulan"><span class="th" style="background-image:url(/img/kos-air-botol-sebulan-1.jpg),url(/artikel/img/kos-air-botol-sebulan-1.jpg)"></span><span>Berapa sebenarnya anda belanja untuk air botol sebulan?<small>Masalah</small></span></a>
+    <a data-keep href="/artikel/tak-sempat-jerang-air"><span class="th" style="background-image:url(/img/tak-sempat-jerang-air-1.jpg),url(/artikel/img/tak-sempat-jerang-air-1.jpg)"></span><span>Balik kerja penat, air masak pun belum sejuk?<small>Masalah</small></span></a>
+    <a data-keep href="/artikel/solusi-air-minum-rumah"><span class="th" style="background-image:url(/img/tangki-air-rumah-2.jpg),url(/artikel/img/tangki-air-rumah-2.jpg)"></span><span>Cara selesaikan masalah air minum di rumah<small>Solusi</small></span></a>
+  </section>
+  <section class="more grp" id="outdoor" aria-labelledby="t-outdoor"><h2 id="t-outdoor"><span class="eye">Penapis seluruh rumah</span><span class="cnt">2 artikel</span></h2>
+    <a data-keep href="/artikel/baju-putih-jadi-kuning"><span class="th" style="background-image:url(/img/baju-putih-jadi-kuning-1.jpg),url(/artikel/img/baju-putih-jadi-kuning-1.jpg)"></span><span>Kenapa baju putih anda makin kekuningan?<small>Masalah</small></span></a>
+    <a data-keep href="/artikel/solusi-air-seluruh-rumah"><span class="th" style="background-image:url(/img/baju-putih-jadi-kuning-1.jpg),url(/artikel/img/baju-putih-jadi-kuning-1.jpg)"></span><span>Cara tapis air untuk seluruh rumah<small>Solusi</small></span></a>
+  </section>
+  <section class="more grp" id="udara" aria-labelledby="t-udara"><h2 id="t-udara"><span class="eye">Penapis udara</span><span class="cnt">2 artikel</span></h2>
+    <a data-keep href="/artikel/habuk-dalam-rumah"><span class="th" style="background-image:url(/img/habuk-dalam-rumah-1.jpg),url(/artikel/img/habuk-dalam-rumah-1.jpg)"></span><span>Habuk yang anda lap pagi tadi, dari mana datangnya?<small>Masalah</small></span></a>
+    <a data-keep href="/artikel/solusi-udara-rumah"><span class="th" style="background-image:url(/img/habuk-dalam-rumah-1.jpg),url(/artikel/img/habuk-dalam-rumah-1.jpg)"></span><span>Cara kurangkan habuk dan udara pengap di rumah<small>Solusi</small></span></a>
+  </section>
+  <section class="more grp" id="tilam" aria-labelledby="t-tilam"><h2 id="t-tilam"><span class="eye">Tilam</span><span class="cnt">2 artikel</span></h2>
+    <a data-keep href="/artikel/bila-perlu-tukar-tilam"><span class="th" style="background-image:url(/img/bila-perlu-tukar-tilam-1.jpg),url(/artikel/img/bila-perlu-tukar-tilam-1.jpg)"></span><span>Tilam anda dah berapa tahun?<small>Masalah</small></span></a>
+    <a data-keep href="/artikel/solusi-tidur-lena"><span class="th" style="background-image:url(/img/bila-perlu-tukar-tilam-1.jpg),url(/artikel/img/bila-perlu-tukar-tilam-1.jpg)"></span><span>Cara dapat semula tidur yang lena<small>Solusi</small></span></a>
+  </section>
+  <section class="more grp" id="urut" aria-labelledby="t-urut"><h2 id="t-urut"><span class="eye">Kerusi urut</span><span class="cnt">2 artikel</span></h2>
+    <a data-keep href="/artikel/lenguh-badan-tiada-masa-urut"><span class="th" style="background-image:url(/img/lenguh-badan-tiada-masa-urut-1.jpg),url(/artikel/img/lenguh-badan-tiada-masa-urut-1.jpg)"></span><span>Bila kali terakhir anda betul-betul rehat?<small>Masalah</small></span></a>
+    <a data-keep href="/artikel/solusi-badan-lenguh"><span class="th" style="background-image:url(/img/lenguh-badan-tiada-masa-urut-1.jpg),url(/artikel/img/lenguh-badan-tiada-masa-urut-1.jpg)"></span><span>Cara rehatkan badan tanpa keluar rumah<small>Solusi</small></span></a>
+  </section>
+  <section class="more grp" id="bidet" aria-labelledby="t-bidet"><h2 id="t-bidet"><span class="eye">Bidet</span><span class="cnt">2 artikel</span></h2>
+    <a data-keep href="/artikel/lantai-tandas-basah"><span class="th" style="background-image:url(/img/lantai-tandas-basah-1.jpg),url(/artikel/img/lantai-tandas-basah-1.jpg)"></span><span>Kenapa lantai tandas rumah anda selalu basah?<small>Masalah</small></span></a>
+    <a data-keep href="/artikel/solusi-tandas-kering"><span class="th" style="background-image:url(/img/lantai-tandas-basah-1.jpg),url(/artikel/img/lantai-tandas-basah-1.jpg)"></span><span>Cara pastikan lantai tandas lebih kering<small>Solusi</small></span></a>
+  </section>
+  <section class="more grp" id="aircond" aria-labelledby="t-aircond"><h2 id="t-aircond"><span class="eye">Aircond</span><span class="cnt">2 artikel</span></h2>
+    <a data-keep href="/artikel/bil-elektrik-naik-aircond-lama"><span class="th" style="background-image:url(/img/bil-elektrik-naik-aircond-lama-1.jpg),url(/artikel/img/bil-elektrik-naik-aircond-lama-1.jpg)"></span><span>Kenapa bil elektrik naik walaupun guna aircond yang sama?<small>Masalah</small></span></a>
+    <a data-keep href="/artikel/solusi-aircond-rumah"><span class="th" style="background-image:url(/img/bil-elektrik-naik-aircond-lama-1.jpg),url(/artikel/img/bil-elektrik-naik-aircond-lama-1.jpg)"></span><span>Cara urus aircond lama yang makan bil<small>Solusi</small></span></a>
+  </section>
+  <section class="more grp" id="basuh" aria-labelledby="t-basuh"><h2 id="t-basuh"><span class="eye">Mesin basuh</span><span class="cnt">2 artikel</span></h2>
+    <a data-keep href="/artikel/baju-berbau-lepas-basuh"><span class="th" style="background-image:url(/img/baju-berbau-lepas-basuh-1.jpg),url(/artikel/img/baju-berbau-lepas-basuh-1.jpg)"></span><span>Baju dah basuh, tapi kenapa masih berbau?<small>Masalah</small></span></a>
+    <a data-keep href="/artikel/solusi-baju-wangi"><span class="th" style="background-image:url(/img/baju-berbau-lepas-basuh-1.jpg),url(/artikel/img/baju-berbau-lepas-basuh-1.jpg)"></span><span>Cara hilangkan bau hapak pada baju<small>Solusi</small></span></a>
+  </section>
+  <section class="more grp" id="peti" aria-labelledby="t-peti"><h2 id="t-peti"><span class="eye">Peti ais</span><span class="cnt">2 artikel</span></h2>
+    <a data-keep href="/artikel/makanan-cepat-rosak-peti-ais"><span class="th" style="background-image:url(/img/makanan-cepat-rosak-peti-ais-1.jpg),url(/artikel/img/makanan-cepat-rosak-peti-ais-1.jpg)"></span><span>Berapa banyak makanan yang anda buang setiap bulan?<small>Masalah</small></span></a>
+    <a data-keep href="/artikel/solusi-makanan-tahan-lama"><span class="th" style="background-image:url(/img/makanan-cepat-rosak-peti-ais-1.jpg),url(/artikel/img/makanan-cepat-rosak-peti-ais-1.jpg)"></span><span>Cara kurangkan makanan terbuang<small>Solusi</small></span></a>
+  </section>
+  <section class="more grp" id="panduan" aria-labelledby="t-panduan"><h2 id="t-panduan"><span class="eye">Panduan membeli</span><span class="cnt">1 artikel</span></h2>
+    <a data-keep href="/artikel/tunai-atau-bulanan"><span class="th" style="background-image:url(/img/tunai-atau-bulanan-1.jpg),url(/artikel/img/tunai-atau-bulanan-1.jpg)"></span><span>Beli tunai atau langgan bulanan? Kira dulu sebelum pilih<small>Panduan</small></span></a>
+  </section>
+  <nav class="more grp" id="kerjaya" data-utama aria-labelledby="t-kerja"><h2 id="t-kerja"><span class="eye">Kerjaya &amp; pendapatan</span></h2>
     <a data-keep data-utama href="/artikel/program-affiliate-langgan-coway"><span class="th" style="background-image:url(/img/program-affiliate-langgan-coway-1.jpg),url(/artikel/img/program-affiliate-langgan-coway-1.jpg)"></span><span>Program Affiliate Langgan Coway: kongsi link dari rumah, kami uruskan jualan<small>Affiliate</small></span></a>
     <a data-keep href="/artikel/kerjaya-consultant-coway"><span class="th" style="background-image:url(/img/kerjaya-consultant-coway-1.jpg),url(/artikel/img/kerjaya-consultant-coway-1.jpg)"></span><span>Kerja sebagai consultant Coway: apa sebenarnya kerjanya, dan sesuai ke untuk anda?<small>Kerjaya</small></span></a>
   </nav>
