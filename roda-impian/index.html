@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Roda Impian · Ganjaran Capai Target</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Roda Impian: ganjaran untuk ejen yang capai target. Pusing dan raikan kejayaan!">
+<meta property="og:title" content="Roda Impian · Ganjaran Capai Target">
+<meta property="og:description" content="Capai target? Pusing Roda Impian dan raikan kejayaan anda!">
+<meta property="og:image" content="https://langgancoway.store/img/og.jpg">
+<meta name="theme-color" content="#0f2a44">
+<link rel="icon" href="/img/coway-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0f2a44; --navy2:#163a5c; --navy3:#1e4b75;
+    --gold:#f2b632; --gold2:#ffd76a; --cream:#fff8e8;
+    --ink:#14212b; --muted:#5b6b78; --line:#dbe2e7; --white:#fff;
+    --sans:"IBM Plex Sans",system-ui,sans-serif;
+    --display:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:var(--sans);color:var(--white);
+    background:
+      radial-gradient(1200px 700px at 50% -10%, #2a5f92 0%, transparent 60%),
+      radial-gradient(900px 600px at 50% 120%, #0a1e33 0%, transparent 60%),
+      var(--navy);
+    min-height:100%;overflow-x:hidden;
+    -webkit-tap-highlight-color:transparent;
+  }
+  /* bintang latar */
+  .stars{position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:
+      radial-gradient(2px 2px at 12% 18%, #ffffff55 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 78% 12%, #ffffff66 50%, transparent 51%),
+      radial-gradient(2px 2px at 88% 64%, #ffd76a55 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 8% 72%, #ffffff44 50%, transparent 51%),
+      radial-gradient(2px 2px at 40% 88%, #ffd76a44 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 62% 30%, #ffffff33 50%, transparent 51%);
+  }
+  .wrap{position:relative;z-index:1;max-width:620px;margin:0 auto;padding:18px 18px 40px;
+    display:flex;flex-direction:column;align-items:center;min-height:100vh}
+  .topbar{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .brand{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px;opacity:.9}
+  .brand img{width:26px;height:26px;border-radius:6px;background:#fff}
+  .icons{display:flex;gap:8px}
+  .ibtn{width:42px;height:42px;border-radius:12px;border:1px solid #ffffff2a;background:#ffffff12;color:#fff;
+    display:grid;place-items:center;cursor:pointer;font-size:19px;transition:background .2s}
+  .ibtn:hover{background:#ffffff22}
+  .ibtn svg{width:20px;height:20px}
+
+  header.hero{text-align:center;margin:18px 0 6px}
+  .kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--navy);background:var(--gold);padding:5px 12px;border-radius:99px}
+  h1{font-family:var(--display);font-weight:800;font-size:clamp(38px,10vw,60px);line-height:1;margin-top:12px;
+    letter-spacing:-.02em;
+    background:linear-gradient(180deg,#fff 30%,var(--gold2) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{margin-top:8px;color:#c9d7e4;font-size:15px}
+
+  /* roda */
+  .stage{position:relative;width:min(92vw,520px);aspect-ratio:1;margin:22px auto 8px}
+  .rim{position:absolute;inset:0;border-radius:50%;
+    background:conic-gradient(from 0deg,#f2b632,#ffe39a,#c98c12,#ffe39a,#f2b632,#c98c12,#ffe39a,#f2b632);
+    box-shadow:0 0 0 6px #0b2236, 0 24px 60px #00000080, 0 0 80px #f2b63240}
+  canvas#wheel{position:absolute;inset:4.2%;width:91.6%;height:91.6%;border-radius:50%}
+  .bulbs{position:absolute;inset:0;pointer-events:none}
+  .bulb{position:absolute;width:2.4%;aspect-ratio:1;border-radius:50%;background:#fff6d0;
+    box-shadow:0 0 8px #fff2b0;transform:translate(-50%,-50%);transition:opacity .15s}
+  .bulb.off{opacity:.25}
+  .pointer{position:absolute;left:50%;top:-3.5%;transform:translateX(-50%);width:13%;z-index:3;
+    filter:drop-shadow(0 6px 6px #0008)}
+  .pointer.bump{animation:bump .12s ease-out}
+  @keyframes bump{50%{transform:translateX(-50%) rotate(-9deg)}}
+  .hub{position:absolute;left:50%;top:50%;width:21%;aspect-ratio:1;transform:translate(-50%,-50%);z-index:2;
+    border-radius:50%;border:none;cursor:pointer;
+    background:radial-gradient(circle at 35% 30%,#fff 0%,#ffe39a 30%,#f2b632 60%,#b77d0d 100%);
+    box-shadow:0 0 0 5px var(--navy), 0 8px 20px #0009, inset 0 -4px 8px #0003;
+    color:var(--navy);font-family:var(--display);font-weight:800;font-size:clamp(13px,3.6vw,19px);letter-spacing:.02em}
+  .hub:disabled{cursor:default;filter:saturate(.8)}
+  .hub:not(:disabled):hover{transform:translate(-50%,-50%) scale(1.04)}
+
+  .who{width:min(92vw,420px);margin-top:16px}
+  .who label{display:block;font-size:13px;color:#c9d7e4;margin-bottom:6px;text-align:center}
+  .who input{width:100%;padding:14px 16px;border-radius:14px;border:1px solid #ffffff30;background:#ffffff14;
+    color:#fff;font:600 16px var(--sans);text-align:center;outline:none}
+  .who input::placeholder{color:#9fb3c6;font-weight:400}
+  .who input:focus{border-color:var(--gold);background:#ffffff1f}
+  .spin{margin-top:14px;width:min(92vw,420px);padding:17px;border:none;border-radius:16px;cursor:pointer;
+    font:800 19px var(--display);letter-spacing:.03em;color:var(--navy);
+    background:linear-gradient(180deg,var(--gold2),var(--gold));
+    box-shadow:0 6px 0 #a8730c, 0 14px 30px #f2b63250;transition:transform .1s, box-shadow .1s}
+  .spin:active:not(:disabled){transform:translateY(4px);box-shadow:0 2px 0 #a8730c}
+  .spin:disabled{opacity:.6;cursor:default}
+
+  .history{width:min(92vw,420px);margin-top:26px}
+  .history h3{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#9fb3c6;margin-bottom:8px;
+    display:flex;justify-content:space-between;align-items:center}
+  .history h3 button{background:none;border:none;color:#9fb3c6;font:500 12px var(--sans);cursor:pointer;text-decoration:underline}
+  .history ol{list-style:none;display:flex;flex-direction:column;gap:6px}
+  .history li{background:#ffffff10;border:1px solid #ffffff18;border-radius:12px;padding:10px 12px;font-size:14px;
+    display:flex;justify-content:space-between;gap:10px}
+  .history li b{color:var(--gold2);font-weight:600}
+  .history li span.t{color:#9fb3c6;font-size:12px;white-space:nowrap}
+  .history .empty{color:#9fb3c6;font-size:14px;text-align:center;padding:8px}
+
+  /* modal menang */
+  .overlay{position:fixed;inset:0;z-index:20;background:#04101dcc;backdrop-filter:blur(4px);
+    display:none;align-items:center;justify-content:center;padding:20px}
+  .overlay.show{display:flex}
+  .card{position:relative;width:min(100%,440px);background:var(--cream);color:var(--ink);border-radius:24px;
+    padding:30px 24px 22px;text-align:center;box-shadow:0 30px 80px #000a;
+    animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .trophy{font-size:62px;line-height:1;margin-top:-62px;filter:drop-shadow(0 8px 10px #0005);animation:float 2s ease-in-out infinite}
+  @keyframes float{50%{transform:translateY(-6px)}}
+  .card .tahniah{font-family:var(--display);font-weight:800;font-size:32px;color:var(--navy);margin-top:6px}
+  .card .nama{font-size:16px;color:var(--muted);margin-top:2px;font-weight:600}
+  .prize{margin:16px auto 0;display:inline-block;padding:12px 20px;border-radius:16px;
+    background:var(--navy);color:var(--gold2);font:800 clamp(20px,6vw,26px) var(--display);line-height:1.2;
+    box-shadow:0 0 0 4px var(--gold)}
+  .msg{margin-top:16px;font-size:15.5px;line-height:1.6;color:#33434f;white-space:pre-line}
+  .actions{display:flex;gap:10px;margin-top:20px}
+  .actions button{flex:1;padding:14px;border-radius:14px;font:700 15px var(--sans);cursor:pointer;border:none}
+  .b-pri{background:var(--navy);color:#fff}
+  .b-sec{background:#fff;color:var(--navy);border:1.5px solid var(--line)!important}
+  .copied{font-size:13px;color:#2f7a5b;margin-top:10px;min-height:18px}
+
+  /* panel tetapan */
+  .sheet{position:fixed;inset:0;z-index:30;background:#04101daa;display:none;justify-content:flex-end}
+  .sheet.show{display:flex}
+  .panel{width:min(100%,460px);height:100%;overflow:auto;background:#fff;color:var(--ink);padding:22px 20px 30px;
+    animation:slide .28s ease-out}
+  @keyframes slide{from{transform:translateX(100%)}to{transform:none}}
+  .panel h2{font-family:var(--display);font-size:24px;color:var(--navy);display:flex;justify-content:space-between;align-items:center}
+  .panel h2 button{background:var(--panel,#f3f6f8);border:none;width:38px;height:38px;border-radius:10px;font-size:20px;cursor:pointer}
+  .field{margin-top:20px}
+  .field label{display:block;font-weight:700;font-size:14px;color:var(--navy)}
+  .field .hint{font-size:12.5px;color:var(--muted);margin:3px 0 8px;line-height:1.45}
+  .field input,.field textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:12px;font:15px var(--sans);color:var(--ink);outline:none}
+  .field input:focus,.field textarea:focus{border-color:var(--navy3)}
+  .plist{display:flex;flex-direction:column;gap:8px}
+  .prow{display:grid;grid-template-columns:14px 1fr 64px 36px;gap:8px;align-items:center}
+  .prow .sw{width:14px;height:14px;border-radius:4px}
+  .prow input{padding:10px}
+  .prow input.w{text-align:center}
+  .prow button{height:38px;border:none;border-radius:10px;background:#fdeaea;color:#b42318;font-size:18px;cursor:pointer}
+  .addp{margin-top:10px;width:100%;padding:12px;border:1.5px dashed #b9c6d1;border-radius:12px;background:#f7fafc;
+    color:var(--navy);font:700 14px var(--sans);cursor:pointer}
+  .colhead{display:grid;grid-template-columns:14px 1fr 64px 36px;gap:8px;font-size:11.5px;color:var(--muted);margin-bottom:4px}
+  .colhead span:nth-child(3){text-align:center}
+  .row2{display:flex;gap:10px;margin-top:26px}
+  .row2 button{flex:1;padding:14px;border-radius:12px;font:700 15px var(--sans);cursor:pointer;border:none}
+  .toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:20px;font-weight:600;font-size:14px;color:var(--navy)}
+  .toggle input{width:20px;height:20px;accent-color:var(--navy)}
+  .note{font-size:12px;color:var(--muted);margin-top:16px;line-height:1.5}
+
+  #confetti{position:fixed;inset:0;pointer-events:none;z-index:25}
+  footer{margin-top:auto;padding-top:30px;font-size:12px;color:#8aa0b4;text-align:center}
+</style>
+</head>
+<body>
+<div class="stars"></div>
+<canvas id="confetti"></canvas>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand"><img src="/img/coway-icon.png" alt=""> <span id="brandTxt">Langgan Coway · Team PD</span></div>
+    <div class="icons">
+      <button class="ibtn" id="btnSound" title="Bunyi" aria-label="Bunyi on/off">🔊</button>
+      <button class="ibtn" id="btnFull" title="Skrin penuh" aria-label="Skrin penuh">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+      </button>
+      <button class="ibtn" id="btnSet" title="Tetapan hadiah" aria-label="Tetapan">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <header class="hero">
+    <span class="kicker" id="kicker">Capai Target · Ganjaran Menanti</span>
+    <h1 id="title">Roda Impian</h1>
+    <p class="sub" id="subtitle">Tahniah kerana capai target! Pusing roda dan raikan kejayaan anda.</p>
+  </header>
+
+  <div class="stage" id="stage">
+    <div class="rim"></div>
+    <canvas id="wheel"></canvas>
+    <div class="bulbs" id="bulbs"></div>
+    <svg class="pointer" id="pointer" viewBox="0 0 60 74">
+      <defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".5" stop-color="#ffe39a"/><stop offset="1" stop-color="#e09a12"/></linearGradient></defs>
+      <path d="M30 72 L6 22 A26 26 0 1 1 54 22 Z" fill="url(#pg)" stroke="#0f2a44" stroke-width="4" stroke-linejoin="round"/>
+      <circle cx="30" cy="26" r="9" fill="#0f2a44"/>
+    </svg>
+    <button class="hub" id="hub" aria-label="Pusing">PUSING</button>
+  </div>
+
+  <div class="who">
+    <label for="nama">Nama pemenang (pilihan)</label>
+    <input id="nama" maxlength="40" placeholder="cth: Aiman" autocomplete="off">
+  </div>
+  <button class="spin" id="spinBtn">🎯 PUSING RODA</button>
+
+  <section class="history">
+    <h3><span>Senarai pemenang</span><button id="clearHist">Kosongkan</button></h3>
+    <ol id="histList"></ol>
+  </section>
+
+  <footer>Roda Impian · langgancoway.store</footer>
+</div>
+
+<!-- Modal menang -->
+<div class="overlay" id="overlay">
+  <div class="card">
+    <div class="trophy">🏆</div>
+    <div class="tahniah">TAHNIAH!</div>
+    <div class="nama" id="wName"></div>
+    <div class="prize" id="wPrize"></div>
+    <p class="msg" id="wMsg"></p>
+    <div class="actions">
+      <button class="b-sec" id="btnCopy">Salin mesej</button>
+      <button class="b-pri" id="btnAgain">Pusing lagi</button>
+    </div>
+    <div class="copied" id="copied"></div>
+  </div>
+</div>
+
+<!-- Panel tetapan -->
+<div class="sheet" id="sheet">
+  <div class="panel">
+    <h2>Tetapan Roda <button id="closeSet" aria-label="Tutup">✕</button></h2>
+
+    <div class="field">
+      <label>Hadiah</label>
+      <p class="hint">Isi hadiah satu per baris. <b>Peluang</b> = berat peluang menang (lebih besar, lebih kerap kena). Letak 0 jika hadiah cuma untuk hiasan dan tak boleh dimenangi.</p>
+      <div class="colhead"><span></span><span>Nama hadiah</span><span>Peluang</span><span></span></div>
+      <div class="plist" id="plist"></div>
+      <button class="addp" id="addPrize">+ Tambah hadiah</button>
+    </div>
+
+    <div class="field">
+      <label for="fMsg">Mesej bila menang</label>
+      <p class="hint">Guna <b>{nama}</b> untuk nama pemenang dan <b>{hadiah}</b> untuk hadiah yang dimenangi.</p>
+      <textarea id="fMsg" rows="5"></textarea>
+    </div>
+
+    <div class="field">
+      <label for="fTitle">Tajuk</label>
+      <input id="fTitle" maxlength="40">
+    </div>
+    <div class="field">
+      <label for="fKicker">Label atas tajuk</label>
+      <input id="fKicker" maxlength="50">
+    </div>
+    <div class="field">
+      <label for="fSub">Ayat bawah tajuk</label>
+      <input id="fSub" maxlength="120">
+    </div>
+    <div class="field">
+      <label for="fSpin">Tempoh pusingan (saat)</label>
+      <input id="fSpin" type="number" min="3" max="15" step="1">
+    </div>
+
+    <div class="row2">
+      <button class="b-sec" id="resetSet" style="border:1.5px solid var(--line)">Set semula</button>
+      <button class="b-pri" id="saveSet">Simpan</button>
+    </div>
+    <p class="note">Tetapan disimpan dalam pelayar peranti ini sahaja. Jika guna peranti lain, isi semula di sana.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ===== HADIAH ASAL (boleh tukar di panel Tetapan ⚙️) ===== */
+  var DEFAULTS = {
+    title: "Roda Impian",
+    kicker: "Capai Target · Ganjaran Menanti",
+    subtitle: "Tahniah kerana capai target! Pusing roda dan raikan kejayaan anda.",
+    spinSec: 6,
+    message: "Tahniah {nama}! 🎉\nAnda menang {hadiah} kerana berjaya capai target bulan ini.\nTeruskan momentum, rezeki menanti! 💪",
+    prizes: [
+      { name: "Hadiah 1", w: 1 },
+      { name: "Hadiah 2", w: 1 },
+      { name: "Hadiah 3", w: 1 },
+      { name: "Hadiah 4", w: 1 },
+      { name: "Hadiah 5", w: 1 },
+      { name: "Hadiah 6", w: 1 }
+    ]
+  };
+  var COLORS = ["#163a5c","#f2b632","#1e6fa8","#e2574c","#2f9e6e","#7b4bb7","#0f2a44","#f08a24","#2a9fb0","#c2416b","#5c8a1e","#3d4fb8"];
+  var KEY = "rodaImpian.v1";
+
+  var $ = function(id){ return document.getElementById(id); };
+  function store(k, v){ try{ if(v === undefined) return JSON.parse(localStorage.getItem(k)); localStorage.setItem(k, JSON.stringify(v)); }catch(e){ return null; } }
+  function clone(o){ return JSON.parse(JSON.stringify(o)); }
+
+  var cfg = Object.assign(clone(DEFAULTS), store(KEY) || {});
+  if(!Array.isArray(cfg.prizes) || cfg.prizes.length < 2) cfg.prizes = clone(DEFAULTS.prizes);
+  var hist = store(KEY + ".hist") || [];
+  var soundOn = store(KEY + ".sound"); if(soundOn === null) soundOn = true;
+
+  /* ===== RODA ===== */
+  var cv = $("wheel"), ctx = cv.getContext("2d");
+  var rot = 0, spinning = false, size = 0;
+
+  function segColor(i, n){
+    var c = COLORS[i % COLORS.length];
+    if(n % COLORS.length === 1 && i === n - 1) c = COLORS[(i + 3) % COLORS.length]; // elak warna sama bersebelahan
+    return c;
+  }
+  function isLight(hex){
+    var r = parseInt(hex.substr(1,2),16), g = parseInt(hex.substr(3,2),16), b = parseInt(hex.substr(5,2),16);
+    return (r*299 + g*587 + b*114) / 1000 > 160;
+  }
+  function wrapText(text, maxW, maxLines){
+    var words = text.split(/\s+/), lines = [], cur = "";
+    words.forEach(function(w){
+      var t = cur ? cur + " " + w : w;
+      if(ctx.measureText(t).width > maxW && cur){ lines.push(cur); cur = w; } else cur = t;
+    });
+    if(cur) lines.push(cur);
+    if(lines.length > maxLines){
+      lines = lines.slice(0, maxLines);
+      var last = lines[maxLines - 1];
+      while(ctx.measureText(last + "…").width > maxW && last.length) last = last.slice(0, -1);
+      lines[maxLines - 1] = last + "…";
+    }
+    return lines;
+  }
+
+  function resize(){
+    var r = cv.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 3);
+    size = r.width;
+    cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.width * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    draw();
+    placeBulbs();
+  }
+
+  function draw(){
+    var P = cfg.prizes, n = P.length, R = size / 2, seg = Math.PI * 2 / n;
+    ctx.clearRect(0, 0, size, size);
+    ctx.save();
+    ctx.translate(R, R);
+    ctx.rotate(rot);
+    for(var i = 0; i < n; i++){
+      var a0 = -Math.PI / 2 + i * seg - seg / 2, a1 = a0 + seg, col = segColor(i, n);
+      ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, R, a0, a1); ctx.closePath();
+      ctx.fillStyle = col; ctx.fill();
+      // kilauan
+      var g = ctx.createRadialGradient(0, 0, R * .2, 0, 0, R);
+      g.addColorStop(0, "rgba(255,255,255,.10)"); g.addColorStop(1, "rgba(0,0,0,.18)");
+      ctx.fillStyle = g; ctx.fill();
+      ctx.strokeStyle = "rgba(255,255,255,.55)"; ctx.lineWidth = Math.max(1.5, R * .008); ctx.stroke();
+
+      // teks
+      ctx.save();
+      ctx.rotate(-Math.PI / 2 + i * seg);
+      var fs = Math.max(11, Math.min(R * .085, R * 1.6 / n + 6));
+      ctx.font = "700 " + fs + "px 'IBM Plex Sans', system-ui, sans-serif";
+      ctx.fillStyle = isLight(col) ? "#0f2a44" : "#ffffff";
+      ctx.textAlign = "right"; ctx.textBaseline = "middle";
+      var maxW = R * .62, arcH = 2 * (R * .6) * Math.sin(seg / 2);
+      var maxLines = Math.max(1, Math.min(3, Math.floor(arcH / (fs * 1.15))));
+      var lines = wrapText(P[i].name || "—", maxW, maxLines), lh = fs * 1.12;
+      lines.forEach(function(l, k){ ctx.fillText(l, R * .88, (k - (lines.length - 1) / 2) * lh); });
+      ctx.restore();
+    }
+    ctx.restore();
+    // bayang dalam
+    var sh = ctx.createRadialGradient(R, R, R * .82, R, R, R);
+    sh.addColorStop(0, "rgba(0,0,0,0)"); sh.addColorStop(1, "rgba(0,0,0,.28)");
+    ctx.fillStyle = sh; ctx.beginPath(); ctx.arc(R, R, R, 0, Math.PI * 2); ctx.fill();
+  }
+
+  /* lampu keliling */
+  var bulbs = [];
+  function placeBulbs(){
+    var box = $("bulbs"); box.innerHTML = ""; bulbs = [];
+    var N = 24;
+    for(var i = 0; i < N; i++){
+      var a = i / N * Math.PI * 2, b = document.createElement("i");
+      b.className = "bulb" + (i % 2 ? " off" : "");
+      b.style.left = (50 + Math.cos(a) * 47.9) + "%"; b.style.top = (50 + Math.sin(a) * 47.9) + "%";
+      box.appendChild(b); bulbs.push(b);
+    }
+  }
+  var bulbPhase = 0, bulbTimer = setInterval(blink, 500);
+  function blink(){ bulbPhase ^= 1; bulbs.forEach(function(b, i){ b.classList.toggle("off", (i + bulbPhase) % 2 === 1); }); }
+
+  /* ===== BUNYI (Web Audio, tiada fail) ===== */
+  var AC = null;
+  function ac(){ if(!AC){ try{ AC = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){} } if(AC && AC.state === "suspended") AC.resume(); return AC; }
+  function tone(freq, t, dur, type, vol){
+    var a = ac(); if(!a || !soundOn) return;
+    var o = a.createOscillator(), g = a.createGain();
+    o.type = type || "sine"; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, a.currentTime + t);
+    g.gain.exponentialRampToValueAtTime(vol || .2, a.currentTime + t + .01);
+    g.gain.exponentialRampToValueAtTime(0.0001, a.currentTime + t + dur);
+    o.connect(g); g.connect(a.destination); o.start(a.currentTime + t); o.stop(a.currentTime + t + dur + .05);
+  }
+  function tick(){ tone(1400, 0, .04, "square", .06); }
+  function fanfare(){
+    [[523,0],[659,.12],[784,.24],[1047,.38]].forEach(function(n){ tone(n[0], n[1], .35, "triangle", .22); });
+    [[784,.6],[988,.6],[1175,.6],[1568,.6]].forEach(function(n){ tone(n[0], n[1], 1.1, "triangle", .12); });
+  }
+
+  /* ===== PUSING ===== */
+  function pickIndex(){
+    var P = cfg.prizes, tot = 0;
+    P.forEach(function(p){ tot += Math.max(0, +p.w || 0); });
+    if(tot <= 0) return Math.floor(Math.random() * P.length);
+    var r = Math.random() * tot;
+    for(var i = 0; i < P.length; i++){ r -= Math.max(0, +P[i].w || 0); if(r < 0) return i; }
+    return P.length - 1;
+  }
+  function easeOut(t){ return 1 - Math.pow(1 - t, 4); }
+
+  function spin(){
+    if(spinning) return;
+    ac();
+    spinning = true; $("spinBtn").disabled = true; $("hub").disabled = true;
+    clearInterval(bulbTimer); bulbTimer = setInterval(blink, 120);
+
+    var n = cfg.prizes.length, seg = Math.PI * 2 / n, win = pickIndex();
+    // segmen i berpusat di sudut i*seg (dari atas). Penunjuk di atas => rot akhir = -i*seg (+ ofset rawak dalam segmen)
+    var jitter = (Math.random() - .5) * seg * .7;
+    var target = -win * seg + jitter;
+    var start = rot, cur = ((start % (Math.PI*2)) + Math.PI*2) % (Math.PI*2);
+    var delta = ((target - cur) % (Math.PI*2) + Math.PI*2) % (Math.PI*2);
+    var total = delta + Math.PI * 2 * (5 + Math.floor(Math.random() * 3));
+    var dur = Math.max(3, Math.min(15, +cfg.spinSec || 6)) * 1000, t0 = performance.now();
+    var lastSeg = Math.floor((start + seg / 2) / seg);
+
+    function frame(now){
+      var t = Math.min(1, (now - t0) / dur);
+      rot = start + total * easeOut(t);
+      draw();
+      var s = Math.floor((rot + seg / 2) / seg);
+      if(s !== lastSeg){ lastSeg = s; tick(); var p = $("pointer"); p.classList.remove("bump"); void p.offsetWidth; p.classList.add("bump"); }
+      if(t < 1) requestAnimationFrame(frame);
+      else done(win);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function fill(tpl, nama, hadiah){
+    return tpl.replace(/\{nama\}/gi, nama).replace(/\{hadiah\}/gi, hadiah);
+  }
+
+  var lastText = "";
+  function done(i){
+    spinning = false;
+    clearInterval(bulbTimer); bulbTimer = setInterval(blink, 500);
+    var prize = cfg.prizes[i].name || "—";
+    var nama = ($("nama").value || "").trim();
+    var msg = fill(cfg.message || "", nama || "juara", prize).replace(/\s+!/g, "!");
+    $("wName").textContent = nama ? nama : "";
+    $("wName").style.display = nama ? "block" : "none";
+    $("wPrize").textContent = prize;
+    $("wMsg").textContent = msg;
+    $("copied").textContent = "";
+    lastText = msg;
+    $("overlay").classList.add("show");
+    fanfare(); confettiBurst();
+    if(navigator.vibrate) try{ navigator.vibrate([60,40,120]); }catch(e){}
+
+    hist.unshift({ n: nama, p: prize, t: Date.now() });
+    hist = hist.slice(0, 50); store(KEY + ".hist", hist); renderHist();
+  }
+
+  function closeWin(){
+    $("overlay").classList.remove("show");
+    $("spinBtn").disabled = false; $("hub").disabled = false;
+  }
+
+  /* ===== KONFETI ===== */
+  var cc = $("confetti"), cx = cc.getContext("2d"), parts = [], cRun = false;
+  function sizeConf(){ var d = Math.min(window.devicePixelRatio || 1, 2); cc.width = innerWidth * d; cc.height = innerHeight * d; cx.setTransform(d,0,0,d,0,0); }
+  function confettiBurst(){
+    var cols = ["#f2b632","#ffd76a","#ffffff","#1e6fa8","#e2574c","#2f9e6e","#7b4bb7"];
+    for(var k = 0; k < 3; k++){
+      setTimeout(function(){
+        for(var i = 0; i < 90; i++){
+          var fromLeft = Math.random() < .5;
+          parts.push({
+            x: fromLeft ? -10 : innerWidth + 10, y: innerHeight * (.55 + Math.random() * .3),
+            vx: (fromLeft ? 1 : -1) * (5 + Math.random() * 9), vy: -(9 + Math.random() * 11),
+            w: 6 + Math.random() * 7, h: 8 + Math.random() * 10, r: Math.random() * 6, vr: (Math.random() - .5) * .4,
+            c: cols[(Math.random() * cols.length) | 0], life: 0
+          });
+        }
+        if(!cRun){ cRun = true; requestAnimationFrame(confLoop); }
+      }, k * 450);
+    }
+  }
+  function confLoop(){
+    cx.clearRect(0, 0, innerWidth, innerHeight);
+    parts = parts.filter(function(p){ return p.y < innerHeight + 40 && p.life < 420; });
+    parts.forEach(function(p){
+      p.life++; p.vy += .28; p.vx *= .985; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+      cx.save(); cx.translate(p.x, p.y); cx.rotate(p.r); cx.scale(1, Math.cos(p.life * .15));
+      cx.fillStyle = p.c; cx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); cx.restore();
+    });
+    if(parts.length) requestAnimationFrame(confLoop); else { cRun = false; cx.clearRect(0, 0, innerWidth, innerHeight); }
+  }
+
+  /* ===== SEJARAH ===== */
+  function renderHist(){
+    var ol = $("histList"); ol.innerHTML = "";
+    if(!hist.length){ ol.innerHTML = '<li class="empty" style="justify-content:center">Belum ada pemenang. Jom pusing!</li>'; return; }
+    hist.slice(0, 10).forEach(function(h){
+      var li = document.createElement("li"), d = new Date(h.t);
+      var left = document.createElement("span");
+      left.textContent = (h.n ? h.n + " · " : "");
+      var b = document.createElement("b"); b.textContent = h.p; left.appendChild(b);
+      var t = document.createElement("span"); t.className = "t";
+      t.textContent = d.toLocaleDateString("ms-MY", { day: "numeric", month: "short" }) + " " + d.toLocaleTimeString("ms-MY", { hour: "2-digit", minute: "2-digit" });
+      li.appendChild(left); li.appendChild(t); ol.appendChild(li);
+    });
+  }
+
+  /* ===== TETAPAN ===== */
+  function applyText(){
+    $("title").textContent = cfg.title || DEFAULTS.title;
+    $("kicker").textContent = cfg.kicker || "";
+    $("kicker").style.display = cfg.kicker ? "inline-block" : "none";
+    $("subtitle").textContent = cfg.subtitle || "";
+    document.title = (cfg.title || DEFAULTS.title) + " · Ganjaran Capai Target";
+  }
+  function prizeRow(p, i){
+    var row = document.createElement("div"); row.className = "prow";
+    var sw = document.createElement("span"); sw.className = "sw";
+    var nm = document.createElement("input"); nm.value = p.name; nm.placeholder = "Nama hadiah"; nm.maxLength = 40; nm.className = "n";
+    var w = document.createElement("input"); w.type = "number"; w.min = "0"; w.step = "1"; w.value = p.w; w.className = "w"; w.title = "Peluang";
+    var del = document.createElement("button"); del.type = "button"; del.textContent = "×"; del.setAttribute("aria-label", "Buang");
+    del.onclick = function(){ if($("plist").children.length <= 2){ alert("Perlu sekurang-kurangnya 2 hadiah."); return; } row.remove(); recolor(); };
+    row.append(sw, nm, w, del);
+    return row;
+  }
+  function recolor(){
+    var rows = $("plist").children, n = rows.length;
+    for(var i = 0; i < n; i++) rows[i].querySelector(".sw").style.background = segColor(i, n);
+  }
+  function openSet(){
+    var pl = $("plist"); pl.innerHTML = "";
+    cfg.prizes.forEach(function(p, i){ pl.appendChild(prizeRow(p, i)); });
+    recolor();
+    $("fMsg").value = cfg.message; $("fTitle").value = cfg.title; $("fKicker").value = cfg.kicker;
+    $("fSub").value = cfg.subtitle; $("fSpin").value = cfg.spinSec;
+    $("sheet").classList.add("show");
+  }
+  function closeSet(){ $("sheet").classList.remove("show"); }
+  function saveSet(){
+    var P = [];
+    Array.prototype.forEach.call($("plist").children, function(r){
+      var n = r.querySelector(".n").value.trim(), w = parseFloat(r.querySelector(".w").value);
+      if(n) P.push({ name: n, w: isNaN(w) ? 1 : Math.max(0, w) });
+    });
+    if(P.length < 2){ alert("Isi sekurang-kurangnya 2 hadiah."); return; }
+    cfg.prizes = P;
+    cfg.message = $("fMsg").value.trim() || DEFAULTS.message;
+    cfg.title = $("fTitle").value.trim() || DEFAULTS.title;
+    cfg.kicker = $("fKicker").value.trim();
+    cfg.subtitle = $("fSub").value.trim();
+    cfg.spinSec = Math.max(3, Math.min(15, parseInt($("fSpin").value, 10) || 6));
+    store(KEY, cfg); applyText(); rot = 0; draw(); closeSet();
+  }
+
+  /* ===== EVENT ===== */
+  $("spinBtn").onclick = spin;
+  $("hub").onclick = spin;
+  $("btnAgain").onclick = closeWin;
+  $("overlay").addEventListener("click", function(e){ if(e.target === this) closeWin(); });
+  $("btnCopy").onclick = function(){
+    var done = function(){ $("copied").textContent = "✓ Mesej disalin. Tampal di WhatsApp group."; };
+    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(lastText).then(done, fallback);
+    else fallback();
+    function fallback(){ var ta = document.createElement("textarea"); ta.value = lastText; document.body.appendChild(ta); ta.select(); try{ document.execCommand("copy"); done(); }catch(e){} ta.remove(); }
+  };
+  $("btnSet").onclick = openSet;
+  $("closeSet").onclick = closeSet;
+  $("sheet").addEventListener("click", function(e){ if(e.target === this) closeSet(); });
+  $("saveSet").onclick = saveSet;
+  $("resetSet").onclick = function(){
+    if(!confirm("Set semula semua hadiah & mesej kepada asal?")) return;
+    cfg = clone(DEFAULTS); store(KEY, cfg); applyText(); rot = 0; draw(); openSet();
+  };
+  $("addPrize").onclick = function(){
+    if($("plist").children.length >= 12){ alert("Maksimum 12 hadiah supaya teks masih jelas."); return; }
+    var r = prizeRow({ name: "", w: 1 }); $("plist").appendChild(r); recolor(); r.querySelector(".n").focus();
+  };
+  $("clearHist").onclick = function(){ if(hist.length && confirm("Kosongkan senarai pemenang?")){ hist = []; store(KEY + ".hist", hist); renderHist(); } };
+  $("btnSound").onclick = function(){ soundOn = !soundOn; store(KEY + ".sound", soundOn); this.textContent = soundOn ? "🔊" : "🔇"; };
+  $("btnFull").onclick = function(){
+    var d = document, el = d.documentElement;
+    if(!(d.fullscreenElement || d.webkitFullscreenElement)){ (el.requestFullscreen || el.webkitRequestFullscreen || function(){}).call(el); }
+    else { (d.exitFullscreen || d.webkitExitFullscreen || function(){}).call(d); }
+  };
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape"){ closeWin(); closeSet(); }
+    if((e.key === " " || e.key === "Enter") && e.target === document.body){ e.preventDefault(); if($("overlay").classList.contains("show")) closeWin(); else spin(); }
+  });
+  window.addEventListener("resize", function(){ resize(); sizeConf(); });
+
+  $("btnSound").textContent = soundOn ? "🔊" : "🔇";
+  applyText(); renderHist(); sizeConf();
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(resize);
+  resize();
+})();
+</script>
+</body>
+</html>
