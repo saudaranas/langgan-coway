@@ -28,7 +28,7 @@ main{padding:16px 14px 40px}
 .card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;text-decoration:none;color:inherit}
 .cover{text-decoration:none;aspect-ratio:3/4;padding:12px;display:flex;flex-direction:column;justify-content:space-between;color:#fff;position:relative}
 .cover .k{font-size:10.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;opacity:.85}
-.cover .t{font-size:16px;font-weight:700;line-height:1.25}
+.cover .t{font-size:16px;font-weight:700;line-height:1.25;text-shadow:0 1px 3px rgba(0,0,0,.5)}
 .cover .pdf{align-self:flex-start;font-size:11px;font-weight:700;background:rgba(255,255,255,.2);border-radius:4px;padding:2px 7px}
 .new{position:absolute;top:10px;right:10px;background:var(--orange);color:#fff;font-size:10.5px;font-weight:700;border-radius:4px;padding:2px 6px}
 .info{padding:10px 12px 12px;display:flex;flex-direction:column;gap:8px;flex:1}
@@ -73,7 +73,8 @@ const NOTA = [
     topik: ["Sales Process", "VPC", "Sales Funnel", "Awareness", "Closing", "Rejection", "Skrip eTrust"],
     mukaSurat: 9,
     pdf: "ultimate-sales-framework/nota-ultimate-sales-framework.pdf",
-    web: "ultimate-sales-framework/"   // pilihan: versi web untuk baca di telefon
+    web: "ultimate-sales-framework/",   // pilihan: versi web untuk baca di telefon
+    gambar: "ultimate-sales-framework/cover.jpg"   // pilihan: gambar kulit 3:4 (jika tiada, guna warna)
   }
 ];
 
@@ -104,7 +105,7 @@ function render(){
   document.getElementById("count").textContent = rows.length + " nota";
   document.getElementById("list").innerHTML = rows.length ? rows.map((n,i) => `
     <div class="card">
-      <a href="${esc(n.pdf)}" target="_blank" rel="noopener" class="cover" style="background:${n.warna || WARNA[NOTA.indexOf(n) % WARNA.length]}">
+      <a href="${esc(n.pdf)}" target="_blank" rel="noopener" class="cover" style="background-color:${n.warna || WARNA[NOTA.indexOf(n) % WARNA.length]}${n.gambar ? `;background-image:linear-gradient(180deg,rgba(0,0,0,.05) 35%,rgba(0,0,0,.78)),url('${esc(n.gambar)}');background-size:cover;background-position:center` : ''}">
         ${isNew(n.tarikh) ? '<span class="new">BARU</span>' : ''}
         <span class="pdf">PDF</span>
         <div><div class="k">${esc(n.kategori)}</div><div class="t">${esc(n.tajuk)}</div></div>
